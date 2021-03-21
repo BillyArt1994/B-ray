@@ -66,7 +66,7 @@ namespace B_ray
             Vector3 result = new Vector3(0, 0, 0);
             result.X = MyMath.Dot(new Vector3(a[0,0],a[0,1],a[0,2]),b);
             result.Y = MyMath.Dot(new Vector3(a[1,0],a[1,1],a[1,2]),b);
-            result.Y = MyMath.Dot(new Vector3(a[2,0],a[2,1],a[2,2]),b);
+            result.Z = MyMath.Dot(new Vector3(a[2,0],a[2,1],a[2,2]),b);
             return result;
         }
 
@@ -81,8 +81,8 @@ namespace B_ray
             Vector4 result = new Vector4(0,0,0,0);
             result.X = MyMath.Dot(new Vector4(a[0,0],a[0,1],a[0,2],a[0,3]),b);
             result.Y = MyMath.Dot(new Vector4(a[1,0],a[1,1],a[1,2],a[1,3]),b);
-            result.Y = MyMath.Dot(new Vector4(a[2,0],a[2,1],a[2,2],a[2,3]),b);
-            result.Y = MyMath.Dot(new Vector4(a[3,0],a[3,1],a[3,2],a[3,3]),b);
+            result.Z = MyMath.Dot(new Vector4(a[2,0],a[2,1],a[2,2],a[2,3]),b);
+            result.W = MyMath.Dot(new Vector4(a[3,0],a[3,1],a[3,2],a[3,3]),b);
             return result;
         }
 

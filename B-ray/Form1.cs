@@ -26,10 +26,8 @@ namespace B_ray
         {
             base.OnPaint(e);
             Camera te = new Camera();
-            //te.transform.Position = new Vector3(25,30,15);
-            //GameObject box = new GameObject();
-            //box.transform.Position = new Vector3(0,0,0);
-            //Vector3 boxViewPos = WorldToViewProjection(box,te);
+            GameObject box = new GameObject();
+            Vector3 tt = WorldToViewProjection(box,te);
         }
 
         /// <summary>
@@ -73,16 +71,16 @@ namespace B_ray
         }
 
         /// <summary>
-        /// 世界转投影坐标
+        /// MVP世界转视角投影矩阵
         /// </summary>
-        /// <param name="vertex">顶点位置</param>
-        /// <param name="cameraPos">相机位置</param>
+        /// <param name="obj">物体</param>
+        /// <param name="camera">相机</param>
         /// <returns></returns>
         public Vector3 WorldToViewProjection ( GameObject obj,Camera camera )
         {
-            Vector3 cameraWorldPos = camera.transform.Position;
-            Vector3 cameraRotation = camera.transform.Rotation;
-            Vector3 objWorldPos = obj.transform.Position;
+            Vector3 cameraWorldPos = new Vector3(0, 0, 0);//camera.transform.Position;
+            Vector3 cameraRotation = new Vector3(33,45, 90);//camera.transform.Rotation;
+            Vector3 objWorldPos = new Vector3(3, 3, -3);//obj.transform.Position;
 
             //平移矩阵
             double[,] Tarry = { {1,0,0,cameraWorldPos.X },{1,0,0,cameraWorldPos.Y },{1,0,0,1 } };
