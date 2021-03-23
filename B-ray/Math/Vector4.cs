@@ -70,17 +70,15 @@ namespace B_ray
         {
             get
             {
-                return _xyz;
-            }
-
-            set
-            {
-                _xyz = new Vector3(X,Y,Z);
+                return new Vector3(X, Y, Z);
             }
         }
 
-        public Vector4 (){
-
+        public Vector4 (Vector3 a, double b){
+            this.X = a.X;
+            this.Y = a.Y;
+            this.Z = a.Z;
+            this.W = b;
         }
 
         public Vector4 ( Vector4 a )

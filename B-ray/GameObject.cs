@@ -8,6 +8,6 @@ namespace B_ray
 {
     public class GameObject
     {
-        public Transform transform { get; }
+        public Transform transform { set; get; }
     }
 }
