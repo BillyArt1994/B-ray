@@ -92,6 +92,7 @@ namespace B_ray
         public static Vector3 operator * ( Matrix a,Vector3 b )
         { return Matrix.Multiply(a,b); }
 
-
+        public static Vector4 operator * ( Matrix a,Vector4 b )
+        { return Matrix.Multiply(a,b); }
     }
 }

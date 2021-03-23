@@ -27,7 +27,7 @@ namespace B_ray
             base.OnPaint(e);
             Camera te = new Camera();
             GameObject box = new GameObject();
-            Vector3 tt = WorldToViewProjection(box,te);
+            Vector4 tt = WorldToViewProjection(box,te);
         }
 
         /// <summary>
@@ -67,7 +67,6 @@ namespace B_ray
             Vector3 p6 = new Vector3(1,0,-1);
             Vector3 p7 = new Vector3(1,1,-1);
             Vector3[] point = { p0,p1,p2,p3,p4,p5,p6,p7 };
-            Vector3 cameraPos = new Vector3(0,0,5);
         }
 
         /// <summary>
@@ -76,17 +75,19 @@ namespace B_ray
         /// <param name="obj">物体</param>
         /// <param name="camera">相机</param>
         /// <returns></returns>
-        public Vector3 WorldToViewProjection ( GameObject obj,Camera camera )
+        public Vector4 WorldToViewProjection ( GameObject obj,Camera camera )
         {
-            Vector3 cameraWorldPos = new Vector3(0, 0, 0);//camera.transform.Position;
-            Vector3 cameraRotation = new Vector3(33,45, 90);//camera.transform.Rotation;
-            Vector3 objWorldPos = new Vector3(3, 3, -3);//obj.transform.Position;
+            Vector3 cameraWorldPos = new Vector3(-3,-3,3);//camera.transform.Position;
+            Vector3 cameraRotation = new Vector3(0,0,0);//camera.transform.Rotation;
+            Vector4 objWorldPos = new Vector4(3,3,-3,1); //obj.transform.Position;
 
-            //平移矩阵
-            double[,] Tarry = { {1,0,0,cameraWorldPos.X },{1,0,0,cameraWorldPos.Y },{1,0,0,1 } };
+            double[,] Tarry = { { 1,0,0,cameraWorldPos.X },{ 0,1,0,cameraWorldPos.Y },{ 0,0,1,cameraWorldPos.Z } ,{ 0,0,0,1} };
             Matrix TMatrix = new Matrix(Tarry);
+            #region 矩阵推导
+            /*
+            //平移矩阵
             //X轴矩阵
-            double[,] Xarry = { { 1,0,0 },{ 0,MyMath.Cos(cameraRotation.X),MyMath.Sin(cameraRotation.X)},{ 0,-MyMath.Sin(cameraRotation.X),MyMath.Cos(cameraRotation.X) } };
+            double[,] Xarry = { { 1,0,0 },{ 0,MyMath.Cos(cameraRotation.X),MyMath.Sin(cameraRotation.X) },{ 0,-MyMath.Sin(cameraRotation.X),MyMath.Cos(cameraRotation.X) } };
             Matrix XAxisMaritx = new Matrix(Xarry);
             //Y轴矩阵
             double[,] Yarry = { { MyMath.Cos(cameraRotation.Y),0,-MyMath.Sin(cameraRotation.Y) },{ 0,1,0 },{ MyMath.Sin(cameraRotation.Y),0,MyMath.Cos(cameraRotation.Y) } };
@@ -94,11 +95,20 @@ namespace B_ray
             //Z轴矩阵
             double[,] zarry = { { MyMath.Cos(cameraRotation.Z),MyMath.Sin(cameraRotation.Z),0 },{ -MyMath.Sin(cameraRotation.Z),MyMath.Cos(cameraRotation.Z),0 },{ 0,0,1 } };
             Matrix ZAxisMaritx = new Matrix(zarry);
-            //XYZ矩阵顺序:X---->Y---->Z
-            Matrix W2VMaritx = ZAxisMaritx*(XAxisMaritx*YAxisMaritx);
-            Vector3 viewSpacePos = W2VMaritx * objWorldPos;
+            //XYZ矩阵顺序:Z---->Y---->X
+            Matrix W2VMaritx = ZAxisMaritx * (XAxisMaritx * YAxisMaritx);
+            */
+
+            #endregion
+
+            //复合矩阵
+            double[,] comzarry = { {MyMath.Cos(cameraRotation.Z)*MyMath.Cos(cameraRotation.Y)+MyMath.Sin(cameraRotation.X)*MyMath.Sin(cameraRotation.Y)*MyMath.Sin(cameraRotation.Z),MyMath.Cos(cameraRotation.X)*MyMath.Sin(cameraRotation.Z),-MyMath.Cos(cameraRotation.Z)*MyMath.Sin(cameraRotation.Y)+MyMath.Sin(cameraRotation.Z)* MyMath.Sin(cameraRotation.X)* MyMath.Cos(cameraRotation.Y) },
+                                  {-MyMath.Sin(cameraRotation.Z)*MyMath.Cos(cameraRotation.Y)+MyMath.Cos(cameraRotation.Z)*MyMath.Sin(cameraRotation.X)*MyMath.Sin(cameraRotation.Y),MyMath.Cos(cameraRotation.X)*MyMath.Cos(cameraRotation.Z),MyMath.Sin(cameraRotation.Z)*MyMath.Sin(cameraRotation.Y)+MyMath.Cos(cameraRotation.Z)* MyMath.Sin(cameraRotation.X)*MyMath.Cos(cameraRotation.Y) },
+                                  {MyMath.Cos(cameraRotation.X)*MyMath.Sin(cameraRotation.Y),-MyMath.Sin(cameraRotation.X),MyMath.Cos(cameraRotation.X)*MyMath.Cos(cameraRotation.Y)} };
+            Matrix ComMaritx = new Matrix(comzarry);
+            
+            Vector4 viewSpacePos = TMatrix * objWorldPos;
             return viewSpacePos;
         }
-
     }
 }

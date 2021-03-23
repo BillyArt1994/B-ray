@@ -18,3 +18,13 @@ C:\Users\billy\source\repos\B-ray\trunk\B-ray\obj\Debug\B-ray.csproj.GenerateRes
 C:\Users\billy\source\repos\B-ray\trunk\B-ray\obj\Debug\B-ray.csproj.CoreCompileInputs.cache
 C:\Users\billy\source\repos\B-ray\trunk\B-ray\obj\Debug\B-ray.exe
 C:\Users\billy\source\repos\B-ray\trunk\B-ray\obj\Debug\B-ray.pdb
+C:\Users\huang\source\repos\trunk\B-ray\bin\Debug\B-ray.exe.config
+C:\Users\huang\source\repos\trunk\B-ray\bin\Debug\B-ray.exe
+C:\Users\huang\source\repos\trunk\B-ray\bin\Debug\B-ray.pdb
+C:\Users\huang\source\repos\trunk\B-ray\obj\Debug\B-ray.csprojAssemblyReference.cache
+C:\Users\huang\source\repos\trunk\B-ray\obj\Debug\B_ray.Form1.resources
+C:\Users\huang\source\repos\trunk\B-ray\obj\Debug\B_ray.Properties.Resources.resources
+C:\Users\huang\source\repos\trunk\B-ray\obj\Debug\B-ray.csproj.GenerateResource.cache
+C:\Users\huang\source\repos\trunk\B-ray\obj\Debug\B-ray.csproj.CoreCompileInputs.cache
+C:\Users\huang\source\repos\trunk\B-ray\obj\Debug\B-ray.exe
+C:\Users\huang\source\repos\trunk\B-ray\obj\Debug\B-ray.pdb

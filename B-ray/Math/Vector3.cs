@@ -51,10 +51,6 @@ namespace B_ray
             }
         }
 
-        public Vector3 ()
-        {
-
-        }
 
         public Vector3 ( Vector3 a )
         {

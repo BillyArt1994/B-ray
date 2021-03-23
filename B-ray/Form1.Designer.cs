@@ -34,7 +34,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(622, 593);
+            this.ClientSize = new System.Drawing.Size(1179, 775);
             this.Name = "Form1";
             this.Text = "B-ray Renderer";
             this.Load += new System.EventHandler(this.Form1_Load);

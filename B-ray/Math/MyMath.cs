@@ -62,5 +62,7 @@ namespace B_ray
         {
             return a.X * b.X + a.Y * b.Y + a.Z * b.Z+a.W*b.W;
         }
+
+
     }
 }
