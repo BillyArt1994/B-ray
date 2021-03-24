@@ -64,7 +64,6 @@ namespace B_ray
             DrawLine(box.vertexList[4].XY,box.vertexList[7].XY,e);
             DrawLine(box.vertexList[4].XY,box.vertexList[2].XY,e);
             DrawLine(box.vertexList[5].XY,box.vertexList[3].XY,e);
-
         }
 
         /// <summary>
