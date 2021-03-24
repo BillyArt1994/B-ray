@@ -26,8 +26,8 @@ namespace B_ray
         {
             base.OnPaint(e);
             Camera mainCamera = new Camera();
-            mainCamera.transform.Position = new Vector3(0,0,150);
-            mainCamera.transform.Rotation = new Vector3(60,15,0);
+            mainCamera.transform.Position = new Vector3(0,0,0);
+            mainCamera.transform.Rotation = new Vector3(15,80,0);
             ///box
             Vector3 p0 = new Vector3(50,100,-50);
             Vector3 p1 = new Vector3(50,0,-50);
@@ -37,33 +37,29 @@ namespace B_ray
             Vector3 p5 = new Vector3(-50,100,50);
             Vector3 p6 = new Vector3(-50,100,-50);
             Vector3 p7 = new Vector3(-50,0,-50);
-
             Vector3[] vertex = { p0,p1,p2,p3,p4,p5,p6,p7 };
+
             int[] index = {0,1,2,0,2,3,
-                           3,2,5,3,5,4,
-                           4,5,6,4,6,7,
-                           7,6,1,7,1,0,
-                           5,6,1,1,2,5,
-                           7,4,0,0,3,4,
+                           3,2,4,4,5,3,
+                           5,4,7,7,5,6,
+                           6,7,0,0,1,7,
+                           5,6,3,0,6,3,
+                           4,7,2,2,1,7,
                            };
+
             Mesh box = new Mesh(vertex,index);
 
             for ( int i = 0; i < box.vertexList.Length; i++ )
             {
                 box.vertexList[i] = WorldToViewProjection(box.vertexList[i],mainCamera);
             }
-            DrawLine(box.vertexList[0].XY,box.vertexList[1].XY,e);
-            DrawLine(box.vertexList[1].XY,box.vertexList[2].XY,e);
-            DrawLine(box.vertexList[2].XY,box.vertexList[3].XY,e);
-            DrawLine(box.vertexList[0].XY,box.vertexList[3].XY,e);
-            DrawLine(box.vertexList[1].XY,box.vertexList[7].XY,e);
-            DrawLine(box.vertexList[7].XY,box.vertexList[6].XY,e);
-            DrawLine(box.vertexList[6].XY,box.vertexList[0].XY,e);
-            DrawLine(box.vertexList[6].XY,box.vertexList[5].XY,e);
-            DrawLine(box.vertexList[5].XY,box.vertexList[4].XY,e);
-            DrawLine(box.vertexList[4].XY,box.vertexList[7].XY,e);
-            DrawLine(box.vertexList[4].XY,box.vertexList[2].XY,e);
-            DrawLine(box.vertexList[5].XY,box.vertexList[3].XY,e);
+
+            for ( int i = 0; i < box.indexList.Length; i+=3 )
+            {
+                DrawLine(box.vertexList[box.indexList[i]].XY,box.vertexList[box.indexList[i+1]].XY,e);
+                DrawLine(box.vertexList[box.indexList[i+1]].XY,box.vertexList[box.indexList[i+2]].XY,e);
+                DrawLine(box.vertexList[box.indexList[i+2]].XY,box.vertexList[box.indexList[i]].XY,e);
+            }
         }
 
         /// <summary>
