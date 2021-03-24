@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="GameObject.cs" />
     <Compile Include="Math\Matrix.cs" />
+    <Compile Include="Math\Vector2.cs" />
     <Compile Include="Mesh.cs" />
     <Compile Include="Math\MyMath.cs" />
     <Compile Include="Program.cs" />

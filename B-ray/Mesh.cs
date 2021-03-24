@@ -8,7 +8,14 @@ namespace B_ray
 {
     public class Mesh
     {
-        public int[] vtexIndex {get;set;}
-        public Vector3[] vtexPos {get;set;}
+        public Vector3[] vertexList { get; set; }
+        public int[] indexList { get; set; }
+
+        public Mesh ( Vector3[] vertex ,int[] index  )
+        {
+            this.vertexList = vertex;
+            this.indexList = index;
+        }
+   
     }
 }

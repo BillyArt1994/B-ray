@@ -51,6 +51,18 @@ namespace B_ray
             }
         }
 
+        public Vector2 XY
+        {
+            get
+            {
+                return new Vector2 (X,Y);
+            }
+        }
+
+        public Vector3 ()
+        {
+
+        }
 
         public Vector3 ( Vector3 a )
         {

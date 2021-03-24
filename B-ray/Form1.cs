@@ -26,10 +26,45 @@ namespace B_ray
         {
             base.OnPaint(e);
             Camera mainCamera = new Camera();
-            GameObject box = new GameObject();
-            box.transform.Position = new Vector3(0, 0, 0);
-            mainCamera.transform.Position = new Vector3(0,0,-5);
-            Vector3 MVP_pos = WorldToViewProjection(box, mainCamera);
+            mainCamera.transform.Position = new Vector3(0,0,150);
+            mainCamera.transform.Rotation = new Vector3(60,15,0);
+            ///box
+            Vector3 p0 = new Vector3(50,100,-50);
+            Vector3 p1 = new Vector3(50,0,-50);
+            Vector3 p2 = new Vector3(50,0,50);
+            Vector3 p3 = new Vector3(50,100,50);
+            Vector3 p4 = new Vector3(-50,0,50);
+            Vector3 p5 = new Vector3(-50,100,50);
+            Vector3 p6 = new Vector3(-50,100,-50);
+            Vector3 p7 = new Vector3(-50,0,-50);
+
+            Vector3[] vertex = { p0,p1,p2,p3,p4,p5,p6,p7 };
+            int[] index = {0,1,2,0,2,3,
+                           3,2,5,3,5,4,
+                           4,5,6,4,6,7,
+                           7,6,1,7,1,0,
+                           5,6,1,1,2,5,
+                           7,4,0,0,3,4,
+                           };
+            Mesh box = new Mesh(vertex,index);
+
+            for ( int i = 0; i < box.vertexList.Length; i++ )
+            {
+                box.vertexList[i] = WorldToViewProjection(box.vertexList[i],mainCamera);
+            }
+            DrawLine(box.vertexList[0].XY,box.vertexList[1].XY,e);
+            DrawLine(box.vertexList[1].XY,box.vertexList[2].XY,e);
+            DrawLine(box.vertexList[2].XY,box.vertexList[3].XY,e);
+            DrawLine(box.vertexList[0].XY,box.vertexList[3].XY,e);
+            DrawLine(box.vertexList[1].XY,box.vertexList[7].XY,e);
+            DrawLine(box.vertexList[7].XY,box.vertexList[6].XY,e);
+            DrawLine(box.vertexList[6].XY,box.vertexList[0].XY,e);
+            DrawLine(box.vertexList[6].XY,box.vertexList[5].XY,e);
+            DrawLine(box.vertexList[5].XY,box.vertexList[4].XY,e);
+            DrawLine(box.vertexList[4].XY,box.vertexList[7].XY,e);
+            DrawLine(box.vertexList[4].XY,box.vertexList[2].XY,e);
+            DrawLine(box.vertexList[5].XY,box.vertexList[3].XY,e);
+
         }
 
         /// <summary>
@@ -38,37 +73,23 @@ namespace B_ray
         /// <param name="startPoint">起始点</param>
         /// <param name="endPoint">终点</param>
         /// <param name="e">事件</param>
-        private void DrawLine(Point startPoint, Point endPoint, PaintEventArgs e)
+        private void DrawLine(Vector2 startPoint, Vector2 endPoint, PaintEventArgs e)
         {
             Bitmap bm = new Bitmap(640, 640);
             var dc = e.Graphics;
 
-            Point dir = new Point(0, 0);
-            dir.X = endPoint.X - startPoint.X;
-            dir.Y = endPoint.Y - startPoint.Y;
+            Vector2 dir = endPoint- startPoint;
 
             double length = Math.Sqrt(dir.X * dir.X + dir.Y * dir.Y);
             length = Math.Round(length);
 
             for (int i = 1; i <= length; i++)
             {
-                Point pixel = new Point((int)(startPoint.X + (dir.X / length) * i), (int)(startPoint.Y + (dir.Y / length) * i));
-                bm.SetPixel(pixel.X, pixel.Y, Color.Red);
+                Vector2 pixel = new Vector2((int)(startPoint.X + (dir.X / length) * i), (int)(startPoint.Y + (dir.Y / length) * i));
+                pixel = pixel+ new Vector2(400,200);
+                bm.SetPixel((int)pixel.X,(int)pixel.Y, Color.Red);
             }
             dc.DrawImageUnscaled(bm, 0, 0);
-        }
-
-        private void DrawBox(float size)
-        {
-            Vector3 p0 = new Vector3(1, 1, 1);
-            Vector3 p1 = new Vector3(1, 0, 1);
-            Vector3 p2 = new Vector3(-1, 0, 1);
-            Vector3 p3 = new Vector3(-1, 1, 1);
-            Vector3 p4 = new Vector3(-1, 1, -1);
-            Vector3 p5 = new Vector3(-1, 0, -1);
-            Vector3 p6 = new Vector3(1, 0, -1);
-            Vector3 p7 = new Vector3(1, 1, -1);
-            Vector3[] point = { p0, p1, p2, p3, p4, p5, p6, p7 };
         }
 
         /// <summary>
@@ -77,11 +98,11 @@ namespace B_ray
         /// <param name="obj">物体</param>
         /// <param name="camera">相机</param>
         /// <returns></returns>
-        public Vector3 WorldToViewProjection(GameObject obj, Camera camera)
+        public Vector3 WorldToViewProjection(Vector3 vertexPos, Camera camera)
         {
             Vector3 cameraWorldPos = camera.transform.Position;
             Vector3 cameraRotation = camera.transform.Rotation;
-            Vector4 objWorldPos = new Vector4 (obj.transform.Position,1);
+            Vector4 objWorldPos = new Vector4 (vertexPos,1);
 
             //平移矩阵
             double[,] Tarry = { { 1, 0, 0, -cameraWorldPos.X }, { 0, 1, 0, -cameraWorldPos.Y }, { 0, 0, 1, -cameraWorldPos.Z }, { 0, 0, 0, 1 } };
