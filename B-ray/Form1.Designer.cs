@@ -28,21 +28,88 @@
         /// </summary>
         private void InitializeComponent ()
         {
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.导入模型ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.打开场景ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.保存场景ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.文件ToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1179, 28);
+            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // 文件ToolStripMenuItem
+            // 
+            this.文件ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.打开场景ToolStripMenuItem,
+            this.保存场景ToolStripMenuItem,
+            this.导入模型ToolStripMenuItem,
+            this.退出ToolStripMenuItem});
+            this.文件ToolStripMenuItem.Name = "文件ToolStripMenuItem";
+            this.文件ToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+            this.文件ToolStripMenuItem.Text = "File";
+            this.文件ToolStripMenuItem.Click += new System.EventHandler(this.文件ToolStripMenuItem_Click);
+            // 
+            // 导入模型ToolStripMenuItem
+            // 
+            this.导入模型ToolStripMenuItem.Name = "导入模型ToolStripMenuItem";
+            this.导入模型ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.导入模型ToolStripMenuItem.Text = "Import";
+            this.导入模型ToolStripMenuItem.Click += new System.EventHandler(this.导入模型ToolStripMenuItem_Click);
+            // 
+            // 退出ToolStripMenuItem
+            // 
+            this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.退出ToolStripMenuItem.Text = "Exit";
+            // 
+            // 打开场景ToolStripMenuItem
+            // 
+            this.打开场景ToolStripMenuItem.Name = "打开场景ToolStripMenuItem";
+            this.打开场景ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.打开场景ToolStripMenuItem.Text = "Open Scene";
+            // 
+            // 保存场景ToolStripMenuItem
+            // 
+            this.保存场景ToolStripMenuItem.Name = "保存场景ToolStripMenuItem";
+            this.保存场景ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.保存场景ToolStripMenuItem.Text = "Save Scene";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1179, 775);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "B-ray Renderer";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
+
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem 文件ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 打开场景ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 保存场景ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 导入模型ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 退出ToolStripMenuItem;
     }
 }
 

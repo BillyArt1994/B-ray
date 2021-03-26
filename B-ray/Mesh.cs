@@ -11,6 +11,11 @@ namespace B_ray
         public Vector3[] vertexList { get; set; }
         public int[] indexList { get; set; }
 
+        public Mesh ()
+        {
+
+        }
+
         public Mesh ( Vector3[] vertex ,int[] index  )
         {
             this.vertexList = vertex;

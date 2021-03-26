@@ -60,6 +60,7 @@
     <Compile Include="Math\MyMath.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tool\ObjFileRead.cs" />
     <Compile Include="Transform.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />

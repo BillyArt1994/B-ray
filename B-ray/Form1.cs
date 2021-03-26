@@ -24,6 +24,7 @@ namespace B_ray
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            /*
             base.OnPaint(e);
             Camera mainCamera = new Camera();
             mainCamera.transform.Position = new Vector3(0,0,0);
@@ -60,6 +61,7 @@ namespace B_ray
                 DrawLine(box.vertexList[box.indexList[i+1]].XY,box.vertexList[box.indexList[i+2]].XY,e);
                 DrawLine(box.vertexList[box.indexList[i+2]].XY,box.vertexList[box.indexList[i]].XY,e);
             }
+            */
         }
 
         /// <summary>
@@ -129,6 +131,21 @@ namespace B_ray
 
             Vector3 viewSpacePos = ((ComMaritx*TMatrix) * objWorldPos).XYZ;
             return viewSpacePos;
+        }
+
+        private void 导入模型ToolStripMenuItem_Click ( object sender,EventArgs e )
+        {
+            OpenFileDialog oPenFileDialog = new OpenFileDialog();
+            oPenFileDialog.InitialDirectory = Application.StartupPath;
+            oPenFileDialog.Filter = "obj|*.obj";
+            oPenFileDialog.RestoreDirectory = true;
+
+            oPenFileDialog.ShowDialog();
+        }
+
+        private void 文件ToolStripMenuItem_Click ( object sender,EventArgs e )
+        {
+
         }
     }
 }
