@@ -12,7 +12,6 @@ namespace B_ray
         private double _y;
         private double _z;
         private double _w;
-        private Vector3 _xyz;
 
         public double X
         {

@@ -8,15 +8,16 @@ namespace B_ray
 {
     public class Mesh
     {
-        public Vector3[] vertexList { get; set; }
-        public int[] indexList { get; set; }
+        public List<Vector3> vertexList { get; set; }
+        public List<int> indexList { get; set; }
 
         public Mesh ()
         {
-
+            this.vertexList = new List<Vector3>();
+            this.indexList = new List<int>();
         }
 
-        public Mesh ( Vector3[] vertex ,int[] index  )
+        public Mesh (List<Vector3> vertex , List<int> index  )
         {
             this.vertexList = vertex;
             this.indexList = index;
