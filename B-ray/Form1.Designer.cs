@@ -64,26 +64,26 @@
             // 打开场景ToolStripMenuItem
             // 
             this.打开场景ToolStripMenuItem.Name = "打开场景ToolStripMenuItem";
-            this.打开场景ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.打开场景ToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.打开场景ToolStripMenuItem.Text = "Open Scene";
             // 
             // 保存场景ToolStripMenuItem
             // 
             this.保存场景ToolStripMenuItem.Name = "保存场景ToolStripMenuItem";
-            this.保存场景ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存场景ToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.保存场景ToolStripMenuItem.Text = "Save Scene";
             // 
             // ImportToolStripMenuItem
             // 
             this.ImportToolStripMenuItem.Name = "ImportToolStripMenuItem";
-            this.ImportToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ImportToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.ImportToolStripMenuItem.Text = "Import";
             this.ImportToolStripMenuItem.Click += new System.EventHandler(this.ImportToolStripMenuItem_Click);
             // 
             // 退出ToolStripMenuItem
             // 
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.退出ToolStripMenuItem.Text = "Exit";
             // 
             // BrayRenderer
@@ -93,7 +93,7 @@
             this.ClientSize = new System.Drawing.Size(884, 620);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "BrayRenderer";
             this.Text = "B-ray Renderer";
             this.Load += new System.EventHandler(this.Form1_Load);
