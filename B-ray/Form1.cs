@@ -12,8 +12,6 @@ namespace B_ray
 {
     public partial class BrayRenderer : Form
     {
-
-        delegate void DrawObj();
         public BrayRenderer()
         {
             InitializeComponent();
@@ -33,7 +31,27 @@ namespace B_ray
             //mainCamera.transform.Position = new Vector3(0, 0, 0);
             //mainCamera.transform.Rotation = new Vector3(15,60, 0);
             //DrawMesh(temp.obj, mainCamera, e);
-            DrawLine(new Vector2 (300,150),new Vector2 (60,60),e );
+            //DrawLine(new Vector2 (300,150),new Vector2 (60,60),e );
+            Vector2 uv = new Vector2(512,512);
+            Bitmap bm = new Bitmap((int)uv.X,(int)uv.Y);
+            var dc = e.Graphics;
+            //for ( int u = 0; u < 512; u++ )
+            //{
+            //    for ( int v = 0; v < 512; v++ )
+            //    {
+
+            //    }
+            //}
+
+            for ( int u = 0; u < uv.X; u++ )
+            {
+                for ( int v = 0; v < uv.Y; v++ )
+                {
+                    bm.SetPixel(u,v,Color.FromArgb(Convert.ToInt32(255/uv.X * u),Convert.ToInt32(255 / uv.Y * v),0));
+                }
+            }
+            
+            dc.DrawImageUnscaled(bm,0,0);
         }
 
         /// <summary>
