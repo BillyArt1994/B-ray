@@ -10,8 +10,14 @@ using System.Windows.Forms;
 
 namespace B_ray
 {
+   
     public partial class BrayRenderer : Form
     {
+        public static double radius;
+        public static Vector3 spherePos;
+        public static int j =  1;
+        public static Vector3[] p1 = new Vector3[262144];
+
         public BrayRenderer()
         {
             InitializeComponent();
@@ -25,6 +31,7 @@ namespace B_ray
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+            #region 读取文件
             //string filePath = @"C:\Users\billy\Desktop\box01.obj";
             //ObjFileRead temp = new ObjFileRead(filePath);
             //Camera mainCamera = new Camera();
@@ -32,26 +39,65 @@ namespace B_ray
             //mainCamera.transform.Rotation = new Vector3(15,60, 0);
             //DrawMesh(temp.obj, mainCamera, e);
             //DrawLine(new Vector2 (300,150),new Vector2 (60,60),e );
-            Vector2 uv = new Vector2(512,512);
-            Bitmap bm = new Bitmap((int)uv.X,(int)uv.Y);
-            var dc = e.Graphics;
-            //for ( int u = 0; u < 512; u++ )
-            //{
-            //    for ( int v = 0; v < 512; v++ )
-            //    {
+            #endregion
 
-            //    }
-            //}
+            //实例主摄像机
+            Vector3 cameraPos = new Vector3(0, 0, -1);
+            //屏幕尺寸 长512 宽512
+            Vector2 screenSize = new Vector2(512,512);
+            //定义一个球物体
+            radius = 1;
 
-            for ( int u = 0; u < uv.X; u++ )
+            spherePos = new Vector3(0, 0,5);
+
+            //屏幕位置获得从摄像机到每个像素发射的射线
+            Vector3[] ray = new Vector3[(int)(screenSize.X*screenSize.Y)];
+            for (int i = (int)-screenSize.X/2; i < screenSize.X/ 2; i++)
             {
-                for ( int v = 0; v < uv.Y; v++ )
+                for (int j = (int)-screenSize.Y/2; j < screenSize.Y/2; j++)
                 {
-                    bm.SetPixel(u,v,Color.FromArgb(Convert.ToInt32(255/uv.X * u),Convert.ToInt32(255 / uv.Y * v),0));
+                    ray[(int)((i+screenSize.X/2)*screenSize.Y+j+ screenSize.Y/2)] = new Vector3(new Vector3 (i, j, 0) - cameraPos);
                 }
             }
-            
-            dc.DrawImageUnscaled(bm,0,0);
+
+            Vector3[] p0 = new Vector3[(int)(screenSize.X * screenSize.Y)];
+
+            for (int i = 0; i < ray.Length; i++)
+            {
+                p0[i] = cameraPos;
+            }
+
+            Vector3[] result =  RayMarching(p0,ray,3);
+
+            Bitmap bm = new Bitmap(512, 512);
+            var dc = e.Graphics;
+
+            for (int i = 0; i < screenSize.X; i++)
+            {
+                for (int j = 0; j < screenSize.Y; j++)
+                {
+                  //int color = Convert.ToInt32(MyMath.Distance(cameraPos, result[j + (int)(i * screenSize.Y)]));
+                    double color = MyMath.Distance(cameraPos, result[j + (int)(i * screenSize.Y)]);
+                    color /= 255;
+                    color = MyMath.Clamp(color, 0, 255);
+                    bm.SetPixel(i, j, Color.FromArgb(255, (int)color, (int)color, (int)color));
+                }
+            }
+            dc.DrawImageUnscaled(bm, 0, 0);
+        }
+
+        public Vector3[] RayMarching(Vector3[] p0,Vector3[] rd,int time)
+        {
+            for (int i = 0; i < p0.Length; i++)
+            {
+                p1[i]=(rd[i]*(MyMath.Distance(p0[i],spherePos)-radius)+p0[i]); 
+            }
+            j++;
+            if (j<time)
+            {
+                RayMarching(p1, rd, time);
+            }
+            return p1;
         }
 
         /// <summary>
@@ -94,13 +140,13 @@ namespace B_ray
             for (int i = 1; i <= length; i++)
             {
                 Vector2 pixel = new Vector2((int)(startPoint.X + (dir.X / length) * i), (int)(startPoint.Y + (dir.Y / length) * i));
-           //     pixel = pixel + new Vector2(400, 200);
+                //     pixel = pixel + new Vector2(400, 200);
                 bm.SetPixel((int)pixel.X, (int)pixel.Y, Color.Red);
             }
             dc.DrawImageUnscaled(bm, 0, 0);
         }
 
-    private void ImportToolStripMenuItem_Click ( object sender,EventArgs e )
+        private void ImportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog oPenFileDialog = new OpenFileDialog();
             oPenFileDialog.InitialDirectory = Application.StartupPath;
@@ -113,7 +159,7 @@ namespace B_ray
             }
         }
 
-        private void 文件ToolStripMenuItem_Click ( object sender,EventArgs e )
+        private void 文件ToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }

@@ -27,7 +27,6 @@ C:\Users\huang\source\repos\trunk\B-ray\obj\Debug\B-ray.exe
 C:\Users\huang\source\repos\trunk\B-ray\obj\Debug\B-ray.pdb
 C:\Users\huang\source\repos\trunk\B-ray\obj\Debug\B-ray.csprojAssemblyReference.cache
 C:\Users\billy\source\repos\B-ray\trunk\B-ray\obj\Debug\B_ray.BrayRenderer.resources
-C:\Users\billy\source\repos\B-ray\trunk\B-ray\obj\Debug\B-ray.csprojAssemblyReference.cache
 F:\Project\B-ray\trunk\B-ray\bin\Debug\B-ray.exe.config
 F:\Project\B-ray\trunk\B-ray\bin\Debug\B-ray.exe
 F:\Project\B-ray\trunk\B-ray\bin\Debug\B-ray.pdb
@@ -38,3 +37,4 @@ F:\Project\B-ray\trunk\B-ray\obj\Debug\B-ray.csproj.GenerateResource.cache
 F:\Project\B-ray\trunk\B-ray\obj\Debug\B-ray.csproj.CoreCompileInputs.cache
 F:\Project\B-ray\trunk\B-ray\obj\Debug\B-ray.exe
 F:\Project\B-ray\trunk\B-ray\obj\Debug\B-ray.pdb
+C:\Users\billy\source\repos\B-ray\trunk\B-ray\obj\Debug\B-ray.csprojAssemblyReference.cache

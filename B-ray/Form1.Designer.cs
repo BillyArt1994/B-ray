@@ -45,7 +45,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(884, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(496, 25);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -90,10 +90,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(884, 620);
+            this.ClientSize = new System.Drawing.Size(496, 473);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
+            this.MaximumSize = new System.Drawing.Size(512, 512);
+            this.MinimumSize = new System.Drawing.Size(512, 512);
             this.Name = "BrayRenderer";
             this.Text = "B-ray Renderer";
             this.Load += new System.EventHandler(this.Form1_Load);

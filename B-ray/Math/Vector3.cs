@@ -88,9 +88,19 @@ namespace B_ray
             return new Vector3(a.x - b.x,a.y - b.y,a.z - b.z);
         }
 
+        private static Vector3 Division(Vector3 a , double b)
+        {
+            return new Vector3(a.x/b,a.y/b,a.z/b);
+        }
+
         private static Vector3 Multiply ( Vector3 a,double b )
         {
             return new Vector3(a.x * b,a.y * b,a.z * b);
+        }
+
+        private static Vector3 Multiply(Vector3 a, Vector3 b)
+        {
+            return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
         }
 
         public static Vector3 operator + ( Vector3 a,Vector3 b )
@@ -106,6 +116,16 @@ namespace B_ray
         public static Vector3 operator * (Vector3 a ,double b )
         { 
             return Vector3.Multiply(a,b);
+        }
+
+        public static Vector3 operator *(Vector3 a, Vector3 b)
+        {
+            return Vector3.Multiply(a,b);
+        }
+
+        public static Vector3 operator /(Vector3 a, double b)
+        {
+            return Vector3.Division(a, b);
         }
     }
 }
