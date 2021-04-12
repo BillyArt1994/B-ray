@@ -56,7 +56,7 @@ namespace B_ray
             {
                 for (int j = (int)-screenSize.Y/2; j < screenSize.Y/2; j++)
                 {
-                    ray[(int)((i+screenSize.X/2)*screenSize.Y+j+ screenSize.Y/2)] = new Vector3(new Vector3 (i, j, 0) - cameraPos);
+                    ray[(int)((i+screenSize.X/2)*screenSize.Y+j+ screenSize.Y/2)] = new Vector3(new Vector3 (i, j, 0)*new Vector3(1/ screenSize.X,1/screenSize.Y,0) - cameraPos);
                 }
             }
 
@@ -67,7 +67,7 @@ namespace B_ray
                 p0[i] = cameraPos;
             }
 
-            Vector3[] result =  RayMarching(p0,ray,3);
+            Vector3[] result =  RayMarching(p0,ray,30);
 
             Bitmap bm = new Bitmap(512, 512);
             var dc = e.Graphics;
@@ -76,7 +76,6 @@ namespace B_ray
             {
                 for (int j = 0; j < screenSize.Y; j++)
                 {
-                  //int color = Convert.ToInt32(MyMath.Distance(cameraPos, result[j + (int)(i * screenSize.Y)]));
                     double color = MyMath.Distance(cameraPos, result[j + (int)(i * screenSize.Y)]);
                     color /= 255;
                     color = MyMath.Clamp(color, 0, 255);
@@ -88,9 +87,11 @@ namespace B_ray
 
         public Vector3[] RayMarching(Vector3[] p0,Vector3[] rd,int time)
         {
+            double minDis = 0;
             for (int i = 0; i < p0.Length; i++)
             {
-                p1[i]=(rd[i]*(MyMath.Distance(p0[i],spherePos)-radius)+p0[i]); 
+                minDis = MyMath.Distance(p0[i], spherePos) - radius;
+                p1[i]=(rd[i]*(minDis) +p0[i]); 
             }
             j++;
             if (j<time)
@@ -105,7 +106,7 @@ namespace B_ray
         /// </summary>
         /// <param name="obj">mesh模型</param>
         /// <param name="mainCamera">摄像机</param>
-        /// <param name="e">绘制事件</param>
+        /// <param name="e">绘制事件</param>                                                                                                         
         public void DrawMesh(Mesh obj, Camera mainCamera, PaintEventArgs e)
         {
             for (int i = 0; i < obj.vertexList.Count; i++)
