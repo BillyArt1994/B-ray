@@ -67,7 +67,7 @@ namespace B_ray
                 p0[i] = cameraPos;
             }
 
-            Vector3[] result =  RayMarching(p0,ray,10);
+            Vector3[] result =  RayMarching(p0,ray,50);
 
             Bitmap bm = new Bitmap(512, 512);
             var dc = e.Graphics;
@@ -89,8 +89,16 @@ namespace B_ray
         {
             for (int i = 0; i < p0.Length; i++)
             {
-                double minDis = MyMath.Distance(p0[i], spherePos) - radius;
-                p1[i]=(rd[i]* minDis + p0[i]); 
+           //     double minDis = MyMath.Distance(p0[i],spherePos) - radius;
+                double minDis =Math.Min(MyMath.Distance(p0[i],spherePos) - radius,Math.Abs(50 - p0[i].Y))  ;
+                if ( minDis <= 0.01 )
+                {
+                    continue;
+                }
+                else
+                {
+                    p1[i] = (rd[i] * minDis + p0[i]);
+                }
             }
             j++;
             if (j<time)
