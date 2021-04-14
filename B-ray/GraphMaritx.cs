@@ -40,7 +40,6 @@ namespace B_ray
             */
 
             #endregion
-
             //复合矩阵
             double[,] comzarry = {{MyMath.Cos(cameraRotation.Z)*MyMath.Cos(cameraRotation.Y)+MyMath.Sin(cameraRotation.X)*MyMath.Sin(cameraRotation.Y)*MyMath.Sin(cameraRotation.Z),MyMath.Cos(cameraRotation.X)*MyMath.Sin(cameraRotation.Z),-MyMath.Cos(cameraRotation.Z)*MyMath.Sin(cameraRotation.Y)+MyMath.Sin(cameraRotation.Z)* MyMath.Sin(cameraRotation.X)* MyMath.Cos(cameraRotation.Y) ,0},
                                   {-MyMath.Sin(cameraRotation.Z)*MyMath.Cos(cameraRotation.Y)+MyMath.Cos(cameraRotation.Z)*MyMath.Sin(cameraRotation.X)*MyMath.Sin(cameraRotation.Y),MyMath.Cos(cameraRotation.X)*MyMath.Cos(cameraRotation.Z),MyMath.Sin(cameraRotation.Z)*MyMath.Sin(cameraRotation.Y)+MyMath.Cos(cameraRotation.Z)* MyMath.Sin(cameraRotation.X)*MyMath.Cos(cameraRotation.Y) ,0},
