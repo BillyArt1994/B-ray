@@ -52,7 +52,7 @@ namespace B_ray
 
             spherePos = new Vector3(0,0,5);
             //定义一个灯光
-            lightpos = new Vector3(3,2,6);
+            lightpos = new Vector3(10,-5,0);
 
             //屏幕位置获得从摄像机到每个像素发射的射线
             Vector3[] ray = new Vector3[(int)(screenSize.X*screenSize.Y)];
@@ -91,13 +91,13 @@ namespace B_ray
 
                     Vector3 normalCol = normalDir[j + (int)(i * screenSize.Y)];
                     normalCol *= 255;
-                    normalCol /= 2;
-                    normalCol += new Vector3 (127.5, 127.5, 127.5);
+            //        normalCol /= 2;
+            //        normalCol += new Vector3 (127.5, 127.5, 127.5);
                     normalCol = MyMath.Clamp(normalCol, 0, 255);
 
                     Vector3 resultCol = lightModle[j + (int)(i * screenSize.Y)];
                     resultCol *= 255;
-
+                    resultCol = MyMath.Clamp(resultCol,0,255);
                     bm.SetPixel(i, j, Color.FromArgb(255, (int)resultCol.X, (int)resultCol.Y, (int)resultCol.Z));
            //       bm.SetPixel(i, j, Color.FromArgb(255, (int)normalCol.X, (int)normalCol.Y, (int)normalCol.Z));
            //       bm.SetPixel(i, j, Color.FromArgb(255, (int)color, (int)color, (int)color));
@@ -137,8 +137,7 @@ namespace B_ray
                     new Vector3(DistanceFields(p1[i] + new Vector3(Offset, 0, 0)) - DistanceFields(p1[i] - new Vector3(Offset, 0, 0)), 
                                 DistanceFields(p1[i] + new Vector3(0, Offset, 0)) - DistanceFields(p1[i] - new Vector3(0, Offset, 0)),
                                 DistanceFields(p1[i] + new Vector3(0, 0, Offset)) - DistanceFields(p1[i] - new Vector3(0, 0, Offset)))/2
-                    );
-
+                                );
             }
             return normal;
         }
@@ -147,7 +146,7 @@ namespace B_ray
             Vector3[] lightDir = new Vector3[262144];
             for (int i = 0; i < p1.Length; i++)
             {
-                lightDir[i] = MyMath.Normalize(p1[i] - lightpos);
+                lightDir[i] = MyMath.Normalize(lightpos-p1[i]);
             }
             return lightDir;
         }
@@ -176,7 +175,7 @@ namespace B_ray
             Vector3[] result= new Vector3[262144];
             for (int i = 0; i < lightDir.Length; i++)
             {
-                double NdotL = MyMath.Dot(lightDir[i], normalDir[i]) * 0.5 + 0.5;
+                double NdotL = MyMath.Dot(lightDir[i], normalDir[i])*0.5+0.5 ;
                 double Specular = MyMath.Dot(normalDir[i], halfwayDir[i]);
                 result[i] = MyMath.Clamp(new Vector3 (NdotL, NdotL, NdotL)+new Vector3 (Specular, Specular, Specular),0,1);
             }
