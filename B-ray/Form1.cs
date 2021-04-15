@@ -56,7 +56,7 @@ namespace B_ray
 
             //屏幕位置获得从摄像机到每个像素发射的射线
             Vector3[] ray = new Vector3[(int)(screenSize.X*screenSize.Y)];
-            for (int i = (int)-screenSize.X/2; i < screenSize.X/ 2; i++)
+            for (int i = (int)-screenSize.X/2; i < screenSize.X/2; i++)
             {
                 for (int j = (int)-screenSize.Y/2; j < screenSize.Y/2; j++)
                 {
@@ -71,7 +71,7 @@ namespace B_ray
                 p0[i] = cameraPos;
             }
 
-            Vector3[] p1Pos =  RayMarching(p0,ray,22);
+            Vector3[] p1Pos =  RayMarching(p0,ray,28);
             Vector3[] normalDir =  GetNormal(p1Pos);
             Vector3[] lightDir = GetLightDir(p1Pos,lightpos);
             Vector3[] viewDir = GetviewDir(p1Pos, cameraPos);
@@ -86,19 +86,19 @@ namespace B_ray
                 for (int j = 0; j < screenSize.Y; j++)
                 {
                     double color = MyMath.Distance(cameraPos, p1Pos[j + (int)(i * screenSize.Y)]);
-                    color /= 255;
-                    color = MyMath.Clamp(color, 0, 255);
+                    color /= 255d;
+                    color = MyMath.Clamp(color, 0, 255d);
 
                     Vector3 normalCol = normalDir[j + (int)(i * screenSize.Y)];
-                    normalCol *= 255;
-            //        normalCol /= 2;
-            //        normalCol += new Vector3 (127.5, 127.5, 127.5);
-                    normalCol = MyMath.Clamp(normalCol, 0, 255);
+                    normalCol *= 255d;
+            //      normalCol /= 2;
+            //      normalCol += new Vector3 (127.5, 127.5, 127.5);
+                    normalCol = MyMath.Clamp(normalCol, 0, 255d);
 
                     Vector3 resultCol = lightModle[j + (int)(i * screenSize.Y)];
-                    resultCol *= 255;
+                    resultCol *= 255d;
                     resultCol = MyMath.Clamp(resultCol,0,255);
-                    bm.SetPixel(i, j, Color.FromArgb(255, (int)resultCol.X, (int)resultCol.Y, (int)resultCol.Z));
+                    bm.SetPixel(i, j, Color.FromArgb(255, Convert.ToInt32(resultCol.X) , Convert.ToInt32(resultCol.Y) , Convert.ToInt32(resultCol.Z) ));
            //       bm.SetPixel(i, j, Color.FromArgb(255, (int)normalCol.X, (int)normalCol.Y, (int)normalCol.Z));
            //       bm.SetPixel(i, j, Color.FromArgb(255, (int)color, (int)color, (int)color));
                 }
@@ -106,12 +106,17 @@ namespace B_ray
             dc.DrawImageUnscaled(bm, 0, 0);
         }
 
-        public Vector3[] RayMarching(Vector3[] p0,Vector3[] rd,int time)
+        public Vector3[] RayMarching(Vector3[] p0, Vector3[] rd, int time)
         {
+            if (time <= 0)
+            {
+                return p1;
+            }
+
             for (int i = 0; i < p0.Length; i++)
             {
                 double minDis = DistanceFields(p0[i]);
-                if ( minDis <= 0.01 )
+                if (minDis <= 0.01)
                 {
                     continue;
                 }
@@ -120,12 +125,7 @@ namespace B_ray
                     p1[i] = (rd[i] * minDis + p0[i]);
                 }
             }
-            j++;
-            if (j<time)
-            {
-                RayMarching(p1, rd, time);
-            }
-            return p1;
+            return RayMarching(p1, rd, time - 1);
         }
 
         public Vector3[] GetNormal(Vector3[] p1)
@@ -175,16 +175,19 @@ namespace B_ray
             Vector3[] result= new Vector3[262144];
             for (int i = 0; i < lightDir.Length; i++)
             {
-                double NdotL = MyMath.Dot(lightDir[i], normalDir[i])*0.5+0.5 ;
+                double NdotL = MyMath.Dot(lightDir[i], normalDir[i])*0.5d+0.5d;
                 double Specular = MyMath.Dot(normalDir[i], halfwayDir[i]);
-                result[i] = MyMath.Clamp(new Vector3 (NdotL, NdotL, NdotL)+new Vector3 (Specular, Specular, Specular),0,1);
+                result[i] = new Vector3(NdotL, NdotL, NdotL);//MyMath.Clamp(new Vector3 (NdotL, NdotL, NdotL)+new Vector3 (Specular, Specular, Specular),0d,1d);
             }
             return result;
         }
 
         public double DistanceFields(Vector3 ray)
         {
-            double minDis = MyMath.Distance(ray, spherePos) - radius;
+            double minDis;
+            double shpereSDF= MyMath.Distance(ray, spherePos) - radius;
+          //double planSDF = 3d;
+            minDis = shpereSDF;//Math.Min(planSDF, shpereSDF);
             return minDis;
         }
 
