@@ -60,7 +60,7 @@ namespace B_ray
                 {
                     Vector3 col;
                     //屏幕位置获得从摄像机到每个像素发射的射线向量
-                    Vector3 ray = new Vector3(new Vector3(i,j,0)*new Vector3(1/screenSize.X,1/screenSize.Y,0) - cameraPos);
+                    Vector3 ray = new Vector3(new Vector3(i- screenSize.X/2,j- screenSize.Y/2,0)*new Vector3(1/screenSize.X,1/screenSize.Y,0) - cameraPos);
                     //初始射线位置p0
                     Vector3 p0 = cameraPos;
                     //进行光线步进迭代得到最终焦点位置
@@ -75,13 +75,13 @@ namespace B_ray
                         //获得法线
                         Vector3 normalDir = GetNormal(p1);
                         //获得灯光向量
-                        Vector3 lightDir = GetNormal(p1);
+                        Vector3 lightDir = GetLightDir(p1,lightpos);
                         //获得视角向量
-                        Vector3 viewDir = GetLightDir(p1,lightpos);
+                        Vector3 viewDir = GetLightDir(p1,cameraPos);
                         //获得半角向量
                         Vector3 halfwayDir = GetHalfwayDir(normalDir,viewDir);
                         //返回光照模型计算后的颜色
-                        col = GetLightModel(lightDir,normalDir,halfwayDir);
+                        col = computeLightModel(lightDir,normalDir,halfwayDir);
                     }
 
                     col *= 255;
@@ -107,15 +107,18 @@ namespace B_ray
             {
                 return p;
             }
-            Vector3 newRay = (rd * minDis + p);
-            double newDis = DistanceFields(newRay);
+
+            Vector3 newP = (rd * minDis + p);
+
+            double newDis = DistanceFields(newP);
+
             if ( newDis > minDis )
             {
                 return null;
             }
             else
             {
-                return RayMarching(p,rd);
+                return RayMarching(newP,rd);
             }
         }
 
@@ -142,7 +145,7 @@ namespace B_ray
         /// <param name="p">射线交点坐标</param>
         /// <param name="Light">灯光坐标</param>
         /// <returns></returns>
-        public Vector3 GetLightDir ( Vector3 p,Vector3 Light )
+        public Vector3 GetLightDir ( Vector3 p,Vector3 lightpos )
         {
             Vector3 lightDir = MyMath.Normalize(lightpos - p);
             return lightDir;
@@ -180,7 +183,7 @@ namespace B_ray
         /// <param name="normalDir">法线向量</param>
         /// <param name="halfwayDir">半角向量</param>
         /// <returns>返回光照模型计算后的颜色</returns>
-        public Vector3 GetLightModel ( Vector3 lightDir,Vector3 normalDir,Vector3 halfwayDir )
+        public Vector3 computeLightModel ( Vector3 lightDir,Vector3 normalDir,Vector3 halfwayDir )
         {
             //HalfLambert
             double NdotL = MyMath.Dot(lightDir,normalDir) * 0.5d + 0.5d;
