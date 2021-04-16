@@ -77,7 +77,7 @@ namespace B_ray
                         //获得灯光向量
                         Vector3 lightDir = GetLightDir(p1,lightpos);
                         //获得视角向量
-                        Vector3 viewDir = GetLightDir(p1,cameraPos);
+                        Vector3 viewDir = GetviewDir(p1,cameraPos);
                         //获得半角向量
                         Vector3 halfwayDir = GetHalfwayDir(normalDir,viewDir);
                         //返回光照模型计算后的颜色
@@ -188,7 +188,7 @@ namespace B_ray
             //HalfLambert
             double NdotL = MyMath.Dot(lightDir,normalDir) * 0.5d + 0.5d;
             double Specular = MyMath.Dot(normalDir,halfwayDir);
-            Vector3 col = new Vector3(NdotL,NdotL,NdotL);//MyMath.Clamp(new Vector3 (NdotL, NdotL, NdotL)+new Vector3 (Specular, Specular, Specular),0d,1d);
+            Vector3 col = new Vector3(NdotL,NdotL,NdotL);//MyMath.Clamp(new Vector3 (NdotL, NdotL, NdotL)+new Vector3 (Specular, Specular, Specular),0,1);
             return col;
         }
 
