@@ -70,7 +70,14 @@ namespace B_ray
         /// <returns>归一化后的向量</returns>
         public static Vector3 Normalize(Vector3 a)
         {
-            return a / (Math.Sqrt(a.X * a.X + a.Y * a.Y + a.Z * a.Z));
+            double value = a.X * a.X + a.Y * a.Y + a.Z * a.Z;
+            if ( value == 0 )
+            {
+                return new Vector3(0,0,0);
+            }
+            else {
+                return a / (Math.Sqrt(value));
+            }
         }
 
         /// <summary>
@@ -109,7 +116,7 @@ namespace B_ray
         /// <summary>
         /// 输入一个三维向量限制其各个分量最大值与最小值
         /// </summary>
-        /// <param name="a">三维向量a</param>
+        /// <param name="a">三维向量</param>
         /// <param name="min">最小值</param>
         /// <param name="max">最大值</param>
         /// <returns></returns>

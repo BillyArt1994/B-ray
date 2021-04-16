@@ -45,11 +45,10 @@ namespace B_ray
             //屏幕尺寸 长512 宽512
             Vector2 screenSize = new Vector2(512,512);
             //定义一个球物体
-            radius = 1;
-
             spherePos = new Vector3(0,0,5);
+            radius = 1;
             //定义一个灯光
-            lightpos = new Vector3(10,-5,0);
+            lightpos = new Vector3(3,-5,0);
 
             Bitmap bm = new Bitmap(512,512);
             var dc = e.Graphics;
@@ -60,7 +59,7 @@ namespace B_ray
                 {
                     Vector3 col;
                     //屏幕位置获得从摄像机到每个像素发射的射线向量
-                    Vector3 ray = new Vector3(new Vector3(i- screenSize.X/2,j- screenSize.Y/2,0)*new Vector3(1/screenSize.X,1/screenSize.Y,0) - cameraPos);
+                    Vector3 ray = new Vector3(new Vector3(i - screenSize.X / 2,j - screenSize.Y / 2,0) * new Vector3(1 / screenSize.X,1 / screenSize.Y,0) - cameraPos);
                     //初始射线位置p0
                     Vector3 p0 = cameraPos;
                     //进行光线步进迭代得到最终焦点位置
@@ -68,7 +67,7 @@ namespace B_ray
                     //判断p1值是否为null
                     if ( p1 == null )
                     {
-                        col = new Vector3 (0,0,0);
+                        col = new Vector3(0,0,0);
                     }
                     else
                     {
@@ -79,14 +78,13 @@ namespace B_ray
                         //获得视角向量
                         Vector3 viewDir = GetviewDir(p1,cameraPos);
                         //获得半角向量
-                        Vector3 halfwayDir = GetHalfwayDir(normalDir,viewDir);
+                        Vector3 halfwayDir = GetHalfwayDir(viewDir,lightDir);
                         //返回光照模型计算后的颜色
                         col = computeLightModel(lightDir,normalDir,halfwayDir);
                     }
 
                     col *= 255;
                     col = MyMath.Clamp(col,0,255);
-
                     bm.SetPixel(i,j,Color.FromArgb(255,Convert.ToInt32(col.X),Convert.ToInt32(col.Y),Convert.ToInt32(col.Z)));
                 }
             }
@@ -103,7 +101,7 @@ namespace B_ray
         public Vector3 RayMarching ( Vector3 p,Vector3 rd )
         {
             double minDis = DistanceFields(p);
-            if ( minDis <= 0.01 )
+            if ( minDis <= 0.00001 )
             {
                 return p;
             }
@@ -159,7 +157,7 @@ namespace B_ray
         /// <returns></returns>
         public Vector3 GetviewDir ( Vector3 p,Vector3 cameraPos )
         {
-            Vector3 viewDir = MyMath.Normalize(p - cameraPos);
+            Vector3 viewDir = MyMath.Normalize(cameraPos - p);
             return viewDir;
         }
 
@@ -171,7 +169,6 @@ namespace B_ray
         /// <returns>返回半角向量</returns>
         public Vector3 GetHalfwayDir ( Vector3 viewDir,Vector3 lightDir )
         {
-
             Vector3 halfwayDir = MyMath.Normalize(viewDir + lightDir);
             return halfwayDir;
         }
@@ -186,10 +183,28 @@ namespace B_ray
         public Vector3 computeLightModel ( Vector3 lightDir,Vector3 normalDir,Vector3 halfwayDir )
         {
             //HalfLambert
-            double NdotL = MyMath.Dot(lightDir,normalDir) * 0.5d + 0.5d;
-            double Specular = MyMath.Dot(normalDir,halfwayDir);
-            Vector3 col = new Vector3(NdotL,NdotL,NdotL);//MyMath.Clamp(new Vector3 (NdotL, NdotL, NdotL)+new Vector3 (Specular, Specular, Specular),0,1);
+            double NdotL = MyMath.Dot(lightDir,normalDir);
+            double NdotH = MyMath.Dot(normalDir,halfwayDir);
+            double ambient = 0.3;
+            double Specular = Math.Pow(Math.Max(0,MyMath.Dot(normalDir,halfwayDir)),38);
+            Vector3 col = new Vector3(NdotL,NdotL,NdotL) + new Vector3(ambient,ambient,ambient);
+            col += new Vector3(ambient,ambient,ambient);
+            col *= new Vector3(1,0,0);
+            col += new Vector3(Specular,Specular,Specular)*new Vector3 (1,1,1);
+            col = MyMath.Clamp(col,0,1);
             return col;
+        }
+
+
+        public double GGXTrowbridge ( double Roughness,double NdotH )
+        {
+            double OneMinusNoHSqr = 1 - NdotH * NdotH;
+            double a = Roughness * Roughness;
+            double n = NdotH * a;
+            double p = a / (OneMinusNoHSqr + n * n);
+            double d = p * p;
+            d = Roughness / (Math.Pow((Math.Pow(NdotH,2) * (Roughness - 1) + 1),2) * 3.1415926);
+            return d;
         }
 
         public double DistanceFields ( Vector3 ray )
