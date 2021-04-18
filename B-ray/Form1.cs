@@ -59,11 +59,11 @@ namespace B_ray
             //定义一个平面
             planPos = new Vector3(0,1.5, 0);
             //定义一个环
-            torusPos = new Vector3(-1.2,1,4);
+            torusPos = new Vector3(-0.3,1,4);
             torusSize = new Vector2(0.7,0.25);
             //定义一个正方体
-            boxPos = new Vector3(-0.3, 0, 6);
-            boxSize = new Vector3(1, 1, 1);
+            boxPos = new Vector3(-2, -0.6, 9);
+            boxSize = new Vector3(1.3,2.1,1.3);
 
             Bitmap bm = new Bitmap(512, 512);
             var dc = e.Graphics;
@@ -87,9 +87,8 @@ namespace B_ray
                     col = computeLightModel(new Vector3(0.8), p1, normalDir);
 
                     col = RayRelfect(col, p1, ray, normalDir, 0.8);
-
+                    col = MyMath.Clamp(col, 0, 1);
                     col *= 255;
-                    col = MyMath.Clamp(col, 0, 255);
                     bm.SetPixel(i, j, Color.FromArgb(255, Convert.ToInt32(col.X), Convert.ToInt32(col.Y), Convert.ToInt32(col.Z)));
                 }
             }
@@ -124,15 +123,15 @@ namespace B_ray
 
         public Vector3 RayRelfect(Vector3 col, Vector3 p,Vector3 ray,Vector3 normalDir,double rayScale)
         {
-            Vector3 rd = GetRelfectDir(ray, normalDir);
-            Vector3 p1 = RayMarching(p + normalDir * 0.03, rd, 50);
+            Vector3 rd = GetRelfectDir(MyMath.Normalize(ray), normalDir);
+            Vector3 p1 = RayMarching(p + normalDir *0.1, rd, 80);
             Vector3 normalDirN = GetNormal(p1);
             Vector3 relfectCol = computeLightModel(new Vector3(0.8), p1, normalDirN);
             relfectCol *= rayScale;
 
             col += relfectCol;
 
-            if (relfectCol<=0.1)
+            if (relfectCol<= 0.01)
             {
                 return col;
             }
@@ -210,7 +209,7 @@ namespace B_ray
         /// <returns>当前射线交点坐标的法线</returns>
         public Vector3 GetNormal(Vector3 p)
         {
-            double Offset = 0.01;
+            double Offset = 0.03;
 
             Vector3 normal = MyMath.Normalize(
                     new Vector3(DistanceFields(p + new Vector3(Offset, 0, 0)) - DistanceFields(p - new Vector3(Offset, 0, 0)),
@@ -327,6 +326,7 @@ namespace B_ray
             //加环境光
             col += new Vector3(0.49, 0.63, 1) * ambient;
             col = MyMath.Clamp(col, 0, 1);
+        //    col = new Vector3 (Shandow, Shandow, Shandow);
             return col;
         }
 
