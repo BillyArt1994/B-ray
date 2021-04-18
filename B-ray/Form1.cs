@@ -21,6 +21,8 @@ namespace B_ray
         public static Vector2 torusSize;
         public static Vector3 boxPos;
         public static Vector3 boxSize;
+        public static Vector3 cameraPos;
+        public static Vector2 screenSize;
 
         public BrayRenderer()
         {
@@ -46,9 +48,9 @@ namespace B_ray
             #endregion
 
             //实例主摄像机
-            Vector3 cameraPos = new Vector3(0,0, -1);
+            cameraPos = new Vector3(0,0, -1);
             //屏幕尺寸 长512 宽512
-            Vector2 screenSize = new Vector2(512, 512);
+            screenSize = new Vector2(512, 512);
             //定义一个球物体
             spherePos = new Vector3(2, 0, 7);
             radius = 1;
@@ -77,33 +79,14 @@ namespace B_ray
                     Vector3 p0 = cameraPos;
                     //进行光线步进迭代得到最终交点位置
                     Vector3 p1 = RayMarching(p0, ray,80);
-                    //材质遮罩
-                    double sphereMask = SphereSDF(p1,spherePos) < 0.01 ? 1 : 0;
-                    double torusMask = TorusSDF(p1, torusPos, torusSize) < 0.01 ? 1 : 0;
-                    double boxMask = BoxSDF(p1, boxPos, boxSize) < 0.01 ? 1 : 0;
-                    double mask = sphereMask + torusMask+ boxMask;
+
                     //获得法线
                     Vector3 normalDir = GetNormal(p1);
 
                     //返回光照模型计算后的颜色
-                    col = computeLightModel(MyMath.Lerp(CheckerBoard(p1,1),new Vector3 (0.39,0.96,1), mask), p1,lightpos,cameraPos, normalDir);
+                    col = computeLightModel(new Vector3(0.8), p1, normalDir);
 
-                    for (int k = 1; k < 4; k++)
-                    {
-                        Vector3 rd = GetRelfectDir(ray, normalDir);
-                        Vector3 pr1 = RayMarching(p1 + normalDir * 0.03, rd, 50);
-                        Vector3 normalDirN = GetNormal(pr1);
-                        double sphereMaskN = SphereSDF(pr1, spherePos) < 0.01 ? 1 : 0;
-                        double torusMaskN = TorusSDF(pr1, torusPos, torusSize) < 0.01 ? 1 : 0;
-                        double boxMaskN = BoxSDF(pr1, boxPos, boxSize) < 0.01 ? 1 : 0;
-                        double maskN = sphereMaskN + torusMaskN+ boxMaskN;
-                        Vector3 getCol = computeLightModel(MyMath.Lerp(CheckerBoard(pr1, 1), new Vector3(0.39, 0.96, 1), maskN), pr1, lightpos, cameraPos, normalDirN);
-                        col += getCol*(0.75/(3*k));
-                        col = MyMath.Clamp(col,0,1);
-                        ray = rd;
-                        p1 = pr1;
-                        normalDir = normalDirN;
-                    }
+                    col = RayRelfect(col, p1, ray, normalDir, 0.8);
 
                     col *= 255;
                     col = MyMath.Clamp(col, 0, 255);
@@ -136,6 +119,26 @@ namespace B_ray
             {
                 Vector3 newP = (rd * minDis + p);
                 return RayMarching(newP, rd, time - 1);
+            }
+        }
+
+        public Vector3 RayRelfect(Vector3 col, Vector3 p,Vector3 ray,Vector3 normalDir,double rayScale)
+        {
+            Vector3 rd = GetRelfectDir(ray, normalDir);
+            Vector3 p1 = RayMarching(p + normalDir * 0.03, rd, 50);
+            Vector3 normalDirN = GetNormal(p1);
+            Vector3 relfectCol = computeLightModel(new Vector3(0.8), p1, normalDirN);
+            relfectCol *= rayScale;
+
+            col += relfectCol;
+
+            if (relfectCol<=0.1)
+            {
+                return col;
+            }
+            else
+            {
+                return RayRelfect(col,p1, rd, normalDirN, rayScale*0.6);
             }
         }
 
@@ -259,9 +262,9 @@ namespace B_ray
         /// <param name="p">像素射线最后落点位置</param>
         /// <param name="LightPos">灯光位置</param>
         /// <returns>阴影值</returns>
-        public double GetShandow(Vector3 p, Vector3 LightPos, Vector3 normalDir,int time)
+        public double GetShandow(Vector3 p, Vector3 normalDir,int time)
         {
-            Vector3 rd = LightPos - p;
+            Vector3 rd = lightpos - p;
             Vector3 rdNor = MyMath.Normalize(rd);
             Vector3 Shandow = RayMarching(p + (normalDir * 0.15), rdNor, time);
             double dis = MyMath.Distance(p, Shandow);
@@ -297,7 +300,7 @@ namespace B_ray
         /// <param name="normalDir">法线向量</param>
         /// <param name="halfwayDir">半角向量</param>
         /// <returns>返回光照模型计算后的颜色</returns>
-        public Vector3 computeLightModel(Vector3 diffuse, Vector3 p, Vector3 lightpos, Vector3 cameraPos,Vector3 normalDir)
+        public Vector3 computeLightModel(Vector3 diffuse, Vector3 p,Vector3 normalDir)
         {
             //获得灯光向量
             Vector3 lightDir = GetLightDir(p, lightpos);
@@ -306,7 +309,7 @@ namespace B_ray
             //获得半角向量
             Vector3 halfwayDir = GetHalfwayDir(viewDir, lightDir);
             //获得阴影
-            double Shandow = GetShandow(p, lightpos, normalDir, 35);
+            double Shandow = GetShandow(p, normalDir, 35);
 
             //HalfLambert
             double NdotL = MyMath.Clamp(MyMath.Dot(lightDir, normalDir), 0.001, 1);

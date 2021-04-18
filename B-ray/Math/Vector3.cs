@@ -80,6 +80,14 @@ namespace B_ray
 
         }
 
+        public Vector3(double a)
+        {
+            this.X = a;
+            this.Y = a;
+            this.Z = a;
+        }
+
+
         public Vector3(Vector3 a)
         {
             this.X = a.X;
@@ -147,5 +155,54 @@ namespace B_ray
         {
             return Vector3.Division(a, b);
         }
+
+        public static bool operator <(Vector3 a, double b)
+        {
+            if (Math.Max(Math.Max(a.X,a.Y),a.Z)<b)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool operator >(Vector3 a, double b)
+        {
+            if (Math.Min(Math.Min(a.X, a.Y), a.Z) > b)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool operator <=(Vector3 a, double b)
+        {
+            if (Math.Max(Math.Max(a.X, a.Y), a.Z) < b || a.x*3 ==b)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool operator >=(Vector3 a, double b)
+        {
+            if (Math.Min(Math.Min(a.X, a.Y), a.Z) > b || a.x * 3 == b)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
 }
