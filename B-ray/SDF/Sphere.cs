@@ -8,22 +8,22 @@ namespace B_ray
 {
     class Sphere :HittableObject
     {
-        private Vector3 _spherePos;
+        private Vector3 _pos;
         private double _radius;
 
         public Sphere()
         {
 
         }
-        public Sphere(Vector3 spherePos,double radius)
+        public Sphere(Vector3 Pos,double radius)
         {
-            this._spherePos = spherePos;
+            this._pos = Pos;
             this._radius = radius;
         }
 
         public override double SDF(Vector3 ray)
         {
-            return MyMath.Distance(ray, this._spherePos) - this._radius;
+            return MyMath.Distance(ray, this._pos) - this._radius;
         }
     }
 }

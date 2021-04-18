@@ -56,12 +56,16 @@
     </Compile>
     <Compile Include="GameObject.cs" />
     <Compile Include="GraphMaritx.cs" />
+    <Compile Include="SDF\Box.cs" />
+    <Compile Include="SDF\HittableObject.cs" />
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Math\Vector2.cs" />
     <Compile Include="Mesh.cs" />
     <Compile Include="Math\MyMath.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SDF\Sphere.cs" />
+    <Compile Include="SDF\Torus.cs" />
     <Compile Include="Tool\ObjFileRead.cs" />
     <Compile Include="Transform.cs" />
     <Compile Include="Math\Vector3.cs" />
