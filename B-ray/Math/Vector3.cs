@@ -55,47 +55,63 @@ namespace B_ray
         {
             get
             {
-                return new Vector2 (X,Y);
+                return new Vector2(X, Y);
             }
         }
 
-        public Vector3 ()
+        public Vector2 XZ
+        {
+            get
+            {
+                return new Vector2(X,Z);
+            }
+        }
+
+        public double Lenght
+        {
+            get
+            {
+                return Math.Sqrt(X * X + Y * Y + Z * Z);
+            }
+        }
+
+        public Vector3()
         {
 
         }
 
-        public Vector3 ( Vector3 a )
+        public Vector3(Vector3 a)
         {
             this.X = a.X;
             this.Y = a.Y;
             this.Z = a.Z;
         }
 
-        public Vector3 ( double x,double y,double z )
+        public Vector3(double x, double y, double z)
         {
             this.X = x;
             this.Y = y;
             this.Z = z;
         }
 
-        private static Vector3 Plus (Vector3 a,Vector3 b )
+        private static Vector3 Plus(Vector3 a, Vector3 b)
         {
-            return new Vector3(a.x + b.x,a.y + b.y,a.z + b.z);
+            return new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
         }
 
-        private static Vector3 Subtraction ( Vector3 a,Vector3 b )
+        private static Vector3 Subtraction(Vector3 a, Vector3 b)
         {
-            return new Vector3(a.x - b.x,a.y - b.y,a.z - b.z);
+            return new Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
         }
 
-        private static Vector3 Division(Vector3 a , double b)
+        private static Vector3 Division(Vector3 a, double b)
         {
-            return new Vector3(a.x/b,a.y/b,a.z/b);
+            return new Vector3(a.x / b, a.y / b, a.z / b);
         }
 
-        private static Vector3 Multiply ( Vector3 a,double b )
+        private static Vector3 Multiply(Vector3 a, double b)
         {
-            return new Vector3(a.x * b,a.y * b,a.z * b);
+            return new Vector3(a.x * b, a.y * b, a.z * b);
         }
 
         private static Vector3 Multiply(Vector3 a, Vector3 b)
@@ -103,24 +119,28 @@ namespace B_ray
             return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
         }
 
-        public static Vector3 operator + ( Vector3 a,Vector3 b )
+        public static Vector3 operator +(Vector3 a, Vector3 b)
         {
-            return Vector3.Plus(a,b);
+            return Vector3.Plus(a, b);
+        }
+        public static Vector3 operator +(Vector3 a, double b)
+        {
+            return Vector3.Plus(a, new Vector3 (b,b,b));
         }
 
-        public static Vector3 operator - ( Vector3 a,Vector3 b )
+        public static Vector3 operator -(Vector3 a, Vector3 b)
         {
-            return Vector3.Subtraction(a,b);
+            return Vector3.Subtraction(a, b);
         }
 
-        public static Vector3 operator * (Vector3 a ,double b )
-        { 
-            return Vector3.Multiply(a,b);
+        public static Vector3 operator *(Vector3 a, double b)
+        {
+            return Vector3.Multiply(a, b);
         }
 
         public static Vector3 operator *(Vector3 a, Vector3 b)
         {
-            return Vector3.Multiply(a,b);
+            return Vector3.Multiply(a, b);
         }
 
         public static Vector3 operator /(Vector3 a, double b)

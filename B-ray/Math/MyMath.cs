@@ -127,5 +127,36 @@ namespace B_ray
             a.Z =Clamp(a.Z, min, max);
             return a;
         }
+
+        public static Vector3 Abs(Vector3 a)
+        {
+            a.X = Math.Abs(a.X);
+            a.Y = Math.Abs(a.Y);
+            a.Z = Math.Abs(a.Z);
+            return a;
+        }
+
+        public static Vector3 Max (Vector3 a , double b)
+        {
+            a.X = Math.Max(a.X,b);
+            a.Y = Math.Max(a.Y,b);
+            a.Z = Math.Max(a.Z,b);
+            return a;
+        }
+
+        public static Vector3 Max(Vector3 a, Vector3 b)
+        {
+            a.X = Math.Max(a.X, b.X);
+            a.Y = Math.Max(a.Y, b.Y);
+            a.Z = Math.Max(a.Z, b.Z);
+            return a;
+        }
+
+        public static Vector3 Lerp (Vector3 a , Vector3 b, double value)
+        {
+
+            return a * (1 - value) + b * value;
+        }
+
     }
 }

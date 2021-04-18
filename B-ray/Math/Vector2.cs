@@ -17,6 +17,13 @@ namespace B_ray
             this.Y = y;
         }
 
+        public double Lenght
+        {
+            get
+            {
+                return Math.Sqrt(X * X + Y * Y);
+            }
+        }
 
         private static Vector2 Subtraction (Vector2 a ,Vector2 b)
         {
