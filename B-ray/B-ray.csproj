@@ -64,6 +64,7 @@
     <Compile Include="Math\MyMath.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SDF\Plane.cs" />
     <Compile Include="SDF\Sphere.cs" />
     <Compile Include="SDF\Torus.cs" />
     <Compile Include="Tool\ObjFileRead.cs" />

@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace B_ray
 {
-    class Plane :HittableObject
+    class Plane : HittableObject
     {
         private Vector3 _pos;
 
-        public Plane ()
+        public Plane()
         {
 
         }
 
-        public Plane (Vector3 pos)
+        public Plane(Vector3 pos)
         {
             this._pos = pos;
         }
 
-        public override double SDF ( Vector3 ray )
+        public override double SDF(Vector3 ray)
         {
-           return _pos.Y - ray.Y;
+            return _pos.Y - ray.Y;
         }
     }
 }
