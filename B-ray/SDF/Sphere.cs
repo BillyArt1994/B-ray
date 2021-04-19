@@ -15,6 +15,7 @@ namespace B_ray
         {
 
         }
+
         public Sphere(Vector3 Pos,double radius)
         {
             this._pos = Pos;

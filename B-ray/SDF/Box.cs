@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace B_ray.SDF
+namespace B_ray
 {
     class Box :HittableObject
     {
