@@ -14,6 +14,7 @@ namespace B_ray
     public partial class BrayRenderer : Form
     {
         public static Vector3 lightpos;
+        public static Vector3 lightpos2;
         public static Vector3 cameraPos;
         public static Vector2 screenSize;
         public static HittableObject[] sceneObject;
@@ -52,9 +53,9 @@ namespace B_ray
             //定义一个平面
             HittableObject plane = new Plane(new Vector3(0,1.5,0),new Vector3(0,1,0),1,88,1);
             //定义一个环
-            HittableObject torus = new Torus(new Vector3(-0.3,1,4),new Vector2(0.7,0.25),new Vector3(0.95,0.3,0.12),1,88,0.5);
+            HittableObject torus = new Torus(new Vector3(-0.3,1,4),new Vector2(0.7,0.25),new Vector3(0.95,0.3,0.12),1,48,0.5);
             //定义一个正方体
-            HittableObject box = new Box(new Vector3(-2,-0.6,9),new Vector3(1.3,2.1,1.3),new Vector3(0.95,0.95,0.05),1,88,0.3);
+            HittableObject box = new Box(new Vector3(-2,-0.6,9),new Vector3(1.3,2.1,1.3),new Vector3(0.95,0.95,0.05),1,25,0.3);
 
             sceneObject = new HittableObject[] { plane,torus,box,sphere };
 
@@ -90,7 +91,6 @@ namespace B_ray
                     bm.SetPixel(i,j,Color.FromArgb(255,Convert.ToInt32(col.X),Convert.ToInt32(col.Y),Convert.ToInt32(col.Z)));
                 }
             }
-
             dc.DrawImageUnscaled(bm,0,0);
         }
 
@@ -179,10 +179,12 @@ namespace B_ray
                 }
             }
 
+            //融合  并未处理颜色
             //double minDis = SmoothUnion(sceneObject[0].SDF(ray), sceneObject[1].SDF(ray), 1);
             //minDis = SmoothUnion(minDis, sceneObject[2].SDF(ray), 1);
             //minDis = SmoothUnion(minDis, sceneObject[3].SDF(ray), 1);
             //Vector2 minDisfinal = new Vector2(minDis, 0);
+
             return minDis;
         }
 
@@ -250,7 +252,7 @@ namespace B_ray
         /// 获得阴影
         /// </summary>
         /// <param name="p">像素射线最后落点位置</param>
-        /// <param name="LightPos">灯光位置</param>
+        /// <param name="lightpos">灯光位置</param>
         /// <returns>阴影值</returns>
         public double GetShandow ( Vector3 p,Vector3 normalDir,int time )
         {
@@ -310,10 +312,10 @@ namespace B_ray
             Vector3 col = new Vector3(NdotL,NdotL,NdotL) * obj.Color;
             //乘阴影
             col *= Shandow*0.8;
-            //乘灯光颜色
-            col *= new Vector3(1,0.95,1);
             //加高光颜色
             col += new Vector3(Specular) * new Vector3(obj.Specular);
+            //乘灯光颜色
+            col *= new Vector3(1, 0.95, 0.95);
             //加环境光
             col += new Vector3(0.49,0.63,1) * ambient;
             col = MyMath.Clamp(col,0,1);

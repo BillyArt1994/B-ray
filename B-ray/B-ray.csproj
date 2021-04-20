@@ -57,7 +57,6 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="GraphMaritx.cs" />
     <Compile Include="SDF\Box.cs" />
-    <Compile Include="SDF\DistanceFields.cs" />
     <Compile Include="SDF\HittableObject.cs" />
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Math\Vector2.cs" />
