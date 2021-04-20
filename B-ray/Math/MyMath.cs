@@ -158,5 +158,15 @@ namespace B_ray
             return a * (1 - value) + b * value;
         }
 
+        public static double Lerp(double a, double b, double value)
+        {
+
+            return a * (1 - value) + b * value;
+        }
+
+        public static Vector3 Pow (Vector3 a,double b)
+        {
+            return new Vector3(Math.Pow(a.X, b), Math.Pow(a.Y, b), Math.Pow(a.Z, b));
+        }
     }
 }
