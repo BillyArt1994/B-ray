@@ -25,7 +25,7 @@ namespace B_ray
         public override double SDF(Vector3 ray)
         {
             Vector3 d = ray - this._pos;
-            Vector2 q = new Vector2(d.XZ.Lenght - this._size.X, this._size.Y);
+            Vector2 q = new Vector2(d.XZ.Lenght - this._size.X, d.Y);
             return q.Lenght - this._size.Y;
         }
     }

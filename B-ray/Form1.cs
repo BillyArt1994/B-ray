@@ -45,25 +45,25 @@ namespace B_ray
             cameraPos = new Vector3(0,0, -1);
             //屏幕尺寸 长512 宽512
             screenSize = new Vector2(512, 512);
-            //定义一个灯
-            lightpos = new Vector3(3, -5, 0);
+            //定义一个灯光
+            lightpos = new Vector3(3,-5,0);
             //定义一个球物体
-            HittableObject sphere = new Sphere(new Vector3(2, 0, 7), 1);
+            HittableObject sphere = new Sphere(new Vector3(2,0,7),1);
             sphere.ReflectRatio = 1;
-            sphere.Color = new Vector3(1, 0, 0);
+            sphere.Color = new Vector3(1,0,0);
             //定义一个平面
-            HittableObject plane = new Plane(new Vector3(0, -1.5, 0));
+            HittableObject plane = new Plane(new Vector3(0,1.5,0));
             plane.ReflectRatio = 0.8;
             //定义一个环
-            HittableObject torus = new Torus(new Vector3(-0.3, 1, 4), new Vector2(0.7, 0.25));
+            HittableObject torus = new Torus(new Vector3(-0.3,1,4),new Vector2(0.7,0.25));
             torus.ReflectRatio = 0.8;
-            torus.Color = new Vector3(1, 1, 0);
+            torus.Color = new Vector3(1,1,0);
             //定义一个正方体
-            HittableObject box = new Box(new Vector3(-2, -0.6, 9), new Vector3(1.3, 2.1, 1.3));
+            HittableObject box = new Box(new Vector3(-2,-0.6,9),new Vector3(1.3,2.1,1.3));
             box.ReflectRatio = 1;
-            box.Color = new Vector3(0.5, 1, 1);
+            box.Color = new Vector3(0.5,1,1);
 
-            sceneObject = new HittableObject[] { plane, torus , box , sphere };
+            sceneObject = new HittableObject[] { plane,torus,box,sphere };
 
             Bitmap bm = new Bitmap(512, 512);
             var dc = e.Graphics;
@@ -73,30 +73,21 @@ namespace B_ray
                 for (int j = 0; j < screenSize.Y; j++)
                 {
                     Vector3 col;
-                    int index;
                     //屏幕位置获得从摄像机到每个像素发射的射线向量
                     Vector3 ray = new Vector3(new Vector3(i - screenSize.X / 2, j - screenSize.Y / 2, 0) * new Vector3(1 / screenSize.X, 1 / screenSize.Y, 0) - cameraPos);
                     //初始射线位置p0
                     Vector3 p0 = cameraPos;
                     //进行光线步进迭代得到最终交点位置
-                    Vector3 p1 = RayMarching(p0, ray,80,out index);
+                    Vector3 p1 = RayMarching(p0, ray,80);
 
                     //获得法线
                     Vector3 normalDir = GetNormal(p1);
 
                     //返回光照模型计算后的颜色
-                    Vector3 checkerColor;
-                    if (index ==0)
-                    {
-                        checkerColor = CheckerBoard(p1, 5);
-                        col = computeLightModel(checkerColor, p1, normalDir);
-                    }
-                    else
-                    {
-                        col = computeLightModel(sceneObject[index].Color, p1, normalDir);
-                    }
-                    
-                    col += RayRelfect(col, p1, ray, normalDir, 0.8);
+                    col = computeLightModel(new Vector3(0.8), p1, normalDir);
+                    //计算反射光并返回新颜色
+               //     col = RayRelfect(col, p1, ray, normalDir, 0.8);
+
                     col = MyMath.Clamp(col, 0, 1);
                     col *= 255;
                     bm.SetPixel(i, j, Color.FromArgb(255, Convert.ToInt32(col.X), Convert.ToInt32(col.Y), Convert.ToInt32(col.Z)));
@@ -113,17 +104,13 @@ namespace B_ray
         /// <param name="rd">射线方向</param>
         /// <param name="time">迭代次数</param>
         /// <returns>返回射线最终迭代后的位置</returns>
-        public Vector3 RayMarching(Vector3 p, Vector3 rd, int time,out int index)
+        public Vector3 RayMarching(Vector3 p, Vector3 rd, int time)
         {
-            int objectIndex;
-            double minDis = DistanceFields(p, sceneObject, out objectIndex);
-            index = objectIndex;
-
             if (time <= 0)
             {
                 return p;
             }
-
+            double minDis = DistanceFields(p);
             if (minDis < 0.01 || minDis >15)
             {
                 return p;
@@ -131,28 +118,16 @@ namespace B_ray
             else
             {
                 Vector3 newP = (rd * minDis + p);
-                return RayMarching(newP, rd, time - 1,out index);
+                return RayMarching(newP, rd, time - 1);
             }
         }
 
         public Vector3 RayRelfect(Vector3 col, Vector3 p,Vector3 ray,Vector3 normalDir,double rayScale)
         {
             Vector3 rd = GetRelfectDir(MyMath.Normalize(ray), normalDir);
-            int index;
-            Vector3 p1 = RayMarching(p + normalDir *0.1, rd, 80,out index);
+            Vector3 p1 = RayMarching(p + normalDir *0.1, rd, 80);
             Vector3 normalDirN = GetNormal(p1);
-            Vector3 checkerColor;
-            Vector3 relfectCol;
-            if (index == 0)
-            {
-                checkerColor = CheckerBoard(p1, 5);
-                relfectCol = computeLightModel(checkerColor, p1, normalDir);
-            }
-            else
-            {
-                relfectCol = computeLightModel(sceneObject[index].Color, p1, normalDir);
-            }
-           
+            Vector3 relfectCol = computeLightModel(new Vector3(0.8), p1, normalDirN);
             relfectCol *= rayScale;
 
             col += relfectCol;
@@ -167,31 +142,78 @@ namespace B_ray
             }
         }
 
+        public Vector3 GetRelfectDir(Vector3 ray, Vector3 normal)
+        {
+            Vector3 relfectDir = ray - normal * 2 * (MyMath.Dot(ray, normal));
+            return relfectDir;
+        }
+
         /// <summary>
         /// 返回距离场最小距离
         /// </summary>
         /// <param name="ray">射线</param>
         /// <returns>最小距离</returns>
-        public double DistanceFields(Vector3 ray,HittableObject[] sceneObject,out int index)
+        public double DistanceFields(Vector3 ray)
         {
             double minDis = double.MaxValue;
-            index = 0;
-            for (int i = 0; i < sceneObject.Length; i++)
+            for ( int i = 0; i < sceneObject.Length; i++ )
             {
                 double dis = sceneObject[i].SDF(ray);
-                if (dis < minDis|| minDis <0.01)
+                if ( dis < minDis )
                 {
                     minDis = dis;
-                    index = i;
                 }
             }
+
+            //double shpere = SphereSDF(ray,spherePos);
+            //double box = BoxSDF(ray,boxPos,boxSize);
+            //double torus = TorusSDF(ray,torusPos,torusSize);
+            //sceneObject[2].SDF(ray);
+            //sceneObject[0].SDF(ray);
+            //double planYBSDF = PlanSDF(ray.Y,1.5);
+            //double boxSDF =BoxSDF(ray,new Vector3(-2,-0.6,9),new Vector3(1.3,2.1,1.3));
+            //double minDis = Math.Min(planYBSDF,boxSDF);
+
+
             return minDis;
         }
 
-        public Vector3 GetRelfectDir(Vector3 ray, Vector3 normal)
+
+        /// <summary>
+        /// 返回距离球最小距离
+        /// </summary>
+        /// <param name="ray">射线位置</param>
+        /// <param name="spherePos">球位置</param>
+        /// <returns></returns>
+        public double SphereSDF ( Vector3 ray,Vector3 spherePos )
         {
-            Vector3 relfectDir = ray - normal * 2 * (MyMath.Dot(ray, normal));
-            return relfectDir;
+            return MyMath.Distance(ray,spherePos) - 1;
+        }
+
+        public double PlanSDF ( double ray,double planPos )
+        {
+            return planPos - ray;
+        }
+
+        /// <summary>
+        /// 返回正方体最小距离
+        /// </summary>
+        /// <param name="ray"></param>
+        /// <param name="boxPos"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public double BoxSDF ( Vector3 ray,Vector3 boxPos,Vector3 b )
+        {
+            Vector3 q = MyMath.Abs(ray - boxPos) - b;
+            double result = MyMath.Max(q,0).Lenght + Math.Min(Math.Max(q.X,Math.Max(q.Y,q.Z)),0);
+            return result;
+        }
+
+        public double TorusSDF ( Vector3 ray,Vector3 p,Vector2 t )
+        {
+            Vector3 d = ray - p;
+            Vector2 q = new Vector2(d.XZ.Lenght - t.X,d.Y);
+            return q.Lenght - t.Y;
         }
 
         /// <summary>
@@ -202,11 +224,11 @@ namespace B_ray
         public Vector3 GetNormal(Vector3 p)
         {
             double Offset = 0.03;
-            int index;
+
             Vector3 normal = MyMath.Normalize(
-                    new Vector3(DistanceFields(p + new Vector3(Offset, 0, 0), sceneObject,out index) - DistanceFields(p - new Vector3(Offset, 0, 0), sceneObject, out index),
-                                DistanceFields(p + new Vector3(0, Offset, 0),sceneObject,out index) - DistanceFields(p - new Vector3(0, Offset, 0), sceneObject, out index),
-                                DistanceFields(p + new Vector3(0, 0, Offset), sceneObject, out index) - DistanceFields(p - new Vector3(0, 0, Offset), sceneObject, out index)) / 2
+                    new Vector3(DistanceFields(p + new Vector3(Offset, 0, 0)) - DistanceFields(p - new Vector3(Offset, 0, 0)),
+                                DistanceFields(p + new Vector3(0, Offset, 0)) - DistanceFields(p - new Vector3(0, Offset, 0)),
+                                DistanceFields(p + new Vector3(0, 0, Offset)) - DistanceFields(p - new Vector3(0, 0, Offset))) / 2
                                 );
             return normal;
         }
@@ -257,8 +279,7 @@ namespace B_ray
         {
             Vector3 rd = lightpos - p;
             Vector3 rdNor = MyMath.Normalize(rd);
-            int index;
-            Vector3 Shandow = RayMarching(p + (normalDir * 0.15), rdNor, time,out index);
+            Vector3 Shandow = RayMarching(p + (normalDir * 0.15), rdNor, time);
             double dis = MyMath.Distance(p, Shandow);
 
             if (dis < rd.Lenght)
@@ -302,11 +323,10 @@ namespace B_ray
             Vector3 halfwayDir = GetHalfwayDir(viewDir, lightDir);
             //获得阴影
             double Shandow = GetShandow(p, normalDir, 35);
-
             //HalfLambert
             double NdotL = MyMath.Clamp(MyMath.Dot(lightDir, normalDir), 0.001, 1);
             double NdotH = MyMath.Dot(normalDir, halfwayDir);
-            double ambient = 0;
+            double ambient = 0.05;
             double Specular = Math.Pow(Math.Max(0, MyMath.Dot(normalDir, halfwayDir)), 88);
             //乘漫反射颜色
             Vector3 col = new Vector3(NdotL, NdotL, NdotL) * diffuse;
@@ -319,7 +339,6 @@ namespace B_ray
             //加环境光
             col += new Vector3(0.49, 0.63, 1) * ambient;
             col = MyMath.Clamp(col, 0, 1);
-        //    col = new Vector3 (Shandow, Shandow, Shandow);
             return col;
         }
 

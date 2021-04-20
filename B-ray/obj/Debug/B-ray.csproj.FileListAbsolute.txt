@@ -37,3 +37,4 @@ F:\Project\B-ray\trunk\B-ray\obj\Debug\B-ray.csproj.CoreCompileInputs.cache
 F:\Project\B-ray\trunk\B-ray\obj\Debug\B-ray.exe
 F:\Project\B-ray\trunk\B-ray\obj\Debug\B-ray.pdb
 C:\Users\billy\source\repos\B-ray\trunk\B-ray\obj\Debug\B-ray.csprojAssemblyReference.cache
+F:\Project\B-ray\trunk\B-ray\obj\Debug\B-ray.csprojAssemblyReference.cache
