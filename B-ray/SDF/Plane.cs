@@ -15,7 +15,7 @@ namespace B_ray
 
         }
 
-        public Plane(Vector3 pos)
+        public Plane(Vector3 pos,Vector3 color,double specular,double gloss,double reflectRatio ) : base(color,specular,gloss,reflectRatio)
         {
             this._pos = pos;
         }

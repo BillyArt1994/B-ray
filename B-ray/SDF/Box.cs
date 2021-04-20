@@ -15,7 +15,7 @@ namespace B_ray
         {
 
         }
-        public Box(Vector3 pos,Vector3 size)
+        public Box(Vector3 pos,Vector3 size,Vector3 color,double specular,double gloss,double reflectRatio ) : base(color,specular,gloss,reflectRatio)
         {
             this._pos = pos;
             this._size = size;

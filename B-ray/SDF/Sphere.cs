@@ -16,7 +16,7 @@ namespace B_ray
 
         }
 
-        public Sphere(Vector3 Pos,double radius)
+        public Sphere(Vector3 Pos,double radius,Vector3 color,double specular,double gloss,double reflectRatio ) : base (color,specular,gloss,reflectRatio)
         {
             this._pos = Pos;
             this._radius = radius;

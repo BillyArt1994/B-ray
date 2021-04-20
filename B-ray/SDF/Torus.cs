@@ -16,7 +16,7 @@ namespace B_ray
 
         }
 
-        public Torus(Vector3 pos,Vector2 size)
+        public Torus(Vector3 pos,Vector2 size,Vector3 color,double specular,double gloss,double reflectRatio ) : base(color,specular,gloss,reflectRatio)
         {
             this._pos = pos;
             this._size = size;
