@@ -16,6 +16,7 @@ namespace B_RayRender
         public static Vector2 screenSize;
         public static Vector3 spherePos;
         public static double sphereRadius;
+        public static Vector3 lightPos;
 
         public Form1()
         {
@@ -31,8 +32,9 @@ namespace B_RayRender
         {
             cameraPos = new Vector3(0, 0, -1);
             screenSize = new Vector2(512, 512);
-            spherePos = new Vector3(0, 0, 5);
+            spherePos = new Vector3(0, 0, 2);
             sphereRadius = 1;
+            lightPos = new Vector3(3,-5,0);
 
             #region 
             base.OnPaint(e);
@@ -48,11 +50,11 @@ namespace B_RayRender
                     Vector3 ray = new Vector3(new Vector2(i, j) / screenSize * 2 - 1, 0)-cameraPos;
                     Vector3 rd = MyMath.Normalize(ray);
                     Vector3 p0 = cameraPos;
-                    Vector3 p1 = RayMarching(p0,rd,80);
+                    Vector3 p1 = RayMarching(p0,rd,30);
                     Vector3 normal = GetNormal(p1);
-                    col = normal;
+                    Vector3 lightDir = MyMath.Normalize(lightPos - p1);
+                    col = new Vector3(MyMath.Dot(lightDir,normal));
                     col *= 255;
-                 //   col = p1;
                     col = MyMath.Clamp(col,0,255);
                     bm.SetPixel(i, j, Color.FromArgb(255, Convert.ToInt32(col.X), Convert.ToInt32(col.Y), Convert.ToInt32(col.Z)));
                 }
@@ -69,7 +71,7 @@ namespace B_RayRender
             }
 
             double minDis = DistanceField(p);
-            if (minDis <= 0.01 )
+            if (minDis <= 0.01)
             {
                 return p;
             }
@@ -91,9 +93,9 @@ namespace B_RayRender
         {
             double sphereSDF = SphereSDF(p);
             double planSDF = 1.5 - p.Y;
-            double planRSDF = 5 - p.X;
-            double planLSDF = Math.Abs(-5 -p.X);
-            double minDis = Math.Min(planSDF, sphereSDF);
+            double planRSDF = 8 - p.X;
+            double planLSDF = Math.Abs(-8-p.X);
+            double minDis = Math.Min(sphereSDF,planSDF);
             minDis = Math.Min(minDis, planLSDF);
             minDis = Math.Min(minDis, planRSDF);
             return minDis;
@@ -102,11 +104,12 @@ namespace B_RayRender
         public Vector3 GetNormal(Vector3 p)
         {
             double Offset = 0.00001;
-
+            double dis = DistanceField(p);
             Vector3 normal = MyMath.Normalize(
-                    new Vector3(DistanceField(p + new Vector3(Offset, 0, 0))- DistanceField(p - new Vector3(Offset, 0, 0)),
-                                DistanceField(p + new Vector3(0, Offset, 0))- DistanceField(p - new Vector3(0, Offset, 0)),
-                                DistanceField(p + new Vector3(0, 0, Offset))- DistanceField(p - new Vector3(0, 0, Offset))));
+                    new Vector3(DistanceField(p + new Vector3(Offset, 0, 0))- dis,
+                                DistanceField(p + new Vector3(0, Offset, 0)) - dis,
+                                DistanceField(p + new Vector3(0, 0, Offset)) - dis)
+                                );
             return normal;
         }
 
