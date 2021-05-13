@@ -4,21 +4,15 @@
 #include "Ray.h"
 #include <iostream>
 
-/*
-Vector3 ray_color(Ray r ) {
-	Vector3 dir = r.GetDirection();
-	auto t = 0.5*(dir.y + 1);
-	return (1 - t)*(1,1,1) + t * Color(0.5, 0.7, 1);
+Color x() {
+
 }
-*/
 
-int main() {
-
+int main(){
 	// Image
-
 	const auto aspect_ratio = 16 / 9;
 	const int image_width = 400;
-	const int image_height = static_cast<int>(image_width/ image_height);
+	const int image_height = static_cast<int>(image_width/ aspect_ratio);
 
 	//Camera
 	auto viewport_height = 2.0;
@@ -31,7 +25,7 @@ int main() {
 	auto lower_left_corner = cameraPos - horizontal / 2 - vertical / 2 - Vector3(0, 0, focal_length);
 
 	// Render
-	unsigned char rgb[image_width * image_height * 3], *p = rgb;
+	unsigned char rgb[400 * 711 * 3], *p = rgb;
 	for (int i = 0; i < image_height; i++)
 		for (int j = 0; j < image_width; j++) {
 			auto u = double(i) / (image_width - 1);
