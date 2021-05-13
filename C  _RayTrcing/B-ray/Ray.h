@@ -13,13 +13,13 @@ public:
 	Vector3 GetDirection() const { return _dirction; }
 
 	Vector3 RayRun(double dis) {
-		return _originPos + dis * _dirction;
+		return _originPos+_dirction* dis;
 	}
 
 private:
 	Vector3 _dirction;
 	Vector3 _originPos;
-}
+};
 
 #endif
 

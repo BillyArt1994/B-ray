@@ -4,8 +4,10 @@
 #include "Ray.h"
 #include <iostream>
 
-Color x() {
-
+Color ray_color(Ray r) {
+	Vector3 dir = r.GetDirection();
+	auto t = (dir.y + 1)*0.5;
+	return (1-t)*Color(1.0, 1.0, 1.0) +t* Color(0.5, 0.7, 1.0);
 }
 
 int main(){
@@ -22,7 +24,7 @@ int main(){
 	auto cameraPos = Vector3(0);
 	auto horizontal = Vector3(viewport_width, 0, 0);
 	auto vertical = Vector3(0, viewport_height, 0);
-	auto lower_left_corner = cameraPos - horizontal / 2 - vertical / 2 - Vector3(0, 0, focal_length);
+	auto lower_left_corner = cameraPos - horizontal/2.0 - vertical / 2 - Vector3(0, 0, focal_length);
 
 	// Render
 	unsigned char rgb[400 * 711 * 3], *p = rgb;
@@ -31,8 +33,8 @@ int main(){
 			auto u = double(i) / (image_width - 1);
 			auto v = double(j) / (image_height - 1);
 			Ray r(cameraPos,lower_left_corner+horizontal*u+vertical*v-cameraPos);
-			*p++ = (unsigned char)x;    /* R */
-			*p++ = (unsigned char)y;    /* G */
+			*p++ = 128;    /* R */
+			*p++ = 128;    /* G */
 			*p++ = 128;                 /* B */
 		}
 	RenderTex(rgb);
