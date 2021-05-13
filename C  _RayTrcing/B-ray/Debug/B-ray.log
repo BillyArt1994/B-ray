@@ -1,0 +1,32 @@
+﻿  maincpp.cpp
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(26): error C3867: “Vector3::x”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(26): error C2296: “-”: 非法，左操作数包含“double (__thiscall Vector3::* )(void) const”类型
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(26): error C2297: “-”: 非法，右操作数包含“double (__thiscall Vector3::* )(void) const”类型
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(26): error C3867: “Vector3::y”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(26): error C3867: “Vector3::z”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(30): error C3867: “Vector3::x”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(30): error C2296: “+”: 非法，左操作数包含“double (__thiscall Vector3::* )(void) const”类型
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(30): error C2297: “+”: 非法，右操作数包含“double (__thiscall Vector3::* )(void) const”类型
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(30): error C3867: “Vector3::y”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(30): error C3867: “Vector3::z”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(34): error C3867: “Vector3::x”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(34): error C2296: “*”: 非法，左操作数包含“double (__thiscall Vector3::* )(void) const”类型
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(34): error C3867: “Vector3::y”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(34): error C3867: “Vector3::z”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(38): error C3867: “Vector3::x”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(38): error C2296: “/”: 非法，左操作数包含“double (__thiscall Vector3::* )(void) const”类型
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(38): error C3867: “Vector3::y”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(38): error C3867: “Vector3::z”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(42): error C3867: “Vector3::x”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(42): error C2296: “*”: 非法，左操作数包含“double (__thiscall Vector3::* )(void) const”类型
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(42): error C2297: “*”: 非法，右操作数包含“double (__thiscall Vector3::* )(void) const”类型
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(42): error C3867: “Vector3::y”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\vector3.h(42): error C3867: “Vector3::z”: 非标准语法；请使用 "&" 来创建指向成员的指针
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\maincpp.cpp(7): error C2628: “Ray”后面接“int”是非法的(是否忘记了“;”?)
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\maincpp.cpp(7): error C3874: “main”的返回类型应为“int”而非“Ray”
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\maincpp.cpp(30): error C2065: “x”: 未声明的标识符
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\maincpp.cpp(31): error C2065: “y”: 未声明的标识符
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\maincpp.cpp(34): error C3861: “RenderTex”: 找不到标识符
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\maincpp.cpp(35): error C2440: “return”: 无法从“int”转换为“Ray”
+  f:\project\b-ray\trunk\c++_raytrcing\b-ray\maincpp.cpp(35): note: 无构造函数可以接受源类型，或构造函数重载决策不明确
+f:\project\b-ray\trunk\c++_raytrcing\b-ray\ray.h(16): error C2677: 二进制“*”: 没有找到接受“Vector3”类型的全局运算符(或没有可接受的转换)
