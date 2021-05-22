@@ -32,7 +32,22 @@
     <ClInclude Include="Ray.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Hiable.h">
+    <ClInclude Include="ReadObjFile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Hittable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

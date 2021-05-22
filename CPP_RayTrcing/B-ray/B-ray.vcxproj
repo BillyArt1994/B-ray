@@ -88,6 +88,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,10 +129,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Color.h" />
-    <ClInclude Include="Hiable.h" />
+    <ClInclude Include="Hittable.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="ReadObjFile.h" />
     <ClInclude Include="svpng.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
