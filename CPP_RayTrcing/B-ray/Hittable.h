@@ -2,6 +2,7 @@
 #define HITTABLE_H
 
 #include "Ray.h"
+#include "Mesh.h"
 
 struct hit_record {
 	Vector3 pos;
@@ -9,10 +10,13 @@ struct hit_record {
 	float t;
 };
 
-class Hittable
+class Hittable:Mesh
 {
 public:
-	virtual bool hit(const Ray& r, double t_min, double t_max, hit_record& rec) const = 0;
+	bool hit(const Ray& r, hit_record& rec) {
+		Vector3 v1 = triangle[]
+		Vector3 normal = 
+	}
 private:
 };
 #endif // !HITTABLE_H

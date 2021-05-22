@@ -6,15 +6,15 @@
 class Triangle {
 	
 private:
-	int _vertexIndex[3];
+	Vector3 _vertexIndex[3];
 public:
-	Triangle(int a, int b , int c) {
+	Triangle(Vector3 a, Vector3 b , Vector3 c) {
 		_vertexIndex[0] = a;
 		_vertexIndex[1] = b;
 		_vertexIndex[2] = c;
 	}
 
-	void SetIndex(int index,int value) {
+	void SetIndex(int index, Vector3 value) {
 		_vertexIndex[index] = value;
 	}
 

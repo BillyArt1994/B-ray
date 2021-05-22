@@ -2,34 +2,35 @@
 #include "Vector3.h"
 #include "Color.h"
 #include "Ray.h"
+#include "Mesh.h"
 #include <iostream>
 
-double hit_sphere(const Vector3 &center,double radius,const Ray&r) {
-	Vector3 oc = r.GetOriginPos() - center;
-	auto a = dot(r.GetDirection(), r.GetDirection());
-	auto b = 2.0*dot(oc, r.GetDirection());
-	auto c = dot(oc, oc) - radius * radius;
-	float discriminant = b * b - 4 * a*c;
-	if (discriminant<0)
-	{
-		return -1.0;
-	}
-	else
-	{
-		return (-b-sqrt(discriminant))/(2.0*a);
-	}
-	
-}
+//float hit_sphere(const Vector3 &center, float radius, const Ray&r) {
+//	Vector3 oc = r.GetOriginPos() - center;
+//	float a = dot(r.GetDirection(), r.GetDirection());
+//	float b = 2.0f*dot(oc, r.GetDirection());
+//	float c = dot(oc, oc) - radius * radius;
+//	float discriminant = b * b - 4.0f * a*c;
+//	if (discriminant < 0.0f)
+//	{
+//		return -1.0f;
+//	}
+//	else
+//	{
+//		return (-b - sqrt(discriminant)) / (2.0f*a);
+//	}
+//
+//}
 
 Color ray_color(Ray r) {
-	auto t =hit_sphere(Vector3(0, 0, -1), 0.5, r);
-	if (t >0.0) {
-		Vector3 normal = (r.RayRun(t) - Vector3(0, 0, -1)).normalize();
+	float t = 0.0f;//hit_sphere(Vector3(0.0f, 0.0f, -1.0f), 0.5f, r);
+	if (t > 0.0) {
+		Vector3 normal = (r.RayRun(t) - Vector3(0.0f, 0.0f, -1.0f)).normalize();
 		return Color(normal.x() + 1, normal.y() + 1, normal.z() + 1)*0.5;
-	}	
+	}
 	Vector3 dir = r.GetDirection();
-	t = (dir.y() + 1)*0.5;
-	return Color(1.0, 1.0, 1.0)*(1.0 - t) + Color(0.5, 0.7, 1.0)*t;
+	t = (dir.y() + 1.0f)*0.5f;
+	return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
 }
 
 void RenderTex(unsigned image_width, unsigned image_height, unsigned char *rgb) {
@@ -39,6 +40,9 @@ void RenderTex(unsigned image_width, unsigned image_height, unsigned char *rgb) 
 }
 
 int main() {
+
+	Mesh test = ReadObjFile("C:\\Users\\huang\\Desktop\\box.obj");
+
 	// Image
 	const auto aspect_ratio = 16.0 / 9.0;
 	const int image_width = 400;
@@ -63,10 +67,11 @@ int main() {
 			Ray r(cameraPos, high_left_corner + horizontal * u - vertical * v - cameraPos);
 			Color pixel_Color = ray_color(r);
 			write_color(std::cout, pixel_Color);
-			*p++ = (unsigned char)pixel_Color.x();    /* R */
-			*p++ = (unsigned char)pixel_Color.y();    /* G */
-			*p++ = (unsigned char)pixel_Color.z();    /* B */
+			*p++ = (unsigned char)pixel_Color.x();    //R
+			*p++ = (unsigned char)pixel_Color.y();    //G
+			*p++ = (unsigned char)pixel_Color.z();    //B
 		}
 	RenderTex(image_width, image_height, rgb);
+
 	return 0;
 }

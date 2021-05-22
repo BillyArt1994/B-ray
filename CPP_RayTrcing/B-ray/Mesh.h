@@ -56,7 +56,7 @@ Mesh ReadObjFile(std::string filePath) {
 			int i = 0;
 			while (p)
 			{
-				while (i== 0)
+				if (i== 0)
 				{
 					obj.triangle.push_back(Triangle());
 				}
