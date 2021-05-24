@@ -10,6 +10,8 @@ public:
 
 	Vertex(Vector3 vertex) :_vertex(vertex) {}
 
+	Vertex(){}
+
 	void SetVertex(Vector3 vertex) {
 		_vertex = vertex;
 	}
@@ -22,14 +24,20 @@ public:
 		_vertex = texcoord;
 	}
 	
-	Vector3 vertex()const { return this->_vertex; }
-	Vector3 normal()const { return this->_normal; }
-	Vector3 texcoord()const { return this->_texcoord; }
+	void SetIndex(int index) {
+		_index = index;
+	}
+
+	Vector3 position()const { return _vertex; }
+	Vector3 normal()const { return _normal; }
+	Vector3 texcoord()const { return _texcoord; }
+	int index()const { return _index; }
 
 private:
 	Vector3 _vertex;
 	Vector3 _normal;
 	Vector3 _texcoord;
+	int _index;
 };
 #endif // !VERTEX_H
 

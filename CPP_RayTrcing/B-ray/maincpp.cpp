@@ -22,14 +22,21 @@
 //
 //}
 
-Color ray_color(Ray r) {
-	float t = 0.0f;//hit_sphere(Vector3(0.0f, 0.0f, -1.0f), 0.5f, r);
-	if (t > 0.0) {
-		Vector3 normal = (r.RayRun(t) - Vector3(0.0f, 0.0f, -1.0f)).normalize();
-		return Color(normal.x() + 1, normal.y() + 1, normal.z() + 1)*0.5;
+bool CheckIntersection(Ray& r,Mesh obj) {
+	for (int i = 0; i < obj.GetTriangle().size(); i++)
+	{
+		bool isIts = obj.GetTriangle()[i].IntersectTriangle(r);
+		return isIts;
+	}
+}
+
+Color ray_color(Ray& r,Mesh obj) {
+	if (CheckIntersection(r, obj))
+	{
+		return Color(1.0f, 0.0f, 0.0f);
 	}
 	Vector3 dir = r.GetDirection();
-	t = (dir.y() + 1.0f)*0.5f;
+	auto t = (dir.y() + 1.0f)*0.5f;
 	return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
 }
 
@@ -41,7 +48,7 @@ void RenderTex(unsigned image_width, unsigned image_height, unsigned char *rgb) 
 
 int main() {
 
-	Mesh test = ReadObjFile("C:\\Users\\huang\\Desktop\\box.obj");
+	Mesh obj = ReadObjFile("C:\\Users\\huang\\Desktop\\box.obj");
 
 	// Image
 	const auto aspect_ratio = 16.0 / 9.0;
@@ -65,7 +72,7 @@ int main() {
 			auto u = double(j) / (image_width - 1);
 			auto v = double(i) / (image_height - 1);
 			Ray r(cameraPos, high_left_corner + horizontal * u - vertical * v - cameraPos);
-			Color pixel_Color = ray_color(r);
+			Color pixel_Color = ray_color(r, obj);
 			write_color(std::cout, pixel_Color);
 			*p++ = (unsigned char)pixel_Color.x();    //R
 			*p++ = (unsigned char)pixel_Color.y();    //G

@@ -2,25 +2,46 @@
 #define TRIANGLE_H
 #include <vector>
 #include "Vertex.h"
+#include "Ray.h"
 
 class Triangle {
-	
+
 private:
-	Vector3 _vertexIndex[3];
+	Vertex _vertexIndex[3];
+	float _dis;
 public:
-	Triangle(Vector3 a, Vector3 b , Vector3 c) {
+	Triangle(Vertex a, Vertex b, Vertex c) {
 		_vertexIndex[0] = a;
 		_vertexIndex[1] = b;
 		_vertexIndex[2] = c;
 	}
 
-	void SetIndex(int index, Vector3 value) {
-		_vertexIndex[index] = value;
+	Triangle() {}
+
+	float GetDis()const { return _dis;}
+
+	void SetIndex(int index, Vertex vertex) {
+		_vertexIndex[index] = vertex;
 	}
 
-	Triangle() {
-
+	bool IntersectTriangle(const Ray& ray) {
+		Vector3 E1 = _vertexIndex[1].position() - _vertexIndex[0].position();
+		Vector3 E2 = _vertexIndex[2].position() - _vertexIndex[0].position();
+		Vector3 T = ray.GetOriginPos() - _vertexIndex[0].position();
+		float D = Martix3x3Multiply(ray.GetDirection(), E1, E2);
+		if (D==0)
+		{
+			return false;
+		}
+		float D1 = Martix3x3Multiply(T, E1, E2);
+		_dis = D1/D;
+		return true;
 	}
 
+	float Martix3x3Multiply(Vector3 a, Vector3 b, Vector3 c) {
+		float positive = a.x()*b.y()*c.z() + a.z()*b.x()*c.y() + a.y()*b.z()*c.x();
+		float negative = c.x()*b.y()*a.z() + c.z()*b.x()*a.y() + c.y()*a.x()*b.z();
+		return positive - negative;
+	}
 };
 #endif // !TRIANGLE_H

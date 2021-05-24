@@ -14,8 +14,11 @@ using std::vector;
 class Mesh {
 
 public:
-	vector<Triangle> triangle;
-	vector<Vertex> vertex;
+	vector<Triangle> GetTriangle() const { return _triangle; }
+	void SetTriangle(Triangle trg) { _triangle.push_back(trg); }
+	void SetTriangle(int index,Vertex ver) { ; }
+private:
+	vector<Triangle> _triangle;
 };
 
 Mesh ReadObjFile(std::string filePath) {
@@ -23,28 +26,31 @@ Mesh ReadObjFile(std::string filePath) {
 	std::ifstream ifs;
 	ifs.open(filePath, std::ios::in);
 	std::string buff;
+	vector<Vector3> normal;
+	vector<Vector3> texcoord;
+	vector<Vertex> vertex;
+
 	while (getline(ifs, buff))
 	{
 		float x, y, z;	
-		vector<Vector3> normal;
-		vector<Vector3> texcoord;
 		switch (buff[0])
 		{
 		case 'v':
 			if (buff[1] == 'n')
 			{
 				sscanf(buff.c_str(), "vn %f %f %f", &x, &y, &z);
-				obj.vertex.push_back(Vertex(Vector3(x, y, z)));
+				normal.push_back(Vector3(x, y, z));
 			}
 			else if (buff[1] == 't')
 			{
-				sscanf(buff.c_str(), "vn %f %f %f", &x, &y, &z);
+				sscanf(buff.c_str(), "vt %f %f %f", &x, &y, &z);
 				texcoord.push_back(Vector3(x, y, z));
 			}
 			else
 			{
 				sscanf(buff.c_str(), "v %f %f %f", &x, &y, &z);
-				normal.push_back(Vector3(x, y, z));
+				vertex.push_back(Vertex(Vector3(x, y, z)));
+				vertex.back().SetIndex(vertex.size() - 1);
 			}
 			break;
 		case 'f':
@@ -58,27 +64,23 @@ Mesh ReadObjFile(std::string filePath) {
 			{
 				if (i== 0)
 				{
-					obj.triangle.push_back(Triangle());
+					obj.SetTriangle(Triangle());
 				}
+
 				int vexIndex = atoi(p);
-				obj.triangle[i].SetIndex(i,vexIndex);
 
 				p = strtok(NULL, d);
 				int texIndex = atoi(p);
-				obj.vertex[vexIndex].SetTexcoord(texcoord[texIndex]);
+				vertex[vexIndex-1].SetTexcoord(texcoord[texIndex-1]);
 
 				p = strtok(NULL, d);
 				int norIndex = atoi(p);
-				obj.vertex[vexIndex].SetNormal(normal[norIndex]);
+				vertex[vexIndex-1].SetNormal(normal[norIndex-1]);
 
 				p = strtok(NULL, d);
 				if (i<3)
 				{
 					i++;
-				}
-				else
-				{
-					i = 0;
 				}
 			}
 			break;
