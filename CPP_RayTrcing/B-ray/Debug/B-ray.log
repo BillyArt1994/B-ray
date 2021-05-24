@@ -1,3 +1,0 @@
-﻿  maincpp.cpp
-f:\project\b-ray\trunk\c  _raytrcing\b-ray\maincpp.cpp(12): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-  B-ray.vcxproj -> F:\Project\B-ray\trunk\C  _RayTrcing\Debug\B-ray.exe
