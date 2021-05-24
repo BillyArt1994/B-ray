@@ -10,7 +10,7 @@ private:
 	Vertex _vertexIndex[3];
 	float _dis;
 public:
-	Triangle(Vertex a, Vertex b, Vertex c) {
+	Triangle(Vertex& a, Vertex& b, Vertex& c) {
 		_vertexIndex[0] = a;
 		_vertexIndex[1] = b;
 		_vertexIndex[2] = c;
@@ -20,7 +20,7 @@ public:
 
 	float GetDis()const { return _dis;}
 
-	void SetIndex(int index, Vertex vertex) {
+	void SetIndex(int& index, Vertex& vertex) {
 		_vertexIndex[index] = vertex;
 	}
 

@@ -16,7 +16,7 @@ class Mesh {
 public:
 	vector<Triangle> GetTriangle() const { return _triangle; }
 	void SetTriangle(Triangle trg) { _triangle.push_back(trg); }
-	void SetTriangle(int index,Vertex ver) { ; }
+	void SetTriangle(int& index,Vertex& vertex) { _triangle.back().SetIndex(index, vertex); }
 private:
 	vector<Triangle> _triangle;
 };
@@ -66,9 +66,8 @@ Mesh ReadObjFile(std::string filePath) {
 				{
 					obj.SetTriangle(Triangle());
 				}
-
 				int vexIndex = atoi(p);
-
+				obj.SetTriangle(i, vertex[vexIndex - 1]);
 				p = strtok(NULL, d);
 				int texIndex = atoi(p);
 				vertex[vexIndex-1].SetTexcoord(texcoord[texIndex-1]);

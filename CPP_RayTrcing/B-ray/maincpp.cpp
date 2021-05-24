@@ -22,7 +22,7 @@
 //
 //}
 
-bool CheckIntersection(Ray& r,Mesh obj) {
+bool CheckIntersection(Ray& r,Mesh& obj) {
 	for (int i = 0; i < obj.GetTriangle().size(); i++)
 	{
 		bool isIts = obj.GetTriangle()[i].IntersectTriangle(r);
@@ -30,7 +30,7 @@ bool CheckIntersection(Ray& r,Mesh obj) {
 	}
 }
 
-Color ray_color(Ray& r,Mesh obj) {
+Color ray_color(Ray& r,Mesh& obj) {
 	if (CheckIntersection(r, obj))
 	{
 		return Color(1.0f, 0.0f, 0.0f);
