@@ -54,7 +54,7 @@ Mesh ReadObjFile(std::string filePath) {
 			}
 			break;
 		case 'f':
-			char ch[25];
+			char ch[40];
 			strcpy_s(ch, buff.c_str());
 			const char *d = " f/";
 			char *p;

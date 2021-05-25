@@ -13,9 +13,9 @@ public:
 	float y() const { return this->_y; }
 	float z() const { return this->_z; }
 
-	void x(float value) { _x = value; }
-	void y(float value) { _y = value; }
-	void z(float value) { _z = value; }
+	void x(float& value) { _x = value; }
+	void y(float& value) { _y = value; }
+	void z(float& value) { _z = value; }
 
 	Vector3(float x, float y, float z) :
 		_x(x), _y(y), _z(z)
@@ -23,7 +23,7 @@ public:
 
 	Vector3() {}
 
-	Vector3(float value) :_x(value), _y(value), _z(value) {}
+	Vector3(float& value) :_x(value), _y(value), _z(value) {}
 
 
 	float length() {
@@ -36,18 +36,27 @@ public:
 
 	//ÔËËã·ûÖØÔØ
 	inline Vector3 operator -(const Vector3 &b) {
-		return Vector3(this->_x - b.x(), this->_y - b.y(), this->_z - b.z());
+		_x -= b.x();
+		_y -= b.y();
+		_z -= b.z();
+		return *this;
 	}
 
 	inline Vector3 operator +(const Vector3 &b) {
-		return Vector3(this->_x + b.x(), this->_y + b.y(), this->_z + b.z());
+		_x += b.x();
+		_y += b.y();
+		_z += b.z();
+		return *this;
 	}
 
 	inline Vector3 operator *(const float &b) {
-		return Vector3(this->_x * b, this->_y * b, this->_z * b);
+		_x = _x * b;
+		_y = _y * b;
+		_z = _z * b;
+		return *this;
 	}
 
-	inline Vector3 operator *=(const float &b) {
+	inline Vector3& operator *=(const float &b) {
 		_x = _x * b;
 		_y = _y * b;
 		_z = _z * b;
@@ -56,6 +65,13 @@ public:
 
 	inline Vector3 operator /(const float &b) {
 		return Vector3(this->_x / b, this->_y / b, this->_z / b);
+	}
+
+	inline Vector3 operator -() {
+		_x = -_x;
+		_y = -_y;
+		_z = -_z;
+		return *this;
 	}
 };
 

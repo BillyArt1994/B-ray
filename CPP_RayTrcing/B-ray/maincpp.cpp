@@ -23,15 +23,20 @@
 //}
 
 bool CheckIntersection(Ray& r,Mesh& obj) {
+	bool isIts;
 	for (int i = 0; i < obj.GetTriangle().size(); i++)
 	{
-		bool isIts = obj.GetTriangle()[i].IntersectTriangle(r);
-		return isIts;
+		isIts = obj.GetTriangle()[i].IntersectTriangle(r);
+		if (isIts == true)
+		{
+			return isIts;
+		}
 	}
+	return isIts;
 }
 
 Color ray_color(Ray& r,Mesh& obj) {
-	if (CheckIntersection(r, obj))
+	if (CheckIntersection(r, obj) ==true)
 	{
 		return Color(1.0f, 0.0f, 0.0f);
 	}
@@ -48,7 +53,7 @@ void RenderTex(unsigned image_width, unsigned image_height, unsigned char *rgb) 
 
 int main() {
 
-	Mesh obj = ReadObjFile("C:\\Users\\huang\\Desktop\\box.obj");
+	Mesh obj = ReadObjFile("C:\\Users\\huang\\Desktop\\Teapot.obj");
 
 	// Image
 	const auto aspect_ratio = 16.0 / 9.0;
@@ -60,7 +65,7 @@ int main() {
 	auto viewport_width = aspect_ratio * viewport_height;
 	auto focal_length = 1.0;
 
-	auto cameraPos = Vector3(0);
+	auto cameraPos = Vector3(0,0,-5);
 	auto horizontal = Vector3(viewport_width, 0, 0);
 	auto vertical = Vector3(0, viewport_height, 0);
 	auto high_left_corner = cameraPos - horizontal / 2 + vertical / 2 - Vector3(0, 0, focal_length);
