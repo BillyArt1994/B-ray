@@ -8,6 +8,7 @@ private:
 	float _x;
 	float _y;
 	float _z;
+
 public:
 	float x() const { return this->_x; }
 	float y() const { return this->_y; }
@@ -23,7 +24,7 @@ public:
 
 	Vector3() {}
 
-	Vector3(float& value) :_x(value), _y(value), _z(value) {}
+	Vector3(float value) :_x(value), _y(value), _z(value) {}
 
 
 	float length() {
@@ -36,24 +37,15 @@ public:
 
 	//ÔËËã·ûÖØÔØ
 	inline Vector3 operator -(const Vector3 &b) {
-		_x -= b.x();
-		_y -= b.y();
-		_z -= b.z();
-		return *this;
+		return Vector3(_x-b.x(), _y-b.y(), _z-b.z());
 	}
 
 	inline Vector3 operator +(const Vector3 &b) {
-		_x += b.x();
-		_y += b.y();
-		_z += b.z();
-		return *this;
+		return Vector3(_x + b.x(), _y + b.y(), _z + b.z());
 	}
 
 	inline Vector3 operator *(const float &b) {
-		_x = _x * b;
-		_y = _y * b;
-		_z = _z * b;
-		return *this;
+		return Vector3(_x * b, _y * b, _z *b);
 	}
 
 	inline Vector3& operator *=(const float &b) {
@@ -64,7 +56,7 @@ public:
 	}
 
 	inline Vector3 operator /(const float &b) {
-		return Vector3(this->_x / b, this->_y / b, this->_z / b);
+		return Vector3(_x/b, _y/b, _z/b);
 	}
 
 	inline Vector3 operator -() {
@@ -76,10 +68,5 @@ public:
 };
 
 using Color = Vector3;
-
-inline float dot(const Vector3 &a, const Vector3 &b) {
-	return a.x()*b.x() + a.y()*b.y() + a.z()*b.z();
-}
-
 #endif // Vector3_H
 

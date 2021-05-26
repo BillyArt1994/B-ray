@@ -5,40 +5,12 @@
 #include "Mesh.h"
 #include <iostream>
 
-//float hit_sphere(const Vector3 &center, float radius, const Ray&r) {
-//	Vector3 oc = r.GetOriginPos() - center;
-//	float a = dot(r.GetDirection(), r.GetDirection());
-//	float b = 2.0f*dot(oc, r.GetDirection());
-//	float c = dot(oc, oc) - radius * radius;
-//	float discriminant = b * b - 4.0f * a*c;
-//	if (discriminant < 0.0f)
-//	{
-//		return -1.0f;
-//	}
-//	else
-//	{
-//		return (-b - sqrt(discriminant)) / (2.0f*a);
-//	}
-//
-//}
 
-bool CheckIntersection(Ray& r,Mesh& obj) {
-	bool isIts;
-	for (int i = 0; i < obj.GetTriangle().size(); i++)
-	{
-		isIts = obj.GetTriangle()[i].IntersectTriangle(r);
-		if (isIts == true)
-		{
-			return isIts;
-		}
-	}
-	return isIts;
-}
 
 Color ray_color(Ray& r,Mesh& obj) {
-	if (CheckIntersection(r, obj) ==true)
+	if (obj.CheckIntersection(r) == true)
 	{
-		return Color(1.0f, 0.0f, 0.0f);
+		return obj.GetNormal()*0.5f+ Vector3(0.5f,0.5f,0.5f);
 	}
 	Vector3 dir = r.GetDirection();
 	auto t = (dir.y() + 1.0f)*0.5f;
@@ -53,22 +25,22 @@ void RenderTex(unsigned image_width, unsigned image_height, unsigned char *rgb) 
 
 int main() {
 
-	Mesh obj = ReadObjFile("C:\\Users\\huang\\Desktop\\Teapot.obj");
+	Mesh obj = ReadObjFile("C:\\Users\\huang\\Desktop\\Torus.obj");
 
 	// Image
-	const auto aspect_ratio = 16.0 / 9.0;
+	const auto aspect_ratio = 16.0f / 9.0f;
 	const int image_width = 400;
 	const int image_height = static_cast<int>(image_width / aspect_ratio);
 
 	//Camera
-	auto viewport_height = 2.0;
+	auto viewport_height = 2.0f;
 	auto viewport_width = aspect_ratio * viewport_height;
-	auto focal_length = 1.0;
+	auto focal_length = 1.0f;
 
-	auto cameraPos = Vector3(0,0,-5);
-	auto horizontal = Vector3(viewport_width, 0, 0);
-	auto vertical = Vector3(0, viewport_height, 0);
-	auto high_left_corner = cameraPos - horizontal / 2 + vertical / 2 - Vector3(0, 0, focal_length);
+	auto cameraPos = Vector3(0.0f,0.0f,-7.0f);
+	auto horizontal = Vector3(viewport_width, 0.0f, 0.0f);
+	auto vertical = Vector3(0.0f, viewport_height, 0.0f);
+	auto high_left_corner = cameraPos - horizontal / 2 + vertical / 2 - Vector3(0.0f, 0.0f, focal_length);
 
 	// Render
 	unsigned char rgb[400 * 711 * 3], *p = rgb;
@@ -76,7 +48,7 @@ int main() {
 		for (int j = 0; j < image_width; j++) {
 			auto u = double(j) / (image_width - 1);
 			auto v = double(i) / (image_height - 1);
-			Ray r(cameraPos, high_left_corner + horizontal * u - vertical * v - cameraPos);
+			Ray r(cameraPos, (high_left_corner + horizontal * u - vertical * v - cameraPos).normalize());
 			Color pixel_Color = ray_color(r, obj);
 			write_color(std::cout, pixel_Color);
 			*p++ = (unsigned char)pixel_Color.x();    //R

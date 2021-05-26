@@ -14,21 +14,39 @@ using std::vector;
 class Mesh {
 
 public:
-	vector<Triangle> GetTriangle() const { return _triangle; }
-	void SetTriangle(Triangle trg) { _triangle.push_back(trg); }
-	void SetTriangle(int& index,Vertex& vertex) { _triangle.back().SetIndex(index, vertex); }
+	vector<Triangle>& GetTriangle()  { return _triangle; }
+	vector<Vertex>& GetVertex() { return _vertex; }
+
+	bool CheckIntersection(Ray& r) {
+		bool isIts;
+		for (int i = 0; i < GetTriangle().size(); i++)
+		{
+			Triangle trig = GetTriangle()[i];
+			isIts = trig.IntersectTriangle(r);
+			if (isIts == true)
+			{
+				_normal = trig.GetNormal();
+				return isIts;
+			}
+		}
+		return isIts;
+	}
+
+	Vector3 GetNormal()const { return _normal; }
+
 private:
 	vector<Triangle> _triangle;
+	vector<Vertex> _vertex;
+	Vector3 _normal;
 };
 
 Mesh ReadObjFile(std::string filePath) {
 	Mesh obj;
+	vector<Vector3> normal;
+	vector<Vector3> texcoord;
 	std::ifstream ifs;
 	ifs.open(filePath, std::ios::in);
 	std::string buff;
-	vector<Vector3> normal;
-	vector<Vector3> texcoord;
-	vector<Vertex> vertex;
 
 	while (getline(ifs, buff))
 	{
@@ -49,8 +67,8 @@ Mesh ReadObjFile(std::string filePath) {
 			else
 			{
 				sscanf(buff.c_str(), "v %f %f %f", &x, &y, &z);
-				vertex.push_back(Vertex(Vector3(x, y, z)));
-				vertex.back().SetIndex(vertex.size() - 1);
+				obj.GetVertex().push_back(Vertex(Vector3(x, y, z)));
+				obj.GetVertex().back().SetIndex(obj.GetVertex().size() - 1);
 			}
 			break;
 		case 'f':
@@ -64,17 +82,17 @@ Mesh ReadObjFile(std::string filePath) {
 			{
 				if (i== 0)
 				{
-					obj.SetTriangle(Triangle());
+					obj.GetTriangle().push_back(Triangle());
 				}
 				int vexIndex = atoi(p);
-				obj.SetTriangle(i, vertex[vexIndex - 1]);
+				obj.GetTriangle().back().SetIndex(i, obj.GetVertex()[vexIndex - 1]);
 				p = strtok(NULL, d);
 				int texIndex = atoi(p);
-				vertex[vexIndex-1].SetTexcoord(texcoord[texIndex-1]);
+				obj.GetVertex()[vexIndex-1].SetTexcoord(texcoord[texIndex-1]);
 
 				p = strtok(NULL, d);
 				int norIndex = atoi(p);
-				vertex[vexIndex-1].SetNormal(normal[norIndex-1]);
+				obj.GetVertex()[vexIndex-1].SetNormal(normal[norIndex-1]);
 
 				p = strtok(NULL, d);
 				if (i<3)
