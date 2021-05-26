@@ -5,7 +5,7 @@
 class Vertex
 {
 public:
-	Vertex(Vector3 position,Vector3 normal,Vector3 texcoord):
+	Vertex(Vector3& position,Vector3& normal,Vector3& texcoord):
 		_position(position), _normal(normal), _texcoord(texcoord){}
 
 	Vertex(Vector3 vertex) :_position(vertex) {}

@@ -4,8 +4,8 @@
 #include "Ray.h"
 #include "Mesh.h"
 #include <iostream>
-
-
+#include <iomanip>
+#include <cmath>
 
 Color ray_color(Ray& r,Mesh& obj) {
 	if (obj.CheckIntersection(r) == true)
@@ -25,7 +25,7 @@ void RenderTex(unsigned image_width, unsigned image_height, unsigned char *rgb) 
 
 int main() {
 
-	Mesh obj = ReadObjFile("C:\\Users\\huang\\Desktop\\Torus.obj");
+	Mesh obj = ReadObjFile("C:\\Users\\billy\\Desktop\\Torus.obj");
 
 	// Image
 	const auto aspect_ratio = 16.0f / 9.0f;
@@ -44,7 +44,7 @@ int main() {
 
 	// Render
 	unsigned char rgb[400 * 711 * 3], *p = rgb;
-	for (int i = 0; i < image_height; i++)
+	for (int i = 0; i < image_height; i++) {
 		for (int j = 0; j < image_width; j++) {
 			auto u = double(j) / (image_width - 1);
 			auto v = double(i) / (image_height - 1);
@@ -55,6 +55,14 @@ int main() {
 			*p++ = (unsigned char)pixel_Color.y();    //G
 			*p++ = (unsigned char)pixel_Color.z();    //B
 		}
+		
+		if (i%22 ==0)
+		{
+			int rate = ceil(i*(100.0f / (image_height - 1)));
+			std::cout << rate << "%" << std::endl;
+		}
+		
+	}
 	RenderTex(image_width, image_height, rgb);
 
 	return 0;
