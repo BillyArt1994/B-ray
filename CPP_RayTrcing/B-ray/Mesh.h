@@ -6,10 +6,10 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <climits>
 #include "Triangle.h"
 #include "Vertex.h"
 using std::vector;
-
 
 class Mesh {
 
@@ -18,18 +18,33 @@ public:
 	vector<Vertex>& GetVertex() { return _vertex; }
 
 	bool CheckIntersection(Ray& r) {
-		bool isIts;
+		float minDis = FLT_MAX;
+		int minIndex = -1;
+		bool isHit =false;
+		Color c=NULL;
 		for (int i = 0; i < GetTriangle().size(); i++)
 		{
-			Triangle trig = GetTriangle()[i];
-			isIts = trig.IntersectTriangle(r);
-			if (isIts == true)
+			Triangle* trig = &GetTriangle()[i];
+			if (trig->IntersectTriangle(r) == true)
 			{
-				_normal = trig.GetNormal();
-				return isIts;
+				float dis = trig->GetDis();
+				if (dis<minDis)
+				{
+					minDis = dis;
+					minIndex = i;
+					isHit = true;
+				}
 			}
 		}
-		return isIts;
+		if (isHit ==true)
+		{
+			_normal = GetTriangle()[minIndex].GetNormal();
+			return isHit;
+		}
+		else
+		{
+			return isHit;
+		}
 	}
 
 	Vector3 GetNormal()const { return _normal; }
@@ -72,7 +87,7 @@ Mesh ReadObjFile(std::string filePath) {
 			}
 			break;
 		case 'f':
-			char ch[40];
+			char ch[100];
 			strcpy_s(ch, buff.c_str());
 			const char *d = " f/";
 			char *p;

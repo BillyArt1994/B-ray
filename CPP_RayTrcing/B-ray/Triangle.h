@@ -9,7 +9,7 @@ class Triangle {
 
 private:
 	Vertex *_vertexIndex[3];
-	Vector3 _normal;
+	Vector3 _normal =NULL;
 	float _dis;
 public:
 	Triangle(Vertex& a, Vertex& b, Vertex& c) {

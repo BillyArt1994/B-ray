@@ -2,6 +2,7 @@
 #define VECTOR3_H
 
 #include <cmath>
+#include <iostream>
 
 class Vector3 {
 private:
@@ -14,18 +15,16 @@ public:
 	float y() const { return this->_y; }
 	float z() const { return this->_z; }
 
-	void x(float& value) { _x = value; }
-	void y(float& value) { _y = value; }
-	void z(float& value) { _z = value; }
+	void x(float value) { _x = value; }
+	void y(float value) { _y = value; }
+	void z(float value) { _z = value; }
 
 	Vector3(float x, float y, float z) :
-		_x(x), _y(y), _z(z)
-	{}
+		_x(x), _y(y), _z(z){}
 
 	Vector3() {}
 
 	Vector3(float value) :_x(value), _y(value), _z(value) {}
-
 
 	float length() {
 		return sqrt(this->x()*this->x() + this->y()*this->y() + this->z()*this->z());
@@ -37,15 +36,11 @@ public:
 
 	//‘ÀÀ„∑˚÷ÿ‘ÿ
 	inline Vector3 operator -(const Vector3 &b) {
-		return Vector3(_x-b.x(), _y-b.y(), _z-b.z());
+		return Vector3(_x - b.x(), _y - b.y(), _z - b.z());
 	}
 
 	inline Vector3 operator +(const Vector3 &b) {
 		return Vector3(_x + b.x(), _y + b.y(), _z + b.z());
-	}
-
-	inline Vector3 operator *(const float &b) {
-		return Vector3(_x * b, _y * b, _z *b);
 	}
 
 	inline Vector3& operator *=(const float &b) {
@@ -56,17 +51,23 @@ public:
 	}
 
 	inline Vector3 operator /(const float &b) {
-		return Vector3(_x/b, _y/b, _z/b);
+		return Vector3(_x / b, _y / b, _z / b);
 	}
 
-	inline Vector3 operator -() {
+	inline Vector3 operator - () {
 		_x = -_x;
 		_y = -_y;
 		_z = -_z;
 		return *this;
 	}
 };
-
 using Color = Vector3;
-#endif // Vector3_H
 
+inline Vector3 operator *(const Vector3& a, const float &b) {
+	return Vector3(a.x()*b, a.y()*b, a.z()*b);
+}
+
+inline Vector3 operator *(const float& a, const Vector3 &b) {
+	return Vector3(a*b.x(), a*b.y(), a*b.z());
+}
+#endif // Vector3_H

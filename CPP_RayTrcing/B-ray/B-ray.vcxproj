@@ -128,10 +128,14 @@
     <ClCompile Include="maincpp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="Image.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="Render.h" />
     <ClInclude Include="svpng.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vector3.h" />
