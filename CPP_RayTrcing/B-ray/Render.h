@@ -2,17 +2,28 @@
 #define RENDER_H
 #include <iostream>
 #include "svpng.h"
+#include "Camera.h"
+#include "Image.h"
+#include "Color.h"
+#include "Ray.h"
+#include "Mesh.h"
 
 class Render
 {
 public:
-	Render() {
+	Render(Camera mainCamera,Image image,Mesh obj) {
 		unsigned char rgb[400 * 225 * 3], *p = rgb;
-		for (int i = 0; i < image_height; i++) {
-			for (int j = 0; j < image_width; j++) {
-				auto u = double(j) / (image_width - 1);
-				auto v = double(i) / (image_height - 1);
-				Ray r(mainCamera.GetPos(), (high_left_corner + horizontal * u - vertical * v - cameraPos).normalize());
+		int width = image.GetWidth();
+		int height = image.GetHeight();
+		Vector3 high_left_corner = mainCamera.GetLC();
+		Vector3 horizontal = mainCamera.GetHorizontal();
+		Vector3 vertical = mainCamera.GetVertical();
+		Vector3 camerPos = mainCamera.GetPos();
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				auto u = double(j) / (width - 1);
+				auto v = double(i) / (height - 1);
+				Ray r(camerPos, (high_left_corner + horizontal * u - vertical * v - camerPos).normalize());
 				Color pixel_Color = ray_color(r, obj);
 				write_color(std::cout, pixel_Color);
 
@@ -23,11 +34,11 @@ public:
 
 			if (i % 22 == 0)
 			{
-				int rate = ceil(i*(100.0f / (image_height - 1)));
+				int rate = ceil(i*(100.0f / (height - 1)));
 				std::cout << rate << "%" << std::endl;
 			}
 		}
-		RenderTex(image_width, image_height, rgb);
+		RenderTex(width, height, rgb);
 	};
 
 private:
@@ -38,6 +49,15 @@ private:
 		fclose(fp);
 	}
 
+	Color ray_color(Ray& r,Mesh& obj) {
+		if (obj.CheckIntersection(r) == true)
+		{
+			return obj.GetNormal()*0.5f + Vector3(0.5f, 0.5f, 0.5f);
+		}
+		Vector3 dir = r.GetDirection();
+		auto t = (dir.y() + 1.0f)*0.5f;
+		return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
+	}
 };
 
 #endif // !RENDER_H

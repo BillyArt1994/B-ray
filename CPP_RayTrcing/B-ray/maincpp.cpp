@@ -5,28 +5,20 @@
 #include "Mesh.h"
 #include "Camera.h"
 #include "Image.h"
+#include "Render.h"
+#include "Light.h"
 #include <iostream>
 #include <iomanip>
 #include <cmath>
 
-Color ray_color(Ray& r,Mesh& obj) {
-	if (obj.CheckIntersection(r) == true)
-	{
-		return obj.GetNormal()*0.5f+Vector3(0.5f,0.5f,0.5f);
-	}
-	Vector3 dir = r.GetDirection();
-	auto t = (dir.y() + 1.0f)*0.5f;
-	return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
-}
-
 int main() {
-
+	Light light(Color(1, 1, 1), Vector3(0, 0, 0),Vector3());
 	Mesh obj = ReadObjFile("C:\\Users\\huang\\Desktop\\Torus.obj");
 	// Image
 	Image image((16.0f/9.0f),400);
 	//camera
 	Camera mainCamera = Camera(Vector3(0,0,-6),-1,image.GetRatio());
 	// Render
-
+	Render(mainCamera,image,obj);
 	return 0;
 }

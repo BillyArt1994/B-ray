@@ -18,7 +18,9 @@ public:
 
 	Vector3 GetPos()const { return _cameraPosition; }
 	Vector3 GetLC()const { return _high_left_corner; }
-	
+	Vector3 GetHorizontal()const { return _horizontal; }
+	Vector3 GetVertical()const { return _vertical; }
+	friend class Render;
 private:
 	Vector3 _cameraPosition;
 	Vector3 _high_left_corner;

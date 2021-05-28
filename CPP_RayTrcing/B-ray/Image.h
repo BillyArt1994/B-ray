@@ -10,6 +10,8 @@ public:
 		_image_height(static_cast<int>(image_width / aspect_ratio)) {}
 
 	float GetRatio() const { return _aspect_ratio; }
+	float GetWidth() const { return _image_width; }
+	float GetHeight() const { return _image_height; }
 
 private:
 	float _aspect_ratio;
