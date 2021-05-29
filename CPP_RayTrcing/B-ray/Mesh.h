@@ -15,13 +15,12 @@ class Mesh {
 
 public:
 	vector<Triangle>& GetTriangle()  { return _triangle; }
-	vector<Vertex>& GetVertex() { return _vertex; }
+	vector<Vertex>& GetVertexArray() { return _vertexArray; }
 
 	bool CheckIntersection(Ray& r) {
 		float minDis = FLT_MAX;
 		int minIndex = -1;
 		bool isHit =false;
-		Color c=NULL;
 		for (int i = 0; i < GetTriangle().size(); i++)
 		{
 			Triangle* trig = &GetTriangle()[i];
@@ -39,6 +38,7 @@ public:
 		if (isHit ==true)
 		{
 			_normal = GetTriangle()[minIndex].GetNormal();
+			_vertex = r.RayRun(GetTriangle()[minIndex].GetDis());
 			return isHit;
 		}
 		else
@@ -48,11 +48,13 @@ public:
 	}
 
 	Vector3 GetNormal()const { return _normal; }
+	Vector3 GetVertex()const { return _vertex; }
 
 private:
 	vector<Triangle> _triangle;
-	vector<Vertex> _vertex;
+	vector<Vertex> _vertexArray;
 	Vector3 _normal;
+	Vector3 _vertex;
 };
 
 Mesh ReadObjFile(std::string filePath) {
@@ -82,8 +84,8 @@ Mesh ReadObjFile(std::string filePath) {
 			else
 			{
 				sscanf(buff.c_str(), "v %f %f %f", &x, &y, &z);
-				obj.GetVertex().push_back(Vertex(Vector3(x, y, z)));
-				obj.GetVertex().back().SetIndex(obj.GetVertex().size() - 1);
+				obj.GetVertexArray().push_back(Vertex(Vector3(x, y, z)));
+				obj.GetVertexArray().back().SetIndex(obj.GetVertexArray().size() - 1);
 			}
 			break;
 		case 'f':
@@ -100,14 +102,14 @@ Mesh ReadObjFile(std::string filePath) {
 					obj.GetTriangle().push_back(Triangle());
 				}
 				int vexIndex = atoi(p);
-				obj.GetTriangle().back().SetIndex(i, obj.GetVertex()[vexIndex - 1]);
+				obj.GetTriangle().back().SetIndex(i, obj.GetVertexArray()[vexIndex - 1]);
 				p = strtok(NULL, d);
 				int texIndex = atoi(p);
-				obj.GetVertex()[vexIndex-1].SetTexcoord(texcoord[texIndex-1]);
+				obj.GetVertexArray()[vexIndex-1].SetTexcoord(texcoord[texIndex-1]);
 
 				p = strtok(NULL, d);
 				int norIndex = atoi(p);
-				obj.GetVertex()[vexIndex-1].SetNormal(normal[norIndex-1]);
+				obj.GetVertexArray()[vexIndex-1].SetNormal(normal[norIndex-1]);
 
 				p = strtok(NULL, d);
 				if (i<3)

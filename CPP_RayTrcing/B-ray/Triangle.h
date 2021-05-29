@@ -20,9 +20,8 @@ public:
 
 	Triangle() {}
 
-	float GetDis()const { return _dis;}
-
 	Vector3 GetNormal() const { return _normal; }
+	float GetDis() const { return _dis; }
 
 	void SetIndex(int index, Vertex& vertex) {
 		_vertexIndex[index] = &vertex;
@@ -53,6 +52,7 @@ public:
 		{
 			return false;
 		}
+
 		float D2 = Det3x3Multiply(dir, E1, T);
 		float v = D2 / D;
 

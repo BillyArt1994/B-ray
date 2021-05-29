@@ -7,11 +7,12 @@
 #include "Color.h"
 #include "Ray.h"
 #include "Mesh.h"
+#include "GameObject.h"
 
 class Render
 {
 public:
-	Render(Camera mainCamera,Image image,Mesh obj) {
+	Render(Camera& mainCamera,Image& image, GameObject& obj,Light& light) {
 		unsigned char rgb[400 * 225 * 3], *p = rgb;
 		int width = image.GetWidth();
 		int height = image.GetHeight();
@@ -19,12 +20,12 @@ public:
 		Vector3 horizontal = mainCamera.GetHorizontal();
 		Vector3 vertical = mainCamera.GetVertical();
 		Vector3 camerPos = mainCamera.GetPos();
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
 				auto u = double(j) / (width - 1);
 				auto v = double(i) / (height - 1);
 				Ray r(camerPos, (high_left_corner + horizontal * u - vertical * v - camerPos).normalize());
-				Color pixel_Color = ray_color(r, obj);
+				Color pixel_Color = ray_color(r, obj,light);
 				write_color(std::cout, pixel_Color);
 
 				*p++ = (unsigned char)pixel_Color.x();    //R
@@ -32,7 +33,7 @@ public:
 				*p++ = (unsigned char)pixel_Color.z();    //B
 			}
 
-			if (i % 22 == 0)
+			if (i % 2 == 0)
 			{
 				int rate = ceil(i*(100.0f / (height - 1)));
 				std::cout << rate << "%" << std::endl;
@@ -49,10 +50,11 @@ private:
 		fclose(fp);
 	}
 
-	Color ray_color(Ray& r,Mesh& obj) {
-		if (obj.CheckIntersection(r) == true)
+	Color ray_color(Ray& r, GameObject& obj,Light& light) {
+		Color modelCol = obj.GetLightModel(&light,r);
+		if ( modelCol != Color(1,0,1))
 		{
-			return obj.GetNormal()*0.5f + Vector3(0.5f, 0.5f, 0.5f);
+			return modelCol;
 		}
 		Vector3 dir = r.GetDirection();
 		auto t = (dir.y() + 1.0f)*0.5f;

@@ -8,6 +8,7 @@ public:
 	{
 		DirectionalLight
 	};
+
 	Light() {}
 	Light(Color col,Vector3 pos,Vector3 rot):_Color(col),_position(pos),_roatiton(rot) {}
 	Vector3 GetPos()const { return _position; }

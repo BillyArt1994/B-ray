@@ -54,6 +54,28 @@ public:
 		return Vector3(_x / b, _y / b, _z / b);
 	}
 
+	inline bool operator ==(const Vector3& b) {
+		if (_x==b.x()&&_y==b.y()&&_z==b.z())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	inline bool operator !=(const Vector3& b) {
+		if (_x == b.x() && _y == b.y() && _z == b.z())
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
 	inline Vector3 operator - () {
 		_x = -_x;
 		_y = -_y;
