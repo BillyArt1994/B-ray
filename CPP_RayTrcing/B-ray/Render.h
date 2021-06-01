@@ -52,11 +52,13 @@ private:
 
 	Color ray_color(Ray& r, vector<GameObject>& worldObjet, Light& light) {
 
-		vector<Triangle> allTriangle;
+		vector<Triangle*> allTriangle;
+		vector<Material*> allMaterial;
 		for (int i = 0; i < worldObjet.size(); i++)
 		{
 			vector<Triangle> *temp = &(worldObjet[i].GetMesh()->GetTriangle());
 			allTriangle.insert(allTriangle.end(), temp->begin(), temp->end());
+			allMaterial.push_back(worldObjet[i].GetMaterial());
 		}
 
 		for (int i = 0; i < allTriangle.size(); i++)
@@ -64,7 +66,7 @@ private:
 			float minDis = FLT_MAX;
 			int minIndex = -1;
 			bool isHit = false;
-			Triangle* trig = &allTriangle[i];
+			Triangle* trig = allTriangle[i];
 			if (trig->IntersectTriangle(r) == true)
 			{
 				float dis = trig->GetDis();
