@@ -51,7 +51,7 @@ Mesh ReadObjFile(std::string filePath) {
 			{
 				sscanf(buff.c_str(), "v %f %f %f", &x, &y, &z);
 				obj.GetVertexArray().push_back(Vertex(Vector3(x, y, z)));
-				obj.GetVertexArray().back().SetIndex(obj.GetVertexArray().size() - 1);
+				obj.GetVertexArray().back().SetIndex(obj.GetVertexArray().size()-1);
 			}
 			break;
 		case 'f':

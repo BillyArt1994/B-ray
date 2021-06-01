@@ -52,33 +52,42 @@ private:
 
 	Color ray_color(Ray& r, vector<GameObject>& worldObjet, Light& light) {
 
-		vector<Triangle*> allTriangle;
-		vector<Material*> allMaterial;
+		float minDis = FLT_MAX;
+		int minIndex = -1;
+		bool isHit = false;
+		int objIndex = -1;
+
 		for (int i = 0; i < worldObjet.size(); i++)
 		{
-			vector<Triangle> *temp = &(worldObjet[i].GetMesh()->GetTriangle());
-			allTriangle.insert(allTriangle.end(), temp->begin(), temp->end());
-			allMaterial.push_back(worldObjet[i].GetMaterial());
-		}
-
-		for (int i = 0; i < allTriangle.size(); i++)
-		{
-			float minDis = FLT_MAX;
-			int minIndex = -1;
-			bool isHit = false;
-			Triangle* trig = allTriangle[i];
-			if (trig->IntersectTriangle(r) == true)
+			vector<Triangle>* trig = &(worldObjet[i].GetMesh()->GetTriangle());
+			for (int j = 0; j < trig->size(); j++)
 			{
-				float dis = trig->GetDis();
-				if (dis < minDis)
+				Triangle* hitTrig = &(trig->at(i));
+				if (hitTrig->IntersectTriangle(r) == true)
 				{
-					minDis = dis;
-					minIndex = i;
-					isHit = true;
+					float dis = hitTrig->GetDis();
+					if (dis < minDis)
+					{
+						minDis = dis;
+						objIndex = i;
+						minIndex = j;
+						isHit = true;
+					}
 				}
 			}
 		}
-
+		
+		if (isHit ==true)
+		{
+			Vector3 normal = worldObjet[objIndex].GetMesh()->GetTriangle()[minIndex].GetNormal();
+			Vector3 vertexPos = r.RayRun(minDis);
+			Material* metl = worldObjet[objIndex].GetMaterial();
+			metl->SetLight(&light);
+			metl->SetNormal(normal);
+			metl->SetVertPos(vertexPos);
+			Color finalCol = metl->LambertModel();
+			return finalCol;
+		}
 		Vector3 dir = r.GetDirection();
 		auto t = (dir.y() + 1.0f)*0.5f;
 		return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;

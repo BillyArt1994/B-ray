@@ -11,6 +11,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+
 #include <time.h>¡¡
 
 int main() {
@@ -20,7 +21,7 @@ int main() {
 	//Light
 	Light light(Color(1.0f, 1.0f, 1.0f), Vector3(2.0f, 3.0f, -5.0f), Vector3(0.0f));
 	//Model
-	Mesh tourMesh = ReadObjFile("C:\\Users\\huang\\Desktop\\Torus.obj");
+	Mesh tourMesh = ReadObjFile("C:\\Users\\billy\\Desktop\\Torus.obj");
 	//Material
 	Material mat1 = Material();
 	//GameObject

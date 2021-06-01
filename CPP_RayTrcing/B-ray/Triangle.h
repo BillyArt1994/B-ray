@@ -1,6 +1,6 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
-#include <vector>
+
 #include "Vertex.h"
 #include "Ray.h"
 #include "Math.h"
@@ -8,11 +8,9 @@
 class Triangle {
 
 private:
-	Vertex *_vertexIndex[3]{NULL,NULL,NULL};
+	Vertex* _vertexIndex[3]{NULL,NULL,NULL};
 	Vector3 _normal =NULL;
 	float _dis = 0;
-	Material* _material;
-
 public:
 	Triangle(Vertex& a, Vertex& b, Vertex& c) {
 		_vertexIndex[0] = &a;
@@ -28,9 +26,6 @@ public:
 	void SetIndex(int index, Vertex& vertex) {
 		_vertexIndex[index] = &vertex;
 	}
-
-	void SetMaterial(Material* matl) { _material = matl; }
-	Material* GetMaterial() const { return _material; }
 
 	bool IntersectTriangle(const Ray& ray) {
 		Vector3 v0 = _vertexIndex[0]->position();

@@ -17,9 +17,12 @@ public:
 		return std::max(dot(_normal, lightDir), 0.0f) ;
 	}
 
-	void SetNV(Mesh* mesh) {
-		_normal = mesh->GetNormal();
-		_vertexPos = mesh->GetVertex();
+	void SetNormal(Vector3& normal) {
+		_normal = normal;
+	}
+
+	void SetVertPos(Vector3& vertPos) {
+		_vertexPos = vertPos;
 	}
 
 	void SetLight(Light* light) {
