@@ -1,8 +1,11 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
+#include <iostream>
 #include "Vector3.h"
 #include "Mesh.h"
 #include "Light.h"
+#include <cmath>
+#include <algorithm>
 
 class Material
 {
@@ -10,23 +13,23 @@ public:
 	Material(){}
 
 	Color LambertModel() {
-		Vector3 lightDir =(*_lightPos - *_vertexPos).normalize();
-		return *_normal*0.5+Vector3(0.5);//dot(*_normal, lightDir);
+		Vector3 lightDir =(_lightPos - _vertexPos).normalize();
+		return std::max(dot(_normal, lightDir), 0.0f) ;
 	}
 
 	void SetNV(Mesh* mesh) {
-		_normal = &mesh->GetNormal();
-		_vertexPos = &mesh->GetVertex();
+		_normal = mesh->GetNormal();
+		_vertexPos = mesh->GetVertex();
 	}
 
 	void SetLight(Light* light) {
-		_lightPos = &light->GetPos();
+		_lightPos = light->GetPos();
 	}
 
 private:
-	Vector3* _normal;
-	Vector3* _lightPos;
-	Vector3* _vertexPos;
+	Vector3 _normal;
+	Vector3 _lightPos;
+	Vector3 _vertexPos;
 };
 
 #endif // !MATERIAL_H

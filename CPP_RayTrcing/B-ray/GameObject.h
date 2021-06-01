@@ -11,19 +11,8 @@ public:
 	GameObject(Mesh* mesh, Material* material) : _mesh(mesh), _material(material) {
 	}
 
-	Color GetLightModel(Light* light, Ray& r) {
-		if (_mesh->CheckIntersection(r))
-		{
-			_material->SetLight(light);
-			_material->SetNV(_mesh);
-			_diffuse = _material->LambertModel();
-		}
-		else
-		{
-			_diffuse = Color(1, 0, 1);
-		}
-		return _diffuse;
-	}
+	Mesh* GetMesh() const { return _mesh; }
+	Material* GetMaterial() const { return _material; }
 
 private:
 	Mesh* _mesh;

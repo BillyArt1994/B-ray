@@ -12,7 +12,7 @@
 class Render
 {
 public:
-	Render(Camera& mainCamera,Image& image, GameObject& obj,Light& light) {
+	Render(Camera& mainCamera, Image& image, vector<GameObject>& worldObjet, Light& light) {
 		unsigned char rgb[400 * 225 * 3], *p = rgb;
 		int width = image.GetWidth();
 		int height = image.GetHeight();
@@ -25,7 +25,7 @@ public:
 				auto u = double(j) / (width - 1);
 				auto v = double(i) / (height - 1);
 				Ray r(camerPos, (high_left_corner + horizontal * u - vertical * v - camerPos).normalize());
-				Color pixel_Color = ray_color(r, obj,light);
+				Color pixel_Color = ray_color(r, worldObjet, light);
 				write_color(std::cout, pixel_Color);
 
 				*p++ = (unsigned char)pixel_Color.x();    //R
@@ -33,7 +33,7 @@ public:
 				*p++ = (unsigned char)pixel_Color.z();    //B
 			}
 
-			if (i % 2 == 0)
+			if (i % 22 == 0)
 			{
 				int rate = ceil(i*(100.0f / (height - 1)));
 				std::cout << rate << "%" << std::endl;
@@ -50,12 +50,33 @@ private:
 		fclose(fp);
 	}
 
-	Color ray_color(Ray& r, GameObject& obj,Light& light) {
-		Color modelCol = obj.GetLightModel(&light,r);
-		if ( modelCol != Color(1,0,1))
+	Color ray_color(Ray& r, vector<GameObject>& worldObjet, Light& light) {
+
+		vector<Triangle> allTriangle;
+		for (int i = 0; i < worldObjet.size(); i++)
 		{
-			return modelCol;
+			vector<Triangle> *temp = &(worldObjet[i].GetMesh()->GetTriangle());
+			allTriangle.insert(allTriangle.end(), temp->begin(), temp->end());
 		}
+
+		for (int i = 0; i < allTriangle.size(); i++)
+		{
+			float minDis = FLT_MAX;
+			int minIndex = -1;
+			bool isHit = false;
+			Triangle* trig = &allTriangle[i];
+			if (trig->IntersectTriangle(r) == true)
+			{
+				float dis = trig->GetDis();
+				if (dis < minDis)
+				{
+					minDis = dis;
+					minIndex = i;
+					isHit = true;
+				}
+			}
+		}
+
 		Vector3 dir = r.GetDirection();
 		auto t = (dir.y() + 1.0f)*0.5f;
 		return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;

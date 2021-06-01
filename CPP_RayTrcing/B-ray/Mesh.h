@@ -17,44 +17,10 @@ public:
 	vector<Triangle>& GetTriangle()  { return _triangle; }
 	vector<Vertex>& GetVertexArray() { return _vertexArray; }
 
-	bool CheckIntersection(Ray& r) {
-		float minDis = FLT_MAX;
-		int minIndex = -1;
-		bool isHit =false;
-		for (int i = 0; i < GetTriangle().size(); i++)
-		{
-			Triangle* trig = &GetTriangle()[i];
-			if (trig->IntersectTriangle(r) == true)
-			{
-				float dis = trig->GetDis();
-				if (dis<minDis)
-				{
-					minDis = dis;
-					minIndex = i;
-					isHit = true;
-				}
-			}
-		}
-		if (isHit ==true)
-		{
-			_normal = GetTriangle()[minIndex].GetNormal();
-			_vertex = r.RayRun(GetTriangle()[minIndex].GetDis());
-			return isHit;
-		}
-		else
-		{
-			return isHit;
-		}
-	}
-
-	Vector3 GetNormal()const { return _normal; }
-	Vector3 GetVertex()const { return _vertex; }
 
 private:
 	vector<Triangle> _triangle;
 	vector<Vertex> _vertexArray;
-	Vector3 _normal;
-	Vector3 _vertex;
 };
 
 Mesh ReadObjFile(std::string filePath) {
