@@ -11,35 +11,50 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
-
 #include <time.h>¡¡
 
 int main() {
 	//¼ÆÊ±
 	clock_t start, end;
 	start = clock();
+
 	//Light
 	Light light(Color(1.0f, 1.0f, 1.0f), Vector3(2.0f, 3.0f, -5.0f), Vector3(0.0f));
+
 	//Model
-	Mesh tourMesh = ReadObjFile("C:\\Users\\billy\\Desktop\\Torus.obj");
+	Mesh torusMesh = ReadObjFile("C:\\Users\\huang\\Desktop\\Torus.obj");
+	//Mesh Box_BigMesh = ReadObjFile("C:\\Users\\huang\\Desktop\\Box_Big.obj");
+	//Mesh Box_SmallMesh = ReadObjFile("C:\\Users\\huang\\Desktop\\Box_Small.obj");
+
 	//Material
-	Material mat1 = Material();
+	Material mat1 = Material(Color(1.0f, 1.0f, 1.0f));
+	//Material mat2 = Material(Color(0.5f, 1.0f, 1.0f));
+	//Material mat3 = Material(Color(1.0f, 0.5f, 1.0f));
+
 	//GameObject
-	GameObject tours(&tourMesh, &mat1);
+	GameObject torus(&torusMesh, &mat1);
+	//GameObject Box_Big(&Box_BigMesh, &mat2);
+	//GameObject Box_Small(&Box_SmallMesh, &mat3);
+
 	//World GameObject
 	vector<GameObject> worldList;
-	worldList.push_back(tours);
+	worldList.push_back(torus);
+	//worldList.push_back(Box_Big);
+	//worldList.push_back(Box_Small);
+
 	//Image
 	Image image((16.0f / 9.0f), 400);
+
 	//camera
 	Camera mainCamera = Camera(Vector3(0, 0, -6), -1, image.GetRatio());
+
 	//Render
 	Render(mainCamera, image, worldList, light);
 
 	end = clock();
 	double spendTime = double(end - start) / CLOCKS_PER_SEC;
 	int m = spendTime / 60;
-	float s = (int)spendTime % 60+ (spendTime-(int)spendTime);
+	float s = (int)spendTime % 60 + (spendTime - (int)spendTime);
 	std::cout << "time = " << m << "·Ö" << s << "Ãë" << std::endl;
 	return 0;
 }

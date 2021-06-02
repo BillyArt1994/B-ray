@@ -12,6 +12,8 @@
 class Render
 {
 public:
+	const int samples_per_pixel = 5;
+
 	Render(Camera& mainCamera, Image& image, vector<GameObject>& worldObjet, Light& light) {
 		unsigned char rgb[400 * 225 * 3], *p = rgb;
 		int width = image.GetWidth();
@@ -21,19 +23,19 @@ public:
 		Vector3 vertical = mainCamera.GetVertical();
 		Vector3 camerPos = mainCamera.GetPos();
 		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				auto u = double(j) / (width - 1);
-				auto v = double(i) / (height - 1);
-				Ray r(camerPos, (high_left_corner + horizontal * u - vertical * v - camerPos).normalize());
-				Color pixel_Color = ray_color(r, worldObjet, light);
-				write_color(std::cout, pixel_Color);
 
-				*p++ = (unsigned char)pixel_Color.x();    //R
-				*p++ = (unsigned char)pixel_Color.y();    //G
-				*p++ = (unsigned char)pixel_Color.z();    //B
+			for (int j = 0; j < width; j++) {
+				auto u = (j) / (width - 1);
+				auto v = (i) / (height - 1);
+				Ray r(camerPos, (high_left_corner + horizontal * u - vertical * v - camerPos).normalize());
+				Color pixel_color = ray_color(r, worldObjet, light);
+				write_color(std::cout, pixel_color, samples_per_pixel);
+				*p++ = (unsigned char)pixel_color.x();    //R
+				*p++ = (unsigned char)pixel_color.y();    //G
+				*p++ = (unsigned char)pixel_color.z();    //B
 			}
 
-			if (i % 22 == 0)
+			if (i % 2 == 0)
 			{
 				int rate = ceil(i*(100.0f / (height - 1)));
 				std::cout << rate << "%" << std::endl;
@@ -62,7 +64,7 @@ private:
 			vector<Triangle>* trig = &(worldObjet[i].GetMesh()->GetTriangle());
 			for (int j = 0; j < trig->size(); j++)
 			{
-				Triangle* hitTrig = &(trig->at(i));
+				Triangle* hitTrig = &(trig->at(j));
 				if (hitTrig->IntersectTriangle(r) == true)
 				{
 					float dis = hitTrig->GetDis();
@@ -76,8 +78,8 @@ private:
 				}
 			}
 		}
-		
-		if (isHit ==true)
+
+		if (isHit == true)
 		{
 			Vector3 normal = worldObjet[objIndex].GetMesh()->GetTriangle()[minIndex].GetNormal();
 			Vector3 vertexPos = r.RayRun(minDis);
