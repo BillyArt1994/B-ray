@@ -8,6 +8,7 @@
 #include "Ray.h"
 #include "Mesh.h"
 #include "GameObject.h"
+#include "OcterTree.h"
 
 class Render
 {
@@ -54,11 +55,26 @@ private:
 
 	Color ray_color(Ray& r, vector<GameObject>& worldObjet, Light& light) {
 
+		/*
 		float minDis = FLT_MAX;
 		int minIndex = -1;
 		bool isHit = false;
 		int objIndex = -1;
+		*/
 
+		vector<Triangle> trig;
+		for (int i = 0; i < worldObjet.size(); i++)
+		{
+			trig = worldObjet[i].GetMesh()->GetTriangle();
+		}
+
+		OcterTree t = OcterTree(trig, Vector3(0), 15, "0", 20);
+		
+
+		return Vector3(0);
+
+		/*
+		//±È¿˙«ÛΩª
 		for (int i = 0; i < worldObjet.size(); i++)
 		{
 			vector<Triangle>* trig = &(worldObjet[i].GetMesh()->GetTriangle());
@@ -93,6 +109,7 @@ private:
 		Vector3 dir = r.GetDirection();
 		auto t = (dir.y() + 1.0f)*0.5f;
 		return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
+		*/
 	}
 };
 

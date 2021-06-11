@@ -22,6 +22,7 @@ public:
 
 	Vector3 GetNormal() const { return _normal; }
 	float GetDis() const { return _dis; }
+	Vertex* GetVertex(int index) const { return _vertexIndex[index]; }
 
 	void SetIndex(int index, Vertex& vertex) {
 		_vertexIndex[index] = &vertex;

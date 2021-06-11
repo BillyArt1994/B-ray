@@ -51,10 +51,13 @@ int main() {
 	//Render
 	Render(mainCamera, image, worldList, light);
 
+#pragma region 打印花费时间
 	end = clock();
 	double spendTime = double(end - start) / CLOCKS_PER_SEC;
 	int m = spendTime / 60;
 	float s = (int)spendTime % 60 + (spendTime - (int)spendTime);
 	std::cout << "time = " << m << "分" << s << "秒" << std::endl;
 	return 0;
+#pragma endregion
+
 }

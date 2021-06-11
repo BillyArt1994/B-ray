@@ -1,7 +1,9 @@
 #ifndef Math
 #define Math
 #include <cmath>
+#include <string>
 #include "Vector3.h"
+#include "Triangle.h"
 
 inline float Det3x3Multiply(Vector3& a, Vector3& b, Vector3& c) {
 	float positive = a.x()*b.y()*c.z() + a.z()*b.x()*c.y() + a.y()*b.z()*c.x();
@@ -17,4 +19,14 @@ inline Vector3 cross(const Vector3 &a, const Vector3 &b) {
 	return Vector3(a.y()*b.z()-a.z()*b.y(),a.z()*b.x()-a.x()*b.z(),a.x()*b.y()-a.y()*b.x());
 }
 
+inline std::string DecTiBin(const float dec) {
+	std::string result = "";
+	int temp = dec;
+	while (temp)
+	{
+		result.insert(0, std::to_string(temp % 2));
+		temp = temp / 2;
+	}
+	return result;
+}
 #endif // !Math

@@ -65,5 +65,11 @@
     <ClInclude Include="Function.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="OcterTree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
