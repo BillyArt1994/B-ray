@@ -1,12 +1,10 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
-
 #include "Vertex.h"
 #include "Ray.h"
 #include "Math.h"
 
 class Triangle {
-
 private:
 	Vertex* _vertexIndex[3]{NULL,NULL,NULL};
 	Vector3 _normal =NULL;

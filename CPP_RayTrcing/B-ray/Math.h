@@ -2,7 +2,6 @@
 #define Math
 #include <cmath>
 #include <string>
-#include "Vector3.h"
 #include "Triangle.h"
 
 inline float Det3x3Multiply(Vector3& a, Vector3& b, Vector3& c) {
@@ -16,7 +15,7 @@ inline float dot(const Vector3 &a, const Vector3 &b) {
 }
 
 inline Vector3 cross(const Vector3 &a, const Vector3 &b) {
-	return Vector3(a.y()*b.z()-a.z()*b.y(),a.z()*b.x()-a.x()*b.z(),a.x()*b.y()-a.y()*b.x());
+	return Vector3(a.y()*b.z() - a.z()*b.y(), a.z()*b.x() - a.x()*b.z(), a.x()*b.y() - a.y()*b.x());
 }
 
 inline std::string DecTiBin(const float dec) {
@@ -29,4 +28,24 @@ inline std::string DecTiBin(const float dec) {
 	}
 	return result;
 }
+
+inline float CompareSize(Vector3 a) {
+	float minSize = 0;
+	float x = abs(a.x()), y = abs(a.y()), z = abs(a.z());
+	if (x > minSize)
+	{
+		minSize = x;
+	}
+	if (y > minSize)
+	{
+		minSize = y;
+	}
+	if (z > minSize)
+	{
+		minSize = z;
+	}
+
+	return minSize;
+}
+
 #endif // !Math

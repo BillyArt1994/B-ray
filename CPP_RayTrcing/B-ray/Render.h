@@ -29,7 +29,7 @@ public:
 				auto u = (j) / (width - 1);
 				auto v = (i) / (height - 1);
 				Ray r(camerPos, (high_left_corner + horizontal * u - vertical * v - camerPos).normalize());
-				Color pixel_color = ray_color(r, worldObjet, light);
+				Color pixel_color = ray_color(r, worldObjet, light,mainCamera);
 				write_color(std::cout, pixel_color, samples_per_pixel);
 				*p++ = (unsigned char)pixel_color.x();    //R
 				*p++ = (unsigned char)pixel_color.y();    //G
@@ -53,7 +53,7 @@ private:
 		fclose(fp);
 	}
 
-	Color ray_color(Ray& r, vector<GameObject>& worldObjet, Light& light) {
+	Color ray_color(Ray& r, vector<GameObject>& worldObjet, Light& light,Camera camr) {
 
 		/*
 		float minDis = FLT_MAX;
@@ -68,7 +68,28 @@ private:
 			trig = worldObjet[i].GetMesh()->GetTriangle();
 		}
 
-		OcterTree t = OcterTree(trig, Vector3(0), 15, "0", 20);
+		float maxDis = 0;
+		for (int i = 0; i < trig.size(); i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				Vector3 v = trig.at(i).GetVertex(j)->position();
+				float size = CompareSize(v);
+				if (size > maxDis)
+				{
+					maxDis = size;
+				}
+				
+			}
+		}
+		float size = CompareSize(camr.GetPos());
+		if (size >maxDis)
+		{
+			maxDis = size;
+		}
+		
+
+		OcterTree t = OcterTree(trig, Vector3(0), maxDis, "0",7, 20);
 		
 
 		return Vector3(0);
