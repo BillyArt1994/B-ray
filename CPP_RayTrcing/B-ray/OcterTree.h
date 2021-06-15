@@ -75,7 +75,6 @@ public:
 		std::string codex = DecTiBin(r.GetOriginPos().x());
 		std::string codey = DecTiBin(r.GetOriginPos().y());
 		std::string codez = DecTiBin(r.GetOriginPos().z());
-
 		std::string qcode = NULL;
 
 		for (int i = 0; i < maxDepth; i++)
@@ -85,7 +84,8 @@ public:
 		}
 
 		std::unordered_map<std::string, OcterNode* >::iterator mapIt;
-
+		
+		//最大匹配位置代码
 		for (int i = qcode.length(); i > 0; i--)
 		{
 			std::string str = qcode.substr(0, i);
@@ -93,9 +93,26 @@ public:
 			if (mapIt != localCode.end())
 			{
 				B = qcode.length() - i;
-				T = true;
 				break;
 			}
+		}
+
+		//匹配后检测此叶节点下 是否包含面片
+		std::string qcodeR = qcode.substr(0, B);
+		mapIt == localCode.find(qcodeR);
+		if (mapIt->second->data.size() ==0)
+		{
+			T = false;
+		}
+		else
+		{
+			T = true;
+		}
+
+		if (!T)
+		{
+			qcodeR = qcode.substr(0, B-1);
+			mapIt == localCode.find(qcodeR);
 		}
 
 		vector<Triangle> trig = mapIt->second->data;

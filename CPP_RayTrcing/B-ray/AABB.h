@@ -8,7 +8,8 @@ public:
 	float length;
 
 	AABB(Vector3 cp,float len) :centralPoint(cp),length(len) { ; }
-
+	
+	//获得八个子包围体
 	vector<AABB> GetEightSubAABB() {
 		vector<AABB> SubAABB;
 		float quaLength = length/4;
@@ -47,7 +48,10 @@ bool isInside(Vertex* v, Vector3 max, Vector3 min) {
 	float y = ver.y();
 	float z = ver.z();
 
-	if (x <max.x() && y < max.y() && z<max.z() && x>min.x() && y>min.y() && z>min.z())
+	if (x <max.x() && y < max.y()
+		&& z<max.z() && x>min.x() 
+		&& y>min.y() && z>min.z()
+		)
 	{
 		return true;
 	}
@@ -58,13 +62,21 @@ bool isInside(Vertex* v, Vector3 max, Vector3 min) {
 }
 
 bool isContain(Triangle& trig, Vector3 max, Vector3 min) {
-	if (isInside(trig.GetVertex(0), max, min) || isInside(trig.GetVertex(1), max, min) || isInside(trig.GetVertex(2), max, min))
+	if (isInside(trig.GetVertex(0), max, min) ||
+		isInside(trig.GetVertex(1), max, min) ||
+		isInside(trig.GetVertex(2), max, min)
+		)
 	{
 		return true;
 	}
 	return false;
 }
 
+float intersects() {
+	//0 
+	//1 o-l/2
+	//2 
 
+}
 #endif // !AABB_H
 
