@@ -89,10 +89,9 @@ private:
 		}
 		
 
-		OcterTree t = OcterTree(trig, Vector3(0), maxDis, "0",7, 20);
-		
-
-		return Vector3(0);
+		OcterTree t = OcterTree(trig, Vector3(0), maxDis, "",8, 20);
+		return t.Intersect(r);
+#pragma region 传统遍历相交
 
 		/*
 		//遍历求交
@@ -130,7 +129,9 @@ private:
 		Vector3 dir = r.GetDirection();
 		auto t = (dir.y() + 1.0f)*0.5f;
 		return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
+
 		*/
+#pragma endregion
 	}
 };
 

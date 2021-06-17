@@ -11,8 +11,9 @@ using std::vector;
 struct OcterNode
 {
 	vector<Triangle> data = { Triangle() };
+	AABB box;
 	OcterNode() {}
-	OcterNode(vector<Triangle> trig) :data(trig) {}
+	OcterNode(vector<Triangle> trig, AABB abbox) :data(trig), box(abbox) {}
 };
 
 class OcterTree {
@@ -31,14 +32,16 @@ public:
 
 		if (trig.size() <= maximum)
 		{
-			OcterNode* node = new OcterNode(trig);
+			AABB box = AABB(centerPoint, length);
+			OcterNode* node = new OcterNode(trig,box);
 			localCode.insert({ depthcode,node });
 			return;
 		}
 
 		if (depthcode.length() >= maxDepth)
 		{
-			OcterNode* node = new OcterNode(trig);
+			AABB box = AABB(centerPoint, length);
+			OcterNode* node = new OcterNode(trig, box);
 			localCode.insert({ depthcode,node });
 			return;
 		}
@@ -72,10 +75,10 @@ public:
 		bool T = false;
 		int B = -1;
 
-		std::string codex = DecTiBin(r.GetOriginPos().x());
-		std::string codey = DecTiBin(r.GetOriginPos().y());
-		std::string codez = DecTiBin(r.GetOriginPos().z());
-		std::string qcode = NULL;
+		std::string codex = DecTiBin(r.GetOriginPos().x(), maxDepth);
+		std::string codey = DecTiBin(r.GetOriginPos().y(), maxDepth);
+		std::string codez = DecTiBin(r.GetOriginPos().z(), maxDepth);
+		std::string qcode = "";
 
 		for (int i = 0; i < maxDepth; i++)
 		{
@@ -84,51 +87,55 @@ public:
 		}
 
 		std::unordered_map<std::string, OcterNode* >::iterator mapIt;
-		
+
 		//最大匹配位置代码
 		for (int i = qcode.length(); i > 0; i--)
 		{
 			std::string str = qcode.substr(0, i);
-			mapIt == localCode.find(str);
+			mapIt = localCode.find(str);
 			if (mapIt != localCode.end())
 			{
 				B = qcode.length() - i;
+				if (B>= qcode.length())
+				{
+					return Vector3(0);
+				}
 				break;
 			}
+
 		}
 
 		//匹配后检测此叶节点下 是否包含面片
 		std::string qcodeR = qcode.substr(0, B);
 		mapIt == localCode.find(qcodeR);
-		if (mapIt->second->data.size() ==0)
+		vector<Triangle> trig = mapIt->second->data;
+		if (trig.size() == 0)
 		{
-			T = false;
+			AABB box = mapIt->second->box;
+			float t = box.intersects(r);
+			t += 0.99f;
+			Ray rnew(r.RayRun(t), r.GetDirection());
+			Intersect(rnew);
 		}
 		else
 		{
-			T = true;
-		}
-
-		if (!T)
-		{
-			qcodeR = qcode.substr(0, B-1);
-			mapIt == localCode.find(qcodeR);
-		}
-
-		vector<Triangle> trig = mapIt->second->data;
-		for (int i = 0; i < trig.size(); i++)
-		{
-			bool ishit =trig.at(i).IntersectTriangle(r);
-			if (ishit)
+			for (int i = 0; i < trig.size(); i++)
 			{
-				return trig.at(i).GetDis;
-			}
-			else
-			{
-
+				bool ishit = trig.at(i).IntersectTriangle(r);
+				if (ishit)
+				{
+					return Vector3(1,0,0);
+				}
+				else
+				{
+					AABB box = mapIt->second->box;
+					float t = box.intersects(r);
+					t += 0.99f;
+					Ray rnew(r.RayRun(t), r.GetDirection());
+					Intersect(rnew);
+				}
 			}
 		}
-
 	}
 };
 

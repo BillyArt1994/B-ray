@@ -18,13 +18,15 @@ inline Vector3 cross(const Vector3 &a, const Vector3 &b) {
 	return Vector3(a.y()*b.z() - a.z()*b.y(), a.z()*b.x() - a.x()*b.z(), a.x()*b.y() - a.y()*b.x());
 }
 
-inline std::string DecTiBin(const float dec) {
+inline std::string DecTiBin(const float dec, const int bits) {
+	int value = dec;
 	std::string result = "";
-	int temp = dec;
-	while (temp)
+	int a = 1;
+	int i = 0;
+	while (i <= bits)
 	{
-		result.insert(0, std::to_string(temp % 2));
-		temp = temp / 2;
+		result.insert(0, std::to_string((value >> i)&a));
+		i++;
 	}
 	return result;
 }
