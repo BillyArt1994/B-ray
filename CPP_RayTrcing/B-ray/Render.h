@@ -23,13 +23,42 @@ public:
 		Vector3 horizontal = mainCamera.GetHorizontal();
 		Vector3 vertical = mainCamera.GetVertical();
 		Vector3 camerPos = mainCamera.GetPos();
+
+		//建TM的树
+		vector<Triangle> trig;
+		for (int i = 0; i < worldObjet.size(); i++)
+		{
+			trig = worldObjet[i].GetMesh()->GetTriangle();
+		}
+		float maxDis = 0;
+		for (int i = 0; i < trig.size(); i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				Vector3 v = trig.at(i).GetVertex(j)->position();
+				float size = CompareSize(v);
+				if (size > maxDis)
+				{
+					maxDis = size;
+				}
+
+			}
+		}
+		float size = CompareSize(mainCamera.GetPos());
+		if (size > maxDis)
+		{
+			maxDis = size;
+		}
+		OcterTree root = OcterTree(trig, Vector3(0), maxDis, "",32, 20);
+
+
 		for (int i = 0; i < height; i++) {
 
 			for (int j = 0; j < width; j++) {
 				auto u = (j) / (width - 1);
 				auto v = (i) / (height - 1);
 				Ray r(camerPos, (high_left_corner + horizontal * u - vertical * v - camerPos).normalize());
-				Color pixel_color = ray_color(r, worldObjet, light,mainCamera);
+				Color pixel_color = ray_color(r, worldObjet,root);
 				write_color(std::cout, pixel_color, samples_per_pixel);
 				*p++ = (unsigned char)pixel_color.x();    //R
 				*p++ = (unsigned char)pixel_color.y();    //G
@@ -53,7 +82,7 @@ private:
 		fclose(fp);
 	}
 
-	Color ray_color(Ray& r, vector<GameObject>& worldObjet, Light& light,Camera camr) {
+	Color ray_color(Ray& r, vector<GameObject>& worldObjet,OcterTree& root) {
 
 		/*
 		float minDis = FLT_MAX;
@@ -61,36 +90,17 @@ private:
 		bool isHit = false;
 		int objIndex = -1;
 		*/
-
-		vector<Triangle> trig;
-		for (int i = 0; i < worldObjet.size(); i++)
+		float t = 0;
+		bool ishit = root.Intersect(r, t);
+		if (ishit ==true)
 		{
-			trig = worldObjet[i].GetMesh()->GetTriangle();
+			return Vector3(1,0,0);
 		}
-
-		float maxDis = 0;
-		for (int i = 0; i < trig.size(); i++)
+		else
 		{
-			for (int j = 0; j < 3; j++)
-			{
-				Vector3 v = trig.at(i).GetVertex(j)->position();
-				float size = CompareSize(v);
-				if (size > maxDis)
-				{
-					maxDis = size;
-				}
-				
-			}
-		}
-		float size = CompareSize(camr.GetPos());
-		if (size >maxDis)
-		{
-			maxDis = size;
+			return Vector3(0);
 		}
 		
-
-		OcterTree t = OcterTree(trig, Vector3(0), maxDis, "",8, 20);
-		return t.Intersect(r);
 #pragma region 传统遍历相交
 
 		/*

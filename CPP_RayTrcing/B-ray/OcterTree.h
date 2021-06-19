@@ -21,14 +21,11 @@ public:
 	std::unordered_map<std::string, OcterNode* > localCode;
 	int maxDepth = -1;
 	int maximum = -1;
-	OcterTree(vector<Triangle> t, Vector3 cp, float l, std::string dc, int md, int mi) :maxDepth(md), maximum(mi) { CreatTree(t, cp, l, dc); }
+	Vector3 centerPoint = Vector3(0);
+	float length = 0;
+	OcterTree(vector<Triangle> t, Vector3 cp, float l, std::string dc, int md, int mi) :maxDepth(md), maximum(mi), centerPoint(cp),length(l){ CreatTree(t, centerPoint,INT_MAX,dc); }
 
-	void CreatTree(vector<Triangle> trig, Vector3 centerPoint, float length, std::string depthcode) {
-
-		if (trig.empty())
-		{
-			return;
-		}
+	void CreatTree(vector<Triangle> trig, Vector3 centerPoint, int length, std::string depthcode) {
 
 		if (trig.size() <= maximum)
 		{
@@ -71,13 +68,23 @@ public:
 		CreatTree(subTrig[7], subBounding[7].centralPoint, subBounding[7].length, depthcode + "7");
 	}
 
-	Vector3 Intersect(Ray r) {
+	bool Intersect(Ray r,float& t) {
+
 		bool T = false;
 		int B = -1;
+		t = 0;
 
-		std::string codex = DecTiBin(r.GetOriginPos().x(), maxDepth);
-		std::string codey = DecTiBin(r.GetOriginPos().y(), maxDepth);
-		std::string codez = DecTiBin(r.GetOriginPos().z(), maxDepth);
+		AABB root = AABB(centerPoint, length);
+		if (root.intersects(r, t) == false)
+		{
+			return false;
+		}
+
+		Vector3 rp = r.GetOriginPos();
+
+		std::string codex = DecTiBin(rp.x(), maxDepth);
+		std::string codey = DecTiBin(rp.y(), maxDepth);
+		std::string codez = DecTiBin(rp.z(), maxDepth);
 		std::string qcode = "";
 
 		for (int i = 0; i < maxDepth; i++)
@@ -96,26 +103,16 @@ public:
 			if (mapIt != localCode.end())
 			{
 				B = qcode.length() - i;
-				if (B>= qcode.length())
-				{
-					return Vector3(0);
-				}
 				break;
 			}
 
 		}
 
 		//匹配后检测此叶节点下 是否包含面片
-		std::string qcodeR = qcode.substr(0, B);
-		mapIt == localCode.find(qcodeR);
 		vector<Triangle> trig = mapIt->second->data;
 		if (trig.size() == 0)
 		{
-			AABB box = mapIt->second->box;
-			float t = box.intersects(r);
-			t += 0.99f;
-			Ray rnew(r.RayRun(t), r.GetDirection());
-			Intersect(rnew);
+			T = false;
 		}
 		else
 		{
@@ -124,17 +121,23 @@ public:
 				bool ishit = trig.at(i).IntersectTriangle(r);
 				if (ishit)
 				{
-					return Vector3(1,0,0);
+					t = trig.at(i).GetDis();
+					return true;
 				}
 				else
 				{
-					AABB box = mapIt->second->box;
-					float t = box.intersects(r);
-					t += 0.99f;
-					Ray rnew(r.RayRun(t), r.GetDirection());
-					Intersect(rnew);
+					T = false;
 				}
 			}
+		}
+
+		if (T ==false)
+		{
+			AABB box = mapIt->second->box;
+			box.intersects(r,t);
+			t += 0.99f;
+			Ray rnew(r.RayRun(t), r.GetDirection());
+			Intersect(rnew,t);
 		}
 	}
 };

@@ -5,12 +5,12 @@
 class AABB {
 public:
 	Vector3 centralPoint = 0;
-	float length = 0;
+	int length = 0;
 
 	Vector3 minPoint;
 	Vector3 maxPoint;
 
-	AABB(Vector3 cp, float len) :centralPoint(cp), length(len), minPoint(cp - (len / 2)), maxPoint(cp + (len / 2)) { ; }
+	AABB(Vector3 cp, int len) :centralPoint(cp), length(len), minPoint(cp - (len / 2)), maxPoint(cp + (len / 2)) { ; }
 	AABB() {}
 	//获得八个子包围体
 	vector<AABB> GetEightSubAABB() {
@@ -35,27 +35,80 @@ public:
 		SubAABB.push_back(AABB(cp7, halfLength));
 		return SubAABB;
 	}
-	float intersects(Ray r) {
+
+	bool intersects(const Ray& r, float& t) {
 		Vector3 rd = r.GetDirection();
 		Vector3 rp = r.GetOriginPos();
+		Vector3 invdir = 1/rd;
+		float tmin, tmax, tminY, tmaxY, tminZ, tmaxZ;
 
-		float tValue[6] = {0};
-		tValue[0] = (minPoint.x() - rp.x()) / rd.x();
-		tValue[1] = (maxPoint.x() - rp.x()) / rd.x();
-		tValue[2] = (minPoint.y() - rp.y()) / rd.y();
-		tValue[3] = (maxPoint.y() - rp.y()) / rd.y();
-		tValue[4] = (minPoint.z() - rp.z()) / rd.z();
-		tValue[5] = (maxPoint.z() - rp.z()) / rd.z();
-
-		float Maxt = FLT_MIN;
-		for (int i = 0; i < 6; i++)
+		if (isinf(invdir.x()))
 		{
-			if (tValue[i] > Maxt)
+			if (rp.x() > maxPoint.x() || rp.x() < minPoint.x())
 			{
-				Maxt = tValue[i];
+				return false;
 			}
+			tmin = -FLT_MAX;
+			tmax = FLT_MAX;
 		}
-		return Maxt;
+		else
+		{
+			tmin = (minPoint.x() - rp.x()) * invdir.x();
+			tmax = (maxPoint.x() - rp.x()) * invdir.x();
+			if (tmin > tmax) std::swap(tmin, tmax);
+		}
+
+		if (isinf(invdir.y()))
+		{
+			if (rp.y() > maxPoint.y() || rp.y() < minPoint.y())
+			{
+				return false;
+			}
+			tminY = -FLT_MAX;
+			tmaxY = FLT_MAX;
+		}
+		else
+		{
+			tminY = (minPoint.y() - rp.y()) * invdir.y();
+			tmaxY = (maxPoint.y() - rp.y()) * invdir.y();
+			if (tminY > tmaxY) std::swap(tmin, tmax);
+		}
+
+		if (tmaxY < tmax)
+		{
+			tmax = tmaxY;
+		}
+		if (tminY > tmin)
+		{
+			tmin = tminY;
+		}
+
+		if (isinf(invdir.z()))
+		{
+			if (rp.z() > maxPoint.z() || rp.z() < minPoint.z())
+			{
+				return false;
+			}
+			tminZ = -FLT_MAX;
+			tmaxZ = FLT_MAX;
+
+		}
+		else
+		{
+			tminZ = (minPoint.z() - rp.z()) * invdir.z();
+			tmaxZ = (maxPoint.z() - rp.z()) * invdir.z();
+			if (tminZ > tmaxZ) std::swap(tminZ, tmaxZ);
+		}
+
+		if (tmaxZ < tmax)
+		{
+			tmax = tmaxZ;
+		}
+		if (tminZ > tmin)
+		{
+			tmin = tminZ;
+		}
+		t = tmax;
 	}
 
 	Vector3 GetMinPoint() {

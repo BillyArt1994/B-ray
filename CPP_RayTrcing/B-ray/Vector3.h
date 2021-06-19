@@ -90,7 +90,7 @@ public:
 		return *this;
 	}
 };
-using Color = Vector3;
+
 
 inline Vector3 operator *(const Vector3& a, const float &b) {
 	return Vector3(a.x()*b, a.y()*b, a.z()*b);
@@ -99,4 +99,10 @@ inline Vector3 operator *(const Vector3& a, const float &b) {
 inline Vector3 operator *(const float& a, const Vector3 &b) {
 	return Vector3(a*b.x(), a*b.y(), a*b.z());
 }
+
+inline Vector3 operator /(const float &a, const Vector3 &b) {
+	return Vector3(a / b.x(), a / b.y(), a / b.z());
+}
+
+using Color = Vector3;
 #endif // Vector3_H
