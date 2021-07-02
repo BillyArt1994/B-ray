@@ -49,7 +49,7 @@ public:
 		{
 			maxDis = size;
 		}
-		OcterTree root = OcterTree(trig, Vector3(0), maxDis, "",32, 20);
+		OcterTree root = OcterTree(trig, Vector3(0), maxDis, "",32, 3);
 
 
 		for (int i = 0; i < height; i++) {

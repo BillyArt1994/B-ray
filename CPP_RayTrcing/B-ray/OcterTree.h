@@ -58,14 +58,29 @@ public:
 			}
 		}
 
-		CreatTree(subTrig[0], subBounding[0].centralPoint, subBounding[0].length, depthcode + "0");
-		CreatTree(subTrig[1], subBounding[1].centralPoint, subBounding[1].length, depthcode + "1");
-		CreatTree(subTrig[2], subBounding[2].centralPoint, subBounding[2].length, depthcode + "2");
-		CreatTree(subTrig[3], subBounding[3].centralPoint, subBounding[3].length, depthcode + "3");
-		CreatTree(subTrig[4], subBounding[4].centralPoint, subBounding[4].length, depthcode + "4");
-		CreatTree(subTrig[5], subBounding[5].centralPoint, subBounding[5].length, depthcode + "5");
-		CreatTree(subTrig[6], subBounding[6].centralPoint, subBounding[6].length, depthcode + "6");
-		CreatTree(subTrig[7], subBounding[7].centralPoint, subBounding[7].length, depthcode + "7");
+		if (depthcode.size()>=1)
+		{
+			CreatTree(subTrig[0], subBounding[0].centralPoint, subBounding[0].length, depthcode + "7");
+			CreatTree(subTrig[1], subBounding[1].centralPoint, subBounding[1].length, depthcode + "6");
+			CreatTree(subTrig[2], subBounding[2].centralPoint, subBounding[2].length, depthcode + "5");
+			CreatTree(subTrig[3], subBounding[3].centralPoint, subBounding[3].length, depthcode + "4");
+			CreatTree(subTrig[4], subBounding[4].centralPoint, subBounding[4].length, depthcode + "3");
+			CreatTree(subTrig[5], subBounding[5].centralPoint, subBounding[5].length, depthcode + "2");
+			CreatTree(subTrig[6], subBounding[6].centralPoint, subBounding[6].length, depthcode + "1");
+			CreatTree(subTrig[7], subBounding[7].centralPoint, subBounding[7].length, depthcode + "0");
+		}
+		else
+		{
+			CreatTree(subTrig[0], subBounding[0].centralPoint, subBounding[0].length, depthcode + "0");
+			CreatTree(subTrig[1], subBounding[1].centralPoint, subBounding[1].length, depthcode + "1");
+			CreatTree(subTrig[2], subBounding[2].centralPoint, subBounding[2].length, depthcode + "2");
+			CreatTree(subTrig[3], subBounding[3].centralPoint, subBounding[3].length, depthcode + "3");
+			CreatTree(subTrig[4], subBounding[4].centralPoint, subBounding[4].length, depthcode + "4");
+			CreatTree(subTrig[5], subBounding[5].centralPoint, subBounding[5].length, depthcode + "5");
+			CreatTree(subTrig[6], subBounding[6].centralPoint, subBounding[6].length, depthcode + "6");
+			CreatTree(subTrig[7], subBounding[7].centralPoint, subBounding[7].length, depthcode + "7");
+		}
+
 	}
 
 	bool Intersect(Ray r,float& t) {
@@ -143,3 +158,5 @@ public:
 };
 
 #endif // OcterTree_H
+
+
