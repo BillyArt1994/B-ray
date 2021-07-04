@@ -49,14 +49,14 @@ public:
 		{
 			maxDis = size;
 		}
-		OcterTree root = OcterTree(trig, Vector3(0), maxDis, "",32, 3);
+		OcterTree root = OcterTree(trig, Vector3(0), maxDis*2, "",32,3 );
 
 
 		for (int i = 0; i < height; i++) {
 
 			for (int j = 0; j < width; j++) {
-				auto u = (j) / (width - 1);
-				auto v = (i) / (height - 1);
+				auto u = double(j) /(width-1);
+				auto v = double(i) /(height-1);
 				Ray r(camerPos, (high_left_corner + horizontal * u - vertical * v - camerPos).normalize());
 				Color pixel_color = ray_color(r, worldObjet,root);
 				write_color(std::cout, pixel_color, samples_per_pixel);

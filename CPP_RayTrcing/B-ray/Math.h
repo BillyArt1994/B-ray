@@ -19,11 +19,11 @@ inline Vector3 cross(const Vector3 &a, const Vector3 &b) {
 }
 
 inline std::string DecTiBin(const float dec, const int bits) {
-	int value = dec;
+	int value = floor(dec);
 	std::string result = "";
 	int a = 1;
 	int i = 0;
-	while (i <= bits)
+	while (i < bits)
 	{
 		result.insert(0, std::to_string((value >> i)&a));
 		i++;

@@ -1,6 +1,7 @@
 #ifndef AABB_H
 #define AABB_H
 #include "Vector3.h"
+#include <math.h> 
 
 class AABB {
 public:
@@ -10,13 +11,13 @@ public:
 	Vector3 minPoint;
 	Vector3 maxPoint;
 
-	AABB(Vector3 cp, int len) :centralPoint(cp), length(len), minPoint(cp - (len / 2)), maxPoint(cp + (len / 2)) { ; }
+	AABB(Vector3 cp, int len) :centralPoint(cp), length(len), minPoint(cp - (len / 2)), maxPoint(cp + (round(len / 2))) { ; }
 	AABB() {}
 	//获得八个子包围体
 	vector<AABB> GetEightSubAABB() {
 		vector<AABB> SubAABB;
-		float quaLength = length / 4;
-		float halfLength = length / 2;
+		int quaLength = length / 4;
+		int halfLength = length / 2;
 		Vector3 cp0(centralPoint.x() + quaLength, centralPoint.y() + quaLength, centralPoint.z() + quaLength);
 		SubAABB.push_back(AABB(cp0, halfLength));
 		Vector3 cp1(centralPoint.x() - quaLength, centralPoint.y() + quaLength, centralPoint.z() + quaLength);
@@ -39,7 +40,7 @@ public:
 	bool intersects(const Ray& r, float& t) {
 		Vector3 rd = r.GetDirection();
 		Vector3 rp = r.GetOriginPos();
-		Vector3 invdir = 1/rd;
+		Vector3 invdir = 1 / rd;
 		float tmin, tmax, tminY, tmaxY, tminZ, tmaxZ;
 
 		if (isinf(invdir.x()))
@@ -71,7 +72,7 @@ public:
 		{
 			tminY = (minPoint.y() - rp.y()) * invdir.y();
 			tmaxY = (maxPoint.y() - rp.y()) * invdir.y();
-			if (tminY > tmaxY) std::swap(tmin, tmax);
+			if (tminY > tmaxY) std::swap(tminY, tmaxY);
 		}
 
 		if (tmaxY < tmax)
@@ -91,7 +92,6 @@ public:
 			}
 			tminZ = -FLT_MAX;
 			tmaxZ = FLT_MAX;
-
 		}
 		else
 		{
@@ -122,6 +122,25 @@ public:
 
 bool isInside(Vertex* v, Vector3 max, Vector3 min) {
 	Vector3 ver = v->position();
+	float x = ver.x();
+	float y = ver.y();
+	float z = ver.z();
+
+	if (x <= max.x() && y <= max.y()
+		&& z <= max.z() && x >= min.x()
+		&& y >= min.y() && z >= min.z()
+		)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool isInside(Vector3* v, Vector3 max, Vector3 min) {
+	Vector3 ver = *v;
 	float x = ver.x();
 	float y = ver.y();
 	float z = ver.z();

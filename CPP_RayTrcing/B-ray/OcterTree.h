@@ -22,8 +22,8 @@ public:
 	int maxDepth = -1;
 	int maximum = -1;
 	Vector3 centerPoint = Vector3(0);
-	float length = 0;
-	OcterTree(vector<Triangle> t, Vector3 cp, float l, std::string dc, int md, int mi) :maxDepth(md), maximum(mi), centerPoint(cp),length(l){ CreatTree(t, centerPoint,INT_MAX,dc); }
+	int length = 0;
+	OcterTree(vector<Triangle> t, Vector3 cp, int l, std::string dc, int md, int mi) :maxDepth(md), maximum(mi), centerPoint(cp),length(l){ CreatTree(t, centerPoint,INT_MAX,dc); }
 
 	void CreatTree(vector<Triangle> trig, Vector3 centerPoint, int length, std::string depthcode) {
 
@@ -90,13 +90,11 @@ public:
 		t = 0;
 
 		AABB root = AABB(centerPoint, length);
-		if (root.intersects(r, t) == false)
+		if (isInside(&r.GetOriginPos(), root.maxPoint, root.minPoint) == false)
 		{
 			return false;
 		}
-
 		Vector3 rp = r.GetOriginPos();
-
 		std::string codex = DecTiBin(rp.x(), maxDepth);
 		std::string codey = DecTiBin(rp.y(), maxDepth);
 		std::string codez = DecTiBin(rp.z(), maxDepth);
@@ -120,41 +118,46 @@ public:
 				B = qcode.length() - i;
 				break;
 			}
-
 		}
 
-		//匹配后检测此叶节点下 是否包含面片
-		vector<Triangle> trig = mapIt->second->data;
-		if (trig.size() == 0)
+		if (B !=-1)
 		{
-			T = false;
-		}
-		else
-		{
-			for (int i = 0; i < trig.size(); i++)
+			//匹配后检测此叶节点下 是否包含面片
+			vector<Triangle> trig = mapIt->second->data;
+			if (trig.size() == 0)
 			{
-				bool ishit = trig.at(i).IntersectTriangle(r);
-				if (ishit)
+				T = false;
+			}
+			else
+			{
+				for (int i = 0; i < trig.size(); i++)
 				{
-					t = trig.at(i).GetDis();
-					return true;
-				}
-				else
-				{
-					T = false;
+					bool ishit = trig.at(i).IntersectTriangle(r);
+					if (ishit)
+					{
+
+						return true;
+					}
+					else
+					{
+						T = false;
+					}
 				}
 			}
 		}
+
 
 		if (T ==false)
 		{
 			AABB box = mapIt->second->box;
 			box.intersects(r,t);
-			t += 0.99f;
+			t += 1;
 			Ray rnew(r.RayRun(t), r.GetDirection());
 			Intersect(rnew,t);
 		}
 	}
+
+
 };
 
 #endif // OcterTree_H

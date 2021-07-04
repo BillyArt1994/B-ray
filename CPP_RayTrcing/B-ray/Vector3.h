@@ -31,7 +31,7 @@ public:
 	}
 
 	Vector3 normalize() {
-		return *this / this->length();
+		return *this/this->length();
 	}
 
 	//ÔËËã·ûÖØÔØ
