@@ -13,8 +13,6 @@
 class Render
 {
 public:
-	const int samples_per_pixel = 5;
-
 	Render(Camera& mainCamera, Image& image, vector<GameObject>& worldObjet, Light& light) {
 		unsigned char rgb[400 * 225 * 3], *p = rgb;
 		int width = image.GetWidth();
@@ -24,48 +22,24 @@ public:
 		Vector3 vertical = mainCamera.GetVertical();
 		Vector3 camerPos = mainCamera.GetPos();
 
-		//建TM的树
-		vector<Triangle> trig;
-		for (int i = 0; i < worldObjet.size(); i++)
-		{
-			trig = worldObjet[i].GetMesh()->GetTriangle();
-		}
-		float maxDis = 0;
-		for (int i = 0; i < trig.size(); i++)
-		{
-			for (int j = 0; j < 3; j++)
-			{
-				Vector3 v = trig.at(i).GetVertex(j)->position();
-				float size = CompareSize(v);
-				if (size > maxDis)
-				{
-					maxDis = size;
-				}
-
-			}
-		}
-		float size = CompareSize(mainCamera.GetPos());
-		if (size > maxDis)
-		{
-			maxDis = size;
-		}
-		OcterTree root = OcterTree(trig, Vector3(0), maxDis*2, "",32,3 );
-
-
+#pragma region 八叉树	
+		int maxAABB = INTMaxAABB(worldObjet, mainCamera);
+		OcterTree root = OcterTree(worldObjet, maxAABB*2,12,30);
+#pragma endregion
 		for (int i = 0; i < height; i++) {
 
 			for (int j = 0; j < width; j++) {
-				auto u = double(j) /(width-1);
-				auto v = double(i) /(height-1);
-				Ray r(camerPos, (high_left_corner + horizontal * u - vertical * v - camerPos).normalize());
-				Color pixel_color = ray_color(r, worldObjet,root);
-				write_color(std::cout, pixel_color, samples_per_pixel);
+				auto u = float(j) /(width-1);
+				auto v = float(i) /(height-1);
+				Ray r(camerPos, ((high_left_corner + horizontal * u - vertical * v )- camerPos).normalize());
+				Color pixel_color = ray_color(r, worldObjet,root,light);
+				write_color(std::cout, pixel_color);
 				*p++ = (unsigned char)pixel_color.x();    //R
 				*p++ = (unsigned char)pixel_color.y();    //G
 				*p++ = (unsigned char)pixel_color.z();    //B
 			}
 
-			if (i % 2 == 0)
+			if (i % 22 == 0)
 			{
 				int rate = ceil(i*(100.0f / (height - 1)));
 				std::cout << rate << "%" << std::endl;
@@ -82,14 +56,8 @@ private:
 		fclose(fp);
 	}
 
-	Color ray_color(Ray& r, vector<GameObject>& worldObjet,OcterTree& root) {
+	Color ray_color(Ray& r, vector<GameObject>& worldObjet,OcterTree& root,Light& light) {
 
-		/*
-		float minDis = FLT_MAX;
-		int minIndex = -1;
-		bool isHit = false;
-		int objIndex = -1;
-		*/
 		float t = 0;
 		bool ishit = root.Intersect(r, t);
 		if (ishit ==true)
@@ -98,13 +66,19 @@ private:
 		}
 		else
 		{
-			return Vector3(0);
+			Vector3 dir = r.GetDirection();
+			auto t = (dir.y() + 1.0f)*0.5f;
+			return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
 		}
-		
-#pragma region 传统遍历相交
 
+#pragma region 传统遍历相交
 		/*
 		//遍历求交
+		float minDis = FLT_MAX;
+		int minIndex = -1;
+		bool isHit = false;
+		int objIndex = -1;
+
 		for (int i = 0; i < worldObjet.size(); i++)
 		{
 			vector<Triangle>* trig = &(worldObjet[i].GetMesh()->GetTriangle());
@@ -142,6 +116,35 @@ private:
 
 		*/
 #pragma endregion
+
+	}
+
+	int INTMaxAABB(vector<GameObject>& worldObjet, Camera camera) {
+		float maxDis = 0;
+		for (size_t i = 0; i < worldObjet.size(); i++)
+		{
+			vector<Triangle> trig = worldObjet[i].GetMesh()->GetTriangle();
+			for (size_t i = 0; i < trig.size(); i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					Vector3 v = trig.at(i).GetVertex(j)->position();
+					float size = CompareSize(v);
+					if (size > maxDis)
+					{
+						maxDis = size;
+					}
+				}
+			}
+		}
+
+		float size = CompareSize(camera.GetPos());
+		if (size > maxDis)
+		{
+			maxDis = size;
+		}
+
+		return ceil(maxDis);
 	}
 };
 

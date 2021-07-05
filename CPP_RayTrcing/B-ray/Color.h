@@ -5,7 +5,7 @@
 #include "Function.h"
 #include <iostream>
 
-void write_color(std::ostream &out, Color &pixel_color,int samples_pixel) {
+void write_color(std::ostream &out, Color &pixel_color) {
 	// Write the translated [0,255] value of each color component.
 	auto r = pixel_color.x();
 	auto g = pixel_color.y();

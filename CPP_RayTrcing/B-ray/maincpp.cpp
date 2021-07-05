@@ -22,7 +22,7 @@ int main() {
 	Light light(Color(1.0f, 1.0f, 1.0f), Vector3(2.0f, 3.0f, -5.0f), Vector3(0.0f));
 
 	//Model
-	Mesh torusMesh = ReadObjFile("C:\\Users\\billy\\Desktop\\plane.obj");
+	Mesh torusMesh = ReadObjFile("C:\\Users\\huang\\Desktop\\Torus.obj");
 	//Mesh Box_BigMesh = ReadObjFile("C:\\Users\\huang\\Desktop\\Box_Big.obj");
 	//Mesh Box_SmallMesh = ReadObjFile("C:\\Users\\huang\\Desktop\\Box_Small.obj");
 
@@ -32,7 +32,7 @@ int main() {
 	//Material mat3 = Material(Color(1.0f, 0.5f, 1.0f));
 
 	//GameObject
-	GameObject torus(&torusMesh, &mat1);
+	GameObject torus(&torusMesh,&mat1);
 	//GameObject Box_Big(&Box_BigMesh, &mat2);
 	//GameObject Box_Small(&Box_SmallMesh, &mat3);
 

@@ -31,38 +31,42 @@ public:
 		Vector3 v1 = _vertexIndex[1]->position();
 		Vector3 v2 = _vertexIndex[2]->position();
 		Vector3 orig = ray.GetOriginPos();
-		Vector3 dir = -ray.GetDirection();
+		Vector3 dir = ray.GetDirection();
 
 		Vector3 E1 = v1 - v0;
 		Vector3 E2 = v2 - v0;
-		Vector3 T = orig - v0;
+ 		Vector3 P= cross(dir,E2);
 
-		float D = Det3x3Multiply(dir, E1, E2);
+		float det = dot(E1, P);
 
-		if (D==0)
+		Vector3 T;
+		if (det > 0)
+		{
+			T = orig - v0;
+		}
+		else
+		{
+			T = v0 - orig;
+			det = -det;
+		}
+
+		if (det < 0.0001f)
+			return false;
+
+		float u = dot(T, P);
+		if (u<0.0f||u>det)
 		{
 			return false;
 		}
 
-		float D1 = Det3x3Multiply(dir, T, E2);
-		float u = D1 / D;
-
-		if (u<0)
+		Vector3 Q = cross(T,E1);
+		float v = dot(dir, Q);
+		if (v<0.0f||v+u>det)
 		{
 			return false;
 		}
 
-		float D2 = Det3x3Multiply(dir, E1, T);
-		float v = D2 / D;
-
-		if (v<0||v+u>1)
-		{
-			return false;
-		}
-		float D3 = Det3x3Multiply(T, E1, E2);
-		float t = D3 / D;
-		_dis = D3/D;
-		_normal = cross(E1, E2).normalize();
+		_dis = dot(E2, Q)*(1.0f / det);
 		return true;
 	}
 };

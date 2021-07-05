@@ -28,6 +28,7 @@ inline std::string DecTiBin(const float dec, const int bits) {
 		result.insert(0, std::to_string((value >> i)&a));
 		i++;
 	}
+
 	return result;
 }
 

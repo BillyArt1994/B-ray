@@ -10,7 +10,7 @@ using std::vector;
 
 struct OcterNode
 {
-	vector<Triangle> data = { Triangle() };
+	vector<Triangle> data = {Triangle()};
 	AABB box;
 	OcterNode() {}
 	OcterNode(vector<Triangle> trig, AABB abbox) :data(trig), box(abbox) {}
@@ -21,16 +21,17 @@ public:
 	std::unordered_map<std::string, OcterNode* > localCode;
 	int maxDepth = -1;
 	int maximum = -1;
-	Vector3 centerPoint = Vector3(0);
 	int length = 0;
-	OcterTree(vector<Triangle> t, Vector3 cp, int l, std::string dc, int md, int mi) :maxDepth(md), maximum(mi), centerPoint(cp),length(l){ CreatTree(t, centerPoint,INT_MAX,dc); }
+	OcterTree(vector<GameObject>& t, int l, int md, int mi) :maxDepth(md), maximum(mi), length(l) {
+
+		CreatTree(t,Vector3(0), INT_MAX, ""); }
 
 	void CreatTree(vector<Triangle> trig, Vector3 centerPoint, int length, std::string depthcode) {
 
 		if (trig.size() <= maximum)
 		{
 			AABB box = AABB(centerPoint, length);
-			OcterNode* node = new OcterNode(trig,box);
+			OcterNode* node = new OcterNode(trig, box);
 			localCode.insert({ depthcode,node });
 			return;
 		}
@@ -58,7 +59,7 @@ public:
 			}
 		}
 
-		if (depthcode.size()>=1)
+		if (depthcode.size() >= 1)
 		{
 			CreatTree(subTrig[0], subBounding[0].centralPoint, subBounding[0].length, depthcode + "7");
 			CreatTree(subTrig[1], subBounding[1].centralPoint, subBounding[1].length, depthcode + "6");
@@ -83,81 +84,79 @@ public:
 
 	}
 
-	bool Intersect(Ray r,float& t) {
+	bool Intersect(Ray r, float& t) {
 
-		bool T = false;
-		int B = -1;
-		t = 0;
-
-		AABB root = AABB(centerPoint, length);
-		if (isInside(&r.GetOriginPos(), root.maxPoint, root.minPoint) == false)
+		AABB root = AABB(Vector3(0), length);
+		Ray ray = r;
+		while (true)
 		{
-			return false;
-		}
-		Vector3 rp = r.GetOriginPos();
-		std::string codex = DecTiBin(rp.x(), maxDepth);
-		std::string codey = DecTiBin(rp.y(), maxDepth);
-		std::string codez = DecTiBin(rp.z(), maxDepth);
-		std::string qcode = "";
-
-		for (int i = 0; i < maxDepth; i++)
-		{
-			int x = codex.at(i) - '0', y = codey.at(i) - '0', z = codez.at(i) - '0';
-			qcode += std::to_string(x + 2 * y + 4 * z);
-		}
-
-		std::unordered_map<std::string, OcterNode* >::iterator mapIt;
-
-		//最大匹配位置代码
-		for (int i = qcode.length(); i > 0; i--)
-		{
-			std::string str = qcode.substr(0, i);
-			mapIt = localCode.find(str);
-			if (mapIt != localCode.end())
+			if (isInside(&ray.GetOriginPos(), root.maxPoint, root.minPoint) == false)
 			{
-				B = qcode.length() - i;
-				break;
+				return false;
 			}
-		}
+			int B = -1;
 
-		if (B !=-1)
-		{
-			//匹配后检测此叶节点下 是否包含面片
-			vector<Triangle> trig = mapIt->second->data;
-			if (trig.size() == 0)
+			Vector3 rp = ray.GetOriginPos();
+			std::string codex = DecTiBin(rp.x(), maxDepth);
+			std::string codey = DecTiBin(rp.y(), maxDepth);
+			std::string codez = DecTiBin(rp.z(), maxDepth);
+			std::string qcode = "";
+
+			for (int i = 0; i < maxDepth; i++)
 			{
-				T = false;
+				int x = codex.at(i) - '0', y = codey.at(i) - '0', z = codez.at(i) - '0';
+				qcode += std::to_string(x + 2 * y + 4 * z);
 			}
-			else
+
+			std::unordered_map<std::string, OcterNode* >::iterator mapIt;
+
+			for (int i = qcode.length(); i > 0; i--)
 			{
-				for (int i = 0; i < trig.size(); i++)
+				std::string str = qcode.substr(0, i);
+				mapIt = localCode.find(str);
+				if (mapIt != localCode.end())
 				{
-					bool ishit = trig.at(i).IntersectTriangle(r);
-					if (ishit)
-					{
+					B = qcode.length() - i;
+					break;
+				}
+			}
 
-						return true;
-					}
-					else
+			//最大匹配位置代码
+			for (int i = qcode.length(); i > 0; i--)
+			{
+				std::string str = qcode.substr(0, i);
+				mapIt = localCode.find(str);
+				if (mapIt != localCode.end())
+				{
+					B = qcode.length() - i;
+					break;
+				}
+			}
+
+			if (B != -1)
+			{
+				//匹配后检测此叶节点下 是否包含面片
+				vector<Triangle> trig = mapIt->second->data;
+
+				if (trig.size() != 0)
+				{
+					for (int i = 0; i < trig.size(); i++)
 					{
-						T = false;
+						bool ishit = trig.at(i).IntersectTriangle(r);
+						if (ishit)
+						{
+
+							return true;
+						}
 					}
 				}
 			}
-		}
-
-
-		if (T ==false)
-		{
 			AABB box = mapIt->second->box;
-			box.intersects(r,t);
+			box.intersects(ray, t);
 			t += 1;
-			Ray rnew(r.RayRun(t), r.GetDirection());
-			Intersect(rnew,t);
+			ray = Ray(ray.RayRun(t), ray.GetDirection());
 		}
 	}
-
-
 };
 
 #endif // OcterTree_H
