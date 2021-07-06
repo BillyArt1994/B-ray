@@ -23,23 +23,23 @@ public:
 		Vector3 camerPos = mainCamera.GetPos();
 
 #pragma region °Ë²æÊ÷	
-		int maxAABB = INTMaxAABB(worldObjet, mainCamera);
-		OcterTree root = OcterTree(worldObjet, maxAABB*2,12,30);
+		int maxLength = INTMaxAABB(worldObjet, mainCamera);
+		OcterTree root = OcterTree(worldObjet, maxLength * 2, 12, 3);
 #pragma endregion
 		for (int i = 0; i < height; i++) {
 
 			for (int j = 0; j < width; j++) {
-				auto u = float(j) /(width-1);
-				auto v = float(i) /(height-1);
-				Ray r(camerPos, ((high_left_corner + horizontal * u - vertical * v )- camerPos).normalize());
-				Color pixel_color = ray_color(r, worldObjet,root,light);
+				auto u = float(j) / (width - 1);
+				auto v = float(i) / (height - 1);
+				Ray r(camerPos, ((high_left_corner + horizontal * u - vertical * v) - camerPos).normalize());
+				Color pixel_color = ray_color(r, worldObjet, root, light);
 				write_color(std::cout, pixel_color);
 				*p++ = (unsigned char)pixel_color.x();    //R
 				*p++ = (unsigned char)pixel_color.y();    //G
 				*p++ = (unsigned char)pixel_color.z();    //B
 			}
 
-			if (i % 22 == 0)
+			if (i % 2 == 0)
 			{
 				int rate = ceil(i*(100.0f / (height - 1)));
 				std::cout << rate << "%" << std::endl;
@@ -56,13 +56,15 @@ private:
 		fclose(fp);
 	}
 
-	Color ray_color(Ray& r, vector<GameObject>& worldObjet,OcterTree& root,Light& light) {
+	Color ray_color(Ray& r, vector<GameObject>& worldObjet, OcterTree& root, Light& light) {
 
 		float t = 0;
-		bool ishit = root.Intersect(r, t);
-		if (ishit ==true)
+		int index = 0;
+		bool ishit = root.Intersect(r, t, index);
+
+		if (ishit == true)
 		{
-			return Vector3(1,0,0);
+			return Vector3(1, 0, 0);
 		}
 		else
 		{

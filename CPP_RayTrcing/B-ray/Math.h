@@ -1,8 +1,7 @@
-#ifndef Math
-#define Math
-#include <cmath>
+#ifndef MATH_H
+#define MATH_H
+
 #include <string>
-#include "Triangle.h"
 
 inline float Det3x3Multiply(Vector3& a, Vector3& b, Vector3& c) {
 	float positive = a.x()*b.y()*c.z() + a.z()*b.x()*c.y() + a.y()*b.z()*c.x();
@@ -51,4 +50,4 @@ inline float CompareSize(Vector3 a) {
 	return minSize;
 }
 
-#endif // !Math
+#endif // !MATH

@@ -1,14 +1,14 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
+
 #include "Vertex.h"
 #include "Ray.h"
 #include "Math.h"
 
 class Triangle {
 private:
-	Vertex* _vertexIndex[3]{NULL,NULL,NULL};
-	Vector3 _normal =NULL;
-	float _dis = 0;
+	Vertex* _vertexIndex[3]{ NULL,NULL,NULL };
+	Vector3 _normal = NULL;
 public:
 	Triangle(Vertex& a, Vertex& b, Vertex& c) {
 		_vertexIndex[0] = &a;
@@ -17,26 +17,22 @@ public:
 	}
 
 	Triangle() {}
-
 	Vector3 GetNormal() const { return _normal; }
-	float GetDis() const { return _dis; }
 	Vertex* GetVertex(int index) const { return _vertexIndex[index]; }
 
 	void SetIndex(int index, Vertex& vertex) {
 		_vertexIndex[index] = &vertex;
 	}
 
-	bool IntersectTriangle(const Ray& ray) {
+	bool IntersectTriangle(const Ray& ray,float& t) {
 		Vector3 v0 = _vertexIndex[0]->position();
 		Vector3 v1 = _vertexIndex[1]->position();
 		Vector3 v2 = _vertexIndex[2]->position();
 		Vector3 orig = ray.GetOriginPos();
 		Vector3 dir = ray.GetDirection();
-
 		Vector3 E1 = v1 - v0;
 		Vector3 E2 = v2 - v0;
- 		Vector3 P= cross(dir,E2);
-
+		Vector3 P = cross(dir,E2);
 		float det = dot(E1, P);
 
 		Vector3 T;
@@ -54,19 +50,19 @@ public:
 			return false;
 
 		float u = dot(T, P);
-		if (u<0.0f||u>det)
+		if (u<0.0f || u>det)
 		{
 			return false;
 		}
 
-		Vector3 Q = cross(T,E1);
+		Vector3 Q = cross(T, E1);
 		float v = dot(dir, Q);
-		if (v<0.0f||v+u>det)
+		if (v<0.0f || v + u>det)
 		{
 			return false;
 		}
 
-		_dis = dot(E2, Q)*(1.0f / det);
+		t = dot(E2, Q)*(1.0f / det);
 		return true;
 	}
 };
