@@ -27,7 +27,6 @@ public:
 		OcterTree root = OcterTree(worldObjet, maxLength * 2, 12, 3);
 #pragma endregion
 		for (int i = 0; i < height; i++) {
-
 			for (int j = 0; j < width; j++) {
 				auto u = float(j) / (width - 1);
 				auto v = float(i) / (height - 1);
@@ -39,7 +38,7 @@ public:
 				*p++ = (unsigned char)pixel_color.z();    //B
 			}
 
-			if (i % 2 == 0)
+			if (i % 5 == 0)
 			{
 				int rate = ceil(i*(100.0f / (height - 1)));
 				std::cout << rate << "%" << std::endl;
@@ -57,7 +56,6 @@ private:
 	}
 
 	Color ray_color(Ray& r, vector<GameObject>& worldObjet, OcterTree& root, Light& light) {
-
 		float t = 0;
 		int index = 0;
 		bool ishit = root.Intersect(r, t, index);

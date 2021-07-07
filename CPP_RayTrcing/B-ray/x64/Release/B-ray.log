@@ -1,0 +1,31 @@
+﻿  maincpp.cpp
+f:\cg\b-ray\cpp_raytrcing\b-ray\math.h(21): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+f:\cg\b-ray\cpp_raytrcing\b-ray\math.h(22): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+f:\cg\b-ray\cpp_raytrcing\b-ray\math.h(23): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+f:\cg\b-ray\cpp_raytrcing\b-ray\mesh.h(54): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+f:\cg\b-ray\cpp_raytrcing\b-ray\mesh.h(42): error C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(2263): note: 参见“sscanf”的声明
+f:\cg\b-ray\cpp_raytrcing\b-ray\mesh.h(47): error C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(2263): note: 参见“sscanf”的声明
+f:\cg\b-ray\cpp_raytrcing\b-ray\mesh.h(52): error C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(2263): note: 参见“sscanf”的声明
+f:\cg\b-ray\cpp_raytrcing\b-ray\mesh.h(62): error C4996: 'strtok': This function or variable may be unsafe. Consider using strtok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(440): note: 参见“strtok”的声明
+f:\cg\b-ray\cpp_raytrcing\b-ray\mesh.h(72): error C4996: 'strtok': This function or variable may be unsafe. Consider using strtok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(440): note: 参见“strtok”的声明
+f:\cg\b-ray\cpp_raytrcing\b-ray\mesh.h(76): error C4996: 'strtok': This function or variable may be unsafe. Consider using strtok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(440): note: 参见“strtok”的声明
+f:\cg\b-ray\cpp_raytrcing\b-ray\mesh.h(80): error C4996: 'strtok': This function or variable may be unsafe. Consider using strtok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(440): note: 参见“strtok”的声明
+f:\cg\b-ray\cpp_raytrcing\b-ray\aabb.h(14): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+f:\cg\b-ray\cpp_raytrcing\b-ray\aabb.h(14): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+f:\cg\b-ray\cpp_raytrcing\b-ray\octertree.h(66): error C2664: “bool isContain(const Triangle &,const Vector3 &,Vector3 &)”: 无法将参数 3 从“Vector3”转换为“Vector3 &”
+  f:\cg\b-ray\cpp_raytrcing\b-ray\octertree.h(66): note: 非常量引用只能绑定到左值
+f:\cg\b-ray\cpp_raytrcing\b-ray\octertree.h(105): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+f:\cg\b-ray\cpp_raytrcing\b-ray\render.h(44): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+f:\cg\b-ray\cpp_raytrcing\b-ray\render.h(54): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(208): note: 参见“fopen”的声明
+f:\cg\b-ray\cpp_raytrcing\b-ray\render.h(149): warning C4244: “return”: 从“float”转换到“int”，可能丢失数据
+f:\cg\b-ray\cpp_raytrcing\b-ray\maincpp.cpp(14): warning C4067: 预处理器指令后有意外标记 - 应输入换行符
+f:\cg\b-ray\cpp_raytrcing\b-ray\maincpp.cpp(57): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+f:\cg\b-ray\cpp_raytrcing\b-ray\maincpp.cpp(58): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据

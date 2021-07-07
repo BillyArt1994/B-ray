@@ -17,20 +17,6 @@ inline Vector3 cross(const Vector3 &a, const Vector3 &b) {
 	return Vector3(a.y()*b.z() - a.z()*b.y(), a.z()*b.x() - a.x()*b.z(), a.x()*b.y() - a.y()*b.x());
 }
 
-inline std::string DecTiBin(const Vector3 pos, const int bits) {
-	int x = floor(pos.x());
-	int y = floor(pos.y());
-	int z = floor(pos.z());
-	std::string result = "";
-	for (int i = bits-1; i >= 0; --i)
-	{
-		int r = ((x >> i) & 1) + 2 * ((y >> i) & 1) + 4 * ((z >> i) & 1);
-		char c = r + '0';
-		result += c;
-	}
-	return result;
-}
-
 inline float CompareSize(Vector3 a) {
 	float minSize = 0;
 	float x = abs(a.x()), y = abs(a.y()), z = abs(a.z());
