@@ -2,5 +2,6 @@
 *.exe
 *.pdb
 *.ipch
+*.db
 
 CPP_RayTrcing\B-ray\x64\*
