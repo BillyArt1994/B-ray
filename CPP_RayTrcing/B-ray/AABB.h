@@ -158,7 +158,7 @@ bool isInside(Vector3* v, Vector3 max, Vector3 min) {
 	}
 }
 
-bool isContain(Triangle& trig, Vector3 max, Vector3 min) {
+bool isContain(const Triangle& trig, const Vector3& max, Vector3& min) {
 	if (isInside(trig.GetVertex(0), max, min) ||
 		isInside(trig.GetVertex(1), max, min) ||
 		isInside(trig.GetVertex(2), max, min)

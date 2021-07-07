@@ -109,29 +109,10 @@ public:
 			int B = -1;
 
 			Vector3 rp = ray.GetOriginPos();
-			std::string codex = DecTiBin(rp.x(), maxDepth);
-			std::string codey = DecTiBin(rp.y(), maxDepth);
-			std::string codez = DecTiBin(rp.z(), maxDepth);
-			std::string qcode = "";
 
-			for (int i = 0; i < maxDepth; i++)
-			{
-				int x = codex.at(i) - '0', y = codey.at(i) - '0', z = codez.at(i) - '0';
-				qcode += std::to_string(x + 2 * y + 4 * z);
-			}
+			std::string qcode = DecTiBin(rp, maxDepth);
 
 			std::unordered_map<std::string, OcterNode* >::iterator mapIt;
-
-			for (int i = qcode.length(); i > 0; i--)
-			{
-				std::string str = qcode.substr(0, i);
-				mapIt = localCode.find(str);
-				if (mapIt != localCode.end())
-				{
-					B = qcode.length() - i;
-					break;
-				}
-			}
 
 			//最大匹配位置代码
 			for (int i = qcode.length(); i > 0; i--)
