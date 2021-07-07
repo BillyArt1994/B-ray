@@ -7,8 +7,10 @@ f:\cg\b-ray\cpp_raytrcing\b-ray\octertree.h(46): warning C4244: “初始化”:
 f:\cg\b-ray\cpp_raytrcing\b-ray\octertree.h(47): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
 f:\cg\b-ray\cpp_raytrcing\b-ray\octertree.h(48): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
 f:\cg\b-ray\cpp_raytrcing\b-ray\octertree.h(125): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-f:\cg\b-ray\cpp_raytrcing\b-ray\render.h(43): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
-f:\cg\b-ray\cpp_raytrcing\b-ray\render.h(147): warning C4244: “return”: 从“float”转换到“int”，可能丢失数据
+f:\cg\b-ray\cpp_raytrcing\b-ray\render.h(63): warning C4244: “参数”: 从“int”转换到“const float”，可能丢失数据
+f:\cg\b-ray\cpp_raytrcing\b-ray\render.h(81): warning C4099: “RenderParams”: 类型名称以前使用“class”现在使用的是“struct”
+  f:\cg\b-ray\cpp_raytrcing\b-ray\render.h(16): note: 参见“RenderParams”的声明
+f:\cg\b-ray\cpp_raytrcing\b-ray\render.h(195): warning C4244: “return”: 从“float”转换到“int”，可能丢失数据
 f:\cg\b-ray\cpp_raytrcing\b-ray\maincpp.cpp(14): warning C4067: 预处理器指令后有意外标记 - 应输入换行符
 f:\cg\b-ray\cpp_raytrcing\b-ray\maincpp.cpp(57): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
 f:\cg\b-ray\cpp_raytrcing\b-ray\maincpp.cpp(58): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
