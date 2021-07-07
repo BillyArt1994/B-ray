@@ -15,7 +15,7 @@ public:
 
 	Color LambertModel() {
 		Vector3 lightDir =(_lightPos - _vertexPos).normalize();
-		return std::max(dot(_normal, lightDir), 0.0f)*_mainCol;
+		return max(dot(_normal, lightDir), 0.0f)*_mainCol;
 	}
 
 	void SetNormal(Vector3& normal) {

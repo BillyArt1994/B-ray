@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <climits>
+#include <windows.h>
 #include "Triangle.h"
 #include "Vertex.h"
 using std::vector;
@@ -14,7 +15,7 @@ using std::vector;
 class Mesh {
 
 public:
-	vector<Triangle>& GetTriangle()  { return _triangle; }
+	vector<Triangle>& GetTriangle() { return _triangle; }
 	vector<Vertex>& GetVertexArray() { return _vertexArray; }
 
 
@@ -29,11 +30,11 @@ Mesh ReadObjFile(std::string filePath) {
 	vector<Vector3> texcoord;
 	std::ifstream ifs;
 	ifs.open(filePath, std::ios::in);
-	std::string buff;
 
+	std::string buff;
 	while (getline(ifs, buff))
 	{
-		float x, y, z;	
+		float x, y, z;
 		switch (buff[0])
 		{
 		case 'v':
@@ -51,7 +52,7 @@ Mesh ReadObjFile(std::string filePath) {
 			{
 				sscanf(buff.c_str(), "v %f %f %f", &x, &y, &z);
 				obj.GetVertexArray().push_back(Vertex(Vector3(x, y, z)));
-				obj.GetVertexArray().back().SetIndex(obj.GetVertexArray().size()-1);
+				obj.GetVertexArray().back().SetIndex(obj.GetVertexArray().size() - 1);
 			}
 			break;
 		case 'f':
@@ -63,7 +64,7 @@ Mesh ReadObjFile(std::string filePath) {
 			int i = 0;
 			while (p)
 			{
-				if (i== 0)
+				if (i == 0)
 				{
 					obj.GetTriangle().push_back(Triangle());
 				}
@@ -71,14 +72,14 @@ Mesh ReadObjFile(std::string filePath) {
 				obj.GetTriangle().back().SetIndex(i, obj.GetVertexArray()[vexIndex - 1]);
 				p = strtok(NULL, d);
 				int texIndex = atoi(p);
-				obj.GetVertexArray()[vexIndex-1].SetTexcoord(texcoord[texIndex-1]);
+				obj.GetVertexArray()[vexIndex - 1].SetTexcoord(texcoord[texIndex - 1]);
 
 				p = strtok(NULL, d);
 				int norIndex = atoi(p);
-				obj.GetVertexArray()[vexIndex-1].SetNormal(normal[norIndex-1]);
+				obj.GetVertexArray()[vexIndex - 1].SetNormal(normal[norIndex - 1]);
 
 				p = strtok(NULL, d);
-				if (i<3)
+				if (i < 3)
 				{
 					i++;
 				}

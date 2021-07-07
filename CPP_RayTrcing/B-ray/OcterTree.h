@@ -5,8 +5,10 @@
 #include "Triangle.h"
 #include "AABB.h"
 #include "Math.h"
-#include <unordered_map>
 using std::vector;
+
+#include "sparsehash/dense_hash_map"
+using google::dense_hash_map;
 
 struct OcterNode
 {
@@ -17,8 +19,54 @@ struct OcterNode
 };
 
 class OcterTree {
+
+private:
+	//获得场景中最大匹配编码
+	dense_hash_map<std::string, OcterNode* >::iterator FindMaxMatch(std::string qcode) {
+		dense_hash_map<std::string, OcterNode* >::iterator result;
+		dense_hash_map<std::string, OcterNode* >::iterator mapIt = localCode.end();
+
+		int a = 0;
+		int b = qcode.length();
+		int i = (a + b) / 2;
+
+		while (a < b - 1)
+		{
+			std::string str = qcode.substr(0, i);
+			result = localCode.find(str);
+			if (result != localCode.end())
+			{
+				mapIt = result;
+				a = i;
+				i = (a + b) / 2;
+			}
+			else
+			{
+				b = i;
+				i = (a + b) / 2;
+			}
+		}
+		return result;
+	}
+
+	//获得空间编码
+	std::string EncodePosition(const Vector3 pos, const int bits) {
+		int x = floor(pos.x());
+		int y = floor(pos.y());
+		int z = floor(pos.z());
+
+		char result[33];
+		for (int i =0 ; i < bits; i++)
+		{
+			int r = ((x >> i) & 1) + 2 * ((y >> i) & 1) + 4 * ((z >> i) & 1);
+			result[31-i] = r + '0';
+		}
+		result[bits] = '\0';
+		return std::string(result);
+	}
+
 public:
-	std::unordered_map<std::string, OcterNode* > localCode;
+	dense_hash_map<std::string, OcterNode* > localCode;
 	vector<GameObject>& world;
 	int maxDepth = -1;
 	int maximum = -1;
@@ -26,6 +74,8 @@ public:
 
 	OcterTree(vector<GameObject>& t, int l, int md, int mi) :
 		world(t), maxDepth(md), maximum(mi), length(l) {
+
+		localCode.set_empty_key(std::string(""));
 		vector<std::pair<int, int>> index;
 		for (int i = 0; i < world.size(); i++)
 		{
@@ -106,27 +156,15 @@ public:
 				return false;
 			}
 
-			int B = -1;
-
 			Vector3 rp = ray.GetOriginPos();
 
-			std::string qcode = DecTiBin(rp, maxDepth);
-
-			std::unordered_map<std::string, OcterNode* >::iterator mapIt;
+			//获得空间编码
+			std::string qcode =EncodePosition(rp, maxDepth);
 
 			//最大匹配位置代码
-			for (int i = qcode.length(); i > 0; i--)
-			{
-				std::string str = qcode.substr(0, i);
-				mapIt = localCode.find(str);
-				if (mapIt != localCode.end())
-				{
-					B = qcode.length() - i;
-					break;
-				}
-			}
+			dense_hash_map<std::string, OcterNode* >::iterator mapIt = FindMaxMatch(qcode);
 
-			if (B != -1)
+			if (mapIt != localCode.end())
 			{
 				//匹配后检测此叶节点下 是否包含面片
 				vector<std::pair<int, int>> index = mapIt->second->data;
@@ -144,14 +182,15 @@ public:
 						}
 					}
 				}
-			}
 
+			}
 			AABB box = mapIt->second->box;
 			box.intersects(ray, tStep);
 			tStep += 1;
 			ray = Ray(ray.RayRun(tStep), ray.GetDirection());
 		}
 	}
+
 };
 
 #endif // OcterTree_H

@@ -16,4 +16,5 @@ inline float clamp(float x, float min, float max) {
 	return x;
 }
 
+
 #endif // !FUNCTION_H

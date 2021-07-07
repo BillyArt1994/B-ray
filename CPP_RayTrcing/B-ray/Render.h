@@ -24,7 +24,7 @@ public:
 
 #pragma region °Ë²æÊ÷	
 		int maxLength = INTMaxAABB(worldObjet, mainCamera);
-		OcterTree root = OcterTree(worldObjet, maxLength * 2, 12, 3);
+		OcterTree root = OcterTree(worldObjet, maxLength * 2,32, 35);
 #pragma endregion
 		for (int i = 0; i < height; i++) {
 
@@ -38,7 +38,6 @@ public:
 				*p++ = (unsigned char)pixel_color.y();    //G
 				*p++ = (unsigned char)pixel_color.z();    //B
 			}
-
 			if (i % 2 == 0)
 			{
 				int rate = ceil(i*(100.0f / (height - 1)));
