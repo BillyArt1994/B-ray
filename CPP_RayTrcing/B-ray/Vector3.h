@@ -91,7 +91,6 @@ public:
 	}
 };
 
-
 inline Vector3 operator *(const Vector3& a, const float &b) {
 	return Vector3(a.x()*b, a.y()*b, a.z()*b);
 }

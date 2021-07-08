@@ -130,6 +130,7 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CharArray.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="GameObject.h" />

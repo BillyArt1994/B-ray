@@ -24,7 +24,7 @@ public:
 		_texcoord = texcoord;
 	}
 	
-	void SetIndex(int index) {
+	void SetIndex(unsigned index) {
 		_index = index;
 	}
 

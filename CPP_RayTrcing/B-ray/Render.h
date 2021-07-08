@@ -15,8 +15,8 @@ class Render
 public:
 	Render(Camera& mainCamera, Image& image, vector<GameObject>& worldObjet, Light& light) {
 		unsigned char rgb[400 * 225 * 3], *p = rgb;
-		int width = image.GetWidth();
-		int height = image.GetHeight();
+		unsigned width = image.GetWidth();
+		unsigned height = image.GetHeight();
 		Vector3 high_left_corner = mainCamera.GetLC();
 		Vector3 horizontal = mainCamera.GetHorizontal();
 		Vector3 vertical = mainCamera.GetVertical();
@@ -24,11 +24,13 @@ public:
 
 #pragma region 八叉树	
 		int maxLength = INTMaxAABB(worldObjet, mainCamera);
-		OcterTree root = OcterTree(worldObjet, maxLength * 2,32, 35);
+		OcterTree root = OcterTree(worldObjet, maxLength*2,32,35);
 #pragma endregion
-		for (int i = 0; i < height; i++) {
 
-			for (int j = 0; j < width; j++) {
+#pragma region 射线求交并绘制颜色
+		for (unsigned i = 0; i < height; i++) {
+
+			for (unsigned j = 0; j < width; j++) {
 				auto u = float(j) / (width - 1);
 				auto v = float(i) / (height - 1);
 				Ray r(camerPos, ((high_left_corner + horizontal * u - vertical * v) - camerPos).normalize());
@@ -46,6 +48,7 @@ public:
 		}
 		RenderTex(width, height, rgb);
 	};
+#pragma endregion
 
 private:
 
@@ -58,7 +61,7 @@ private:
 	Color ray_color(Ray& r, vector<GameObject>& worldObjet, OcterTree& root, Light& light) {
 
 		float t = 0;
-		int index = 0;
+		unsigned index = 0;
 		bool ishit = root.Intersect(r, t, index);
 
 		if (ishit == true)
@@ -72,7 +75,7 @@ private:
 			return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
 		}
 
-#pragma region 传统遍历相交
+#pragma region 传统全局遍历相交
 		/*
 		//遍历求交
 		float minDis = FLT_MAX;
