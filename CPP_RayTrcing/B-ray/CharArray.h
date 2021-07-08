@@ -35,27 +35,41 @@ public:
 		a.addElement(value);
 		return a;
 	}
+
+	bool operator == (const CharArray& a) {
+		if (size != a.size)
+		{
+			return false;
+		}
+		else
+		{
+
+			if (strcmp(_array, a.readArrary()) == 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
+
 private:
 	char _array[128] = {'\0'};
 };
 
-bool operator ==(const CharArray& a, const CharArray& b) {
-	if (a.size != b.size)
+namespace std
+{
+	template<>
+	class hash<CharArray>
 	{
-		return false;
-	}
-	else
-	{
-
-		if (strcmp(a.readArrary(), b.readArrary()) == 0)
+	public:
+		size_t operator()( CharArray& a,CharArray& b) const
 		{
-			return true;
+			return (a == b);
 		}
-		else
-		{
-			return false;
-		}
-	}
+	};
 }
 
 #endif // !CHARARRY_H
