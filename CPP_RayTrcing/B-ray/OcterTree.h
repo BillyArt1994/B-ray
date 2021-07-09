@@ -23,7 +23,7 @@ class OcterTree {
 
 private:
 	//获得场景中最大匹配编码
-	dense_hash_map<CharArray, OcterNode* >::iterator FindMaxMatch(CharArray qcode) {
+	dense_hash_map<CharArray, OcterNode* >::iterator FindMaxMatch( CharArray qcode) {
 		dense_hash_map<CharArray, OcterNode* >::iterator result;
 		dense_hash_map<CharArray, OcterNode* >::iterator mapIt = localCode.end();
 
@@ -60,7 +60,7 @@ private:
 		for (unsigned i = 0; i<bits; i++)
 		{
 			unsigned  r = ((x >> i) & 1) + 2 * ((y >> i) & 1) + 4 * ((z >> i) & 1);
-			result.addElement(r + '0');
+			result.addElement(r + '0', bits-1-i );
 		}
 		return result;
 	}
@@ -128,18 +128,26 @@ public:
 		//迭代分割并进行编码
 		if (depthcode.size >= 1)
 		{
-			for (unsigned i = 0; i < 8; i++)
-			{
-				CreatTree(subIndex[i], subBounding[i].centralPoint, subBounding[i].length, depthcode + (7-i));
-			}
+			CreatTree(subIndex[0], subBounding[0].centralPoint, subBounding[0].length, depthcode + 7);
+			CreatTree(subIndex[1], subBounding[1].centralPoint, subBounding[1].length, depthcode + 6);
+			CreatTree(subIndex[2], subBounding[2].centralPoint, subBounding[2].length, depthcode + 5);
+			CreatTree(subIndex[3], subBounding[3].centralPoint, subBounding[3].length, depthcode + 4);
+			CreatTree(subIndex[4], subBounding[4].centralPoint, subBounding[4].length, depthcode + 3);
+			CreatTree(subIndex[5], subBounding[5].centralPoint, subBounding[5].length, depthcode + 2);
+			CreatTree(subIndex[6], subBounding[6].centralPoint, subBounding[6].length, depthcode + 1);
+			CreatTree(subIndex[7], subBounding[7].centralPoint, subBounding[7].length, depthcode + 0);
 
 		}
 		else
 		{
-			for (unsigned i = 0; i < 8; i++)
-			{
-				CreatTree(subIndex[i], subBounding[i].centralPoint, subBounding[i].length, depthcode + i);
-			}
+			CreatTree(subIndex[0], subBounding[0].centralPoint, subBounding[0].length, depthcode + 0);
+			CreatTree(subIndex[1], subBounding[1].centralPoint, subBounding[1].length, depthcode + 1);
+			CreatTree(subIndex[2], subBounding[2].centralPoint, subBounding[2].length, depthcode + 2);
+			CreatTree(subIndex[3], subBounding[3].centralPoint, subBounding[3].length, depthcode + 3);
+			CreatTree(subIndex[4], subBounding[4].centralPoint, subBounding[4].length, depthcode + 4);
+			CreatTree(subIndex[5], subBounding[5].centralPoint, subBounding[5].length, depthcode + 5);
+			CreatTree(subIndex[6], subBounding[6].centralPoint, subBounding[6].length, depthcode + 6);
+			CreatTree(subIndex[7], subBounding[7].centralPoint, subBounding[7].length, depthcode + 7);
 		}
 	}
 

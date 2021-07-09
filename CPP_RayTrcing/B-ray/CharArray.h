@@ -9,9 +9,20 @@ public:
 
 	CharArray() {}
 
+	CharArray(char c) { this->addElement(c); }
+
 	void addElement(char input) {
 		_array[size] = input;
 		size += 1;
+	}
+
+	void addElement(char input,unsigned index) {
+		_array[index] = input;
+		size += 1;
+	}
+
+	char at(const int index) {
+		return _array[index];
 	}
 
 	const char* readArrary()const {
@@ -21,6 +32,7 @@ public:
 	CharArray subchar(unsigned e) {
 		CharArray a;
 		strncpy(a._array, _array, e);
+		a.size = e;
 		return a;
 	}
 
@@ -36,7 +48,14 @@ public:
 		return a;
 	}
 
-	bool operator == (const CharArray& a) {
+	CharArray operator + (int value) {
+		CharArray a;
+		a = *this;
+		a.addElement(value+'0');
+		return a;
+	}
+
+	bool operator == (const CharArray& a) const {
 		if (size != a.size)
 		{
 			return false;
@@ -55,8 +74,9 @@ public:
 		}
 	}
 
+
 private:
-	char _array[128] = {'\0'};
+	char _array[128] = { '\0' };
 };
 
 namespace std
@@ -65,10 +85,11 @@ namespace std
 	class hash<CharArray>
 	{
 	public:
-		size_t operator()( CharArray& a,CharArray& b) const
+		size_t operator()(const CharArray& a) const
 		{
-			return (a == b);
+			return hash<std::string>()(a.readArrary()) ^ hash<int>()(a.size);
 		}
+
 	};
 }
 

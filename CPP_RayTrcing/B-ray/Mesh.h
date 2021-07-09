@@ -32,6 +32,7 @@ Mesh ReadObjFile(std::string filePath) {
 	ifs.open(filePath, std::ios::in);
 
 	std::string buff;
+
 	while (getline(ifs, buff))
 	{
 		float x, y, z;
