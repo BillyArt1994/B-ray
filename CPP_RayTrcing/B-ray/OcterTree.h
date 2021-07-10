@@ -70,9 +70,9 @@ private:
 
 	//获得坐标在空间中的编码
 	CharArray EncodePosition(const Vector3& pos, const unsigned  bits) {
-		int x = floor(pos.x());
-		int y = floor(pos.y());
-		int z = floor(pos.z());
+		int x = round(pos.x());
+		int y = round(pos.y());
+		int z = round(pos.z());
 
 		CharArray result;
 		for (unsigned i = 0; i<bits; i++)
@@ -214,7 +214,13 @@ public:
 			//当前射线并未求到交点，则与立方体网格求交并找到出口点添加1单位的扰动量穿越到下一个立方体网格中
 			AABB box = mapIt->second->box;
 			box.intersects(ray, tStep);
-			tStep += 1;
+			if (tStep <0)
+			{
+				tStep = 1;
+			}
+			else {
+				tStep += 1;
+			}
 			ray = Ray(ray.RayRun(tStep), ray.GetDirection());
 		}
 	}
