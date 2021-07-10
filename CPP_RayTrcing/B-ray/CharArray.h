@@ -63,7 +63,7 @@ public:
 		else
 		{
 
-			if (strcmp(_array, a.readArrary()) == 0)
+			if (strncmp(_array, a.readArrary(), size) == 0)
 			{
 				return true;
 			}
