@@ -37,6 +37,7 @@ public:
 		return SubAABB;
 	}
 
+	//与包围盒求交
 	bool intersects(const Ray& r, float& t) {
 		Vector3 rd = r.GetDirection();
 		Vector3 rp = r.GetOriginPos();

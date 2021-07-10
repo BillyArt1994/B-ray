@@ -70,9 +70,9 @@ private:
 
 	//获得坐标在空间中的编码
 	CharArray EncodePosition(const Vector3& pos, const unsigned  bits) {
-		int x = round(pos.x());
-		int y = round(pos.y());
-		int z = round(pos.z());
+		int x = floor(pos.x());
+		int y = floor(pos.y());
+		int z = floor(pos.z());
 
 		CharArray result;
 		for (unsigned i = 0; i<bits; i++)
@@ -104,10 +104,10 @@ public:
 			}
 		}
 
-		CreatTree(index, Vector3(0), INT_MAX, CharArray());
+		CreatTree(index, Vector3(0), UINT_MAX, CharArray());
 	}
 
-	void CreatTree(vector<std::pair<unsigned, unsigned >> index, Vector3 centerPoint, unsigned  length, CharArray depthcode) {
+	void CreatTree(vector<std::pair<unsigned, unsigned >> index, Vector3 centerPoint, float length, CharArray depthcode) {
 
 		//三角面数量低于Maximum时设为叶节点并且存入哈希表中
 		if (index.size() <= maximum)
@@ -214,13 +214,7 @@ public:
 			//当前射线并未求到交点，则与立方体网格求交并找到出口点添加1单位的扰动量穿越到下一个立方体网格中
 			AABB box = mapIt->second->box;
 			box.intersects(ray, tStep);
-			if (tStep <0)
-			{
-				tStep = 1;
-			}
-			else {
-				tStep += 1;
-			}
+			tStep += 1;
 			ray = Ray(ray.RayRun(tStep), ray.GetDirection());
 		}
 	}

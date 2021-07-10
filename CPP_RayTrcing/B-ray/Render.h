@@ -24,7 +24,7 @@ public:
 
 #pragma region 八叉树	
 		int maxLength = INTMaxAABB(worldObjet, mainCamera);
-		OcterTree root = OcterTree(worldObjet, maxLength*2,32,3);
+		OcterTree root = OcterTree(worldObjet, maxLength*2,32,5);
 #pragma endregion
 
 #pragma region 射线求交并绘制颜色
