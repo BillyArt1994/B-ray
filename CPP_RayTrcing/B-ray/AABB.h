@@ -6,18 +6,18 @@
 class AABB {
 public:
 	Vector3 centralPoint = 0;
-	int length = 0;
+	float length = 0;
 
 	Vector3 minPoint;
 	Vector3 maxPoint;
 
-	AABB(Vector3 cp, int len) :centralPoint(cp), length(len), minPoint(cp - (len / 2)), maxPoint(cp + (round(len / 2))) { ; }
+	AABB(Vector3 cp, float len) :centralPoint(cp), length(len), minPoint(cp - (len/2.0f)), maxPoint(cp + (len / 2.0f)) { ; }
 	AABB() {}
 	//获得八个子包围体
 	vector<AABB> GetEightSubAABB() {
 		vector<AABB> SubAABB;
-		int quaLength = length / 4;
-		int halfLength = length / 2;
+		float quaLength = length / 4;
+		float halfLength = length / 2;
 		Vector3 cp0(centralPoint.x() + quaLength, centralPoint.y() + quaLength, centralPoint.z() + quaLength);
 		SubAABB.push_back(AABB(cp0, halfLength));
 		Vector3 cp1(centralPoint.x() - quaLength, centralPoint.y() + quaLength, centralPoint.z() + quaLength);

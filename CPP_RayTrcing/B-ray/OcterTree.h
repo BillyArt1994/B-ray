@@ -24,30 +24,48 @@ class OcterTree {
 private:
 	//获得场景中最大匹配编码
 	dense_hash_map<CharArray, OcterNode* >::iterator FindMaxMatch( CharArray qcode) {
+
+#pragma region 二分法
+		//dense_hash_map<CharArray, OcterNode* >::iterator result;
+		//dense_hash_map<CharArray, OcterNode* >::iterator mapIt = localCode.end();
+
+		//int a = 0;
+		//int b = qcode.size;
+		//int i = (a + b) / 2;
+
+		//while (a < b - 1)
+		//{
+		//	CharArray c = qcode.subchar(i);
+		//	result = localCode.find(c);
+		//	if (result != localCode.end())
+		//	{
+		//		mapIt = result;
+		//		a = i;
+		//		i = (a + b) / 2;
+		//	}
+		//	else
+		//	{
+		//		b = i;
+		//		i = (a + b) / 2;
+		//	}
+		//}
+		//	return result;
+#pragma endregion
+		int i = qcode.size;
 		dense_hash_map<CharArray, OcterNode* >::iterator result;
-		dense_hash_map<CharArray, OcterNode* >::iterator mapIt = localCode.end();
-
-		int a = 0;
-		int b = qcode.size;
-		int i = (a + b) / 2;
-
-		while (a < b - 1)
+		while (i>0)
 		{
 			CharArray c = qcode.subchar(i);
 			result = localCode.find(c);
 			if (result != localCode.end())
 			{
-				mapIt = result;
-				a = i;
-				i = (a + b) / 2;
+				return result;
 			}
 			else
 			{
-				b = i;
-				i = (a + b) / 2;
+				i--;
 			}
 		}
-		return result;
 	}
 
 	//获得坐标在空间中的编码
