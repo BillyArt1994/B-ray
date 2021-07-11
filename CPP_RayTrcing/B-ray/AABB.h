@@ -37,7 +37,7 @@ public:
 		return SubAABB;
 	}
 
-	//与包围盒求交
+	//与包围盒求交获得出口t值
 	bool intersects(const Ray& r, float& t) {
 		Vector3 rd = r.GetDirection();
 		Vector3 rp = r.GetOriginPos();
@@ -120,7 +120,7 @@ public:
 		return maxPoint;
 	}
 };
-
+//判断顶点是否存在在包围盒内
 bool isInside(Vertex* v, Vector3 max, Vector3 min) {
 	Vector3 ver = v->position();
 	float x = ver.x();
@@ -140,7 +140,8 @@ bool isInside(Vertex* v, Vector3 max, Vector3 min) {
 	}
 }
 
-bool isInside(Vector3* v, Vector3 max, Vector3 min) {
+//判断顶点是否存在在包围盒内
+bool isInside(Vector3*v, Vector3 max, Vector3 min) {
 	Vector3 ver = *v;
 	float x = ver.x();
 	float y = ver.y();
@@ -159,6 +160,7 @@ bool isInside(Vector3* v, Vector3 max, Vector3 min) {
 	}
 }
 
+//判断三角面是否存在在包围盒内
 bool isContain(const Triangle& trig, const Vector3& max, Vector3& min) {
 	if (isInside(trig.GetVertex(0), max, min) ||
 		isInside(trig.GetVertex(1), max, min) ||
@@ -166,7 +168,9 @@ bool isContain(const Triangle& trig, const Vector3& max, Vector3& min) {
 		)
 	{
 		return true;
-	}
+	}	
+
+
 	return false;
 }
 

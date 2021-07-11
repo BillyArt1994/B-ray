@@ -154,7 +154,6 @@ public:
 			CreatTree(subIndex[5], subBounding[5].centralPoint, subBounding[5].length, depthcode + 2);
 			CreatTree(subIndex[6], subBounding[6].centralPoint, subBounding[6].length, depthcode + 1);
 			CreatTree(subIndex[7], subBounding[7].centralPoint, subBounding[7].length, depthcode + 0);
-
 		}
 		else
 		{
