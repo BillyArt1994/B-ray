@@ -24,7 +24,7 @@ public:
 
 #pragma region 八叉树	
 		int maxLength = INTMaxAABB(worldObjet, mainCamera);
-		OcterTree root = OcterTree(worldObjet, maxLength*2,32,35);
+		OcterTree root = OcterTree(worldObjet, maxLength*2,32,80);
 #pragma endregion
 
 #pragma region 射线求交并绘制颜色
@@ -61,12 +61,19 @@ private:
 	Color ray_color(Ray& r, vector<GameObject>& worldObjet, OcterTree& root, Light& light) {
 
 		float t = 0;
-		unsigned index = 0;
-		bool ishit = root.Intersect(r, t, index);
-
+		unsigned meshIndex = 0;
+		unsigned tirgIndex = 0;
+		bool ishit = root.Intersect(r, t,meshIndex,tirgIndex);
 		if (ishit == true)
 		{
-			return Vector3(1, 0, 0);
+			Vector3 normal = worldObjet[meshIndex].GetMesh()->GetTriangle()[tirgIndex].GetNormal();
+			//Vector3 vertexPos = r.RayRun(t);
+			//Material* metl = worldObjet[meshIndex].GetMaterial();
+			//metl->SetLight(&light);
+			//metl->SetNormal(normal);
+			//metl->SetVertPos(vertexPos);
+			//Color finalCol = metl->LambertModel();
+			return normal;
 		}
 		else
 		{
@@ -91,7 +98,7 @@ private:
 				Triangle* hitTrig = &(trig->at(j));
 				if (hitTrig->IntersectTriangle(r) == true)
 				{
-					float dis = hitTrig->GetDis();
+					float dis = hitTrig->GetRayDis();
 					if (dis < minDis)
 					{
 						minDis = dis;

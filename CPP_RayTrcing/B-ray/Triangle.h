@@ -17,7 +17,7 @@ public:
 	}
 
 	Triangle() {}
-	Vector3 GetNormal() const { return _normal; }
+	Vector3 GetNormal() { return _normal; }
 	Vertex* GetVertex(int index) const { return _vertexIndex[index]; }
 
 	void SetIndex(int index, Vertex& vertex) {
@@ -63,6 +63,7 @@ public:
 		}
 
 		t = dot(E2, Q)*(1.0f / det);
+		_normal = cross(E1, E2).normalize();
 		return true;
 	}
 };

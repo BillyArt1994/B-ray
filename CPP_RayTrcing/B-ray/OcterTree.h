@@ -23,7 +23,7 @@ class OcterTree {
 
 private:
 	//获得场景中最大匹配编码
-	dense_hash_map<CharArray, OcterNode* >::iterator FindMaxMatch( CharArray qcode) {
+	dense_hash_map<CharArray, OcterNode* >::iterator FindMaxMatch(CharArray qcode) {
 
 #pragma region 二分法
 		//dense_hash_map<CharArray, OcterNode* >::iterator result;
@@ -53,7 +53,7 @@ private:
 #pragma endregion
 		int i = qcode.size;
 		dense_hash_map<CharArray, OcterNode* >::iterator result;
-		while (i>0)
+		while (i > 0)
 		{
 			CharArray c = qcode.subchar(i);
 			result = localCode.find(c);
@@ -75,10 +75,10 @@ private:
 		int z = floor(pos.z());
 
 		CharArray result;
-		for (unsigned i = 0; i<bits; i++)
+		for (unsigned i = 0; i < bits; i++)
 		{
 			unsigned  r = ((x >> i) & 1) + 2 * ((y >> i) & 1) + 4 * ((z >> i) & 1);
-			result.addElement(r + '0', bits-1-i );
+			result.addElement(r + '0', bits - 1 - i);
 		}
 		return result;
 	}
@@ -89,8 +89,8 @@ public:
 	unsigned maxDepth = -1;
 	unsigned maximum = -1;
 	unsigned length = -1;
-	OcterTree(vector<GameObject>& t, unsigned  l, unsigned  md, unsigned  mi):
-		world(t), length(l) ,maxDepth(md), maximum(mi)
+	OcterTree(vector<GameObject>& t, unsigned  l, unsigned  md, unsigned  mi) :
+		world(t), length(l), maxDepth(md), maximum(mi)
 	{
 
 		localCode.set_empty_key(CharArray());
@@ -169,7 +169,7 @@ public:
 		}
 	}
 
-	bool Intersect(Ray& r, float& t, unsigned & indexMesh) {
+	bool Intersect(Ray& r, float& t, unsigned & meshIndex, unsigned& tirgIndex) {
 
 		AABB root = AABB(Vector3(0), length);
 		Ray ray = r;
@@ -195,20 +195,34 @@ public:
 				//匹配后检测此叶节点下 是否包含面片
 				vector<std::pair<unsigned, unsigned>> index = mapIt->second->data;
 
+				//进行面片求交
 				if (index.size() != 0)
 				{
+					float minDis = FLT_MAX;
+					meshIndex = 0;
+					tirgIndex = 0;
 					for (unsigned i = 0; i < index.size(); i++)
 					{
-						Triangle trig = world.at(index.at(i).first).GetMesh()->GetTriangle().at(index.at(i).second);
-						bool ishit = trig.IntersectTriangle(r, t);
-						if (ishit)
+						unsigned mIndex = index.at(i).first;
+						unsigned tIndex = index.at(i).second;
+						Triangle* trig = &(world.at(mIndex).GetMesh()->GetTriangle().at(tIndex));
+						if (trig->IntersectTriangle(r, t))
 						{
-							indexMesh = index.at(i).first;
-							return true;
+							if (t< minDis)
+							{
+								minDis = t;
+								meshIndex = mIndex;
+								tirgIndex = tIndex;
+							}
 						}
 					}
-				}
 
+					if (minDis!= FLT_MAX)
+					{
+						return true;
+					}
+
+				}
 			}
 
 			//当前射线并未求到交点，则与立方体网格求交并找到出口点添加1单位的扰动量穿越到下一个立方体网格中
