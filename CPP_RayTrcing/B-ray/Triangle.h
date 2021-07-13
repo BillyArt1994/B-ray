@@ -24,7 +24,7 @@ public:
 		_vertexIndex[index] = &vertex;
 	}
 
-	bool IntersectTriangle(const Ray& ray,float& t) {
+	bool Intersect(const Ray& ray,float& t) {
 		Vector3 v0 = _vertexIndex[0]->position();
 		Vector3 v1 = _vertexIndex[1]->position();
 		Vector3 v2 = _vertexIndex[2]->position();

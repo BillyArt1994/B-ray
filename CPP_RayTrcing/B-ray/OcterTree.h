@@ -136,7 +136,7 @@ public:
 		{
 			for (unsigned j = 0; j < 8; j++)
 			{
-				if (isContain(world.at(index.at(i).first).GetMesh()->GetTriangle().at(index.at(i).second), subBounding.at(j).GetMaxPoint(), subBounding.at(j).GetMinPoint()))
+				if (isContain(world.at(index.at(i).first).GetMesh()->GetTriangle().at(index.at(i).second), subBounding.at(j)))
 				{
 					subIndex[j].push_back(index.at(i));
 				}
@@ -178,7 +178,7 @@ public:
 			float tStep = 0;
 
 			//检测射线是否还在场景内部
-			if (isInside(&ray.GetOriginPos(), root.maxPoint, root.minPoint) == false)
+			if (isInside(ray.GetOriginPos(), root) == false)
 			{
 				return false;
 			}
@@ -205,7 +205,7 @@ public:
 						unsigned mIndex = index.at(i).first;
 						unsigned tIndex = index.at(i).second;
 						Triangle* trig = &(world.at(mIndex).GetMesh()->GetTriangle().at(tIndex));
-						if (trig->IntersectTriangle(r, t))
+						if (trig->Intersect(r, t))
 						{
 							if (t< minDis)
 							{
@@ -231,7 +231,6 @@ public:
 			ray = Ray(ray.RayRun(tStep), ray.GetDirection());
 		}
 	}
-
 };
 
 #endif // OcterTree_H

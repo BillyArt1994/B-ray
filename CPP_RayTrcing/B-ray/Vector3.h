@@ -20,7 +20,7 @@ public:
 	void z(float value) { _z = value; }
 
 	Vector3(float x, float y, float z) :
-		_x(x), _y(y), _z(z){}
+		_x(x), _y(y), _z(z) {}
 
 	Vector3() {}
 
@@ -31,7 +31,7 @@ public:
 	}
 
 	Vector3 normalize() {
-		return *this/this->length();
+		return *this / this->length();
 	}
 
 	//ÔËËã·ûÖØÔØ
@@ -62,7 +62,7 @@ public:
 	}
 
 	inline bool operator ==(const Vector3& b) {
-		if (_x==b.x()&&_y==b.y()&&_z==b.z())
+		if (_x == b.x() && _y == b.y() && _z == b.z())
 		{
 			return true;
 		}
@@ -84,9 +84,16 @@ public:
 	}
 
 	inline Vector3 operator - () {
-		_x = -_x;
-		_y = -_y;
-		_z = -_z;
+		_x =-_x;
+		_y =-_y;
+		_z =-_z;
+		return *this;
+	}
+
+	inline Vector3 operator -=  (const Vector3 b) {
+		_x -= b.x();
+		_y -= b.y();
+		_z -= b.z();
 		return *this;
 	}
 };

@@ -11,7 +11,7 @@ public:
 	Vector3 minPoint;
 	Vector3 maxPoint;
 
-	AABB(Vector3 cp, float len) :centralPoint(cp), length(len), minPoint(cp - (len/2.0f)), maxPoint(cp + (len / 2.0f)) { ; }
+	AABB(Vector3 cp, float len) :centralPoint(cp), length(len), minPoint(cp - (len / 2.0f)), maxPoint(cp + (len / 2.0f)) { ; }
 	AABB() {}
 	//获得八个子包围体
 	vector<AABB> GetEightSubAABB() {
@@ -112,44 +112,18 @@ public:
 		t = tmax;
 	}
 
-	Vector3 GetMinPoint() {
-		return minPoint;
-	}
-
-	Vector3 GetMaxPoint() {
-		return maxPoint;
-	}
 };
+
 //判断顶点是否存在在包围盒内
-bool isInside(Vertex* v, Vector3 max, Vector3 min) {
-	Vector3 ver = v->position();
+bool isInside(const Vector3& v, const AABB& aabb) {
+	Vector3 ver = v;
 	float x = ver.x();
 	float y = ver.y();
 	float z = ver.z();
 
-	if (x <= max.x() && y <= max.y()
-		&& z <= max.z() && x >= min.x()
-		&& y >= min.y() && z >= min.z()
-		)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-//判断顶点是否存在在包围盒内
-bool isInside(Vector3*v, Vector3 max, Vector3 min) {
-	Vector3 ver = *v;
-	float x = ver.x();
-	float y = ver.y();
-	float z = ver.z();
-
-	if (x <= max.x() && y <= max.y()
-		&& z <= max.z() && x >= min.x()
-		&& y >= min.y() && z >= min.z()
+	if (x <= aabb.maxPoint.x() && y <= aabb.maxPoint.y()
+		&& z <= aabb.maxPoint.z() && x >= aabb.minPoint.x()
+		&& y >= aabb.minPoint.y() && z >= aabb.minPoint.z()
 		)
 	{
 		return true;
@@ -161,15 +135,58 @@ bool isInside(Vector3*v, Vector3 max, Vector3 min) {
 }
 
 //判断三角面是否存在在包围盒内
-bool isContain(const Triangle& trig, const Vector3& max, Vector3& min) {
-	if (isInside(trig.GetVertex(0), max, min) ||
-		isInside(trig.GetVertex(1), max, min) ||
-		isInside(trig.GetVertex(2), max, min)
+bool isContain(const Triangle& trig,const AABB& aabb) {
+	Vector3 v0 = trig.GetVertex(0)->position();
+	Vector3 v1 = trig.GetVertex(1)->position();
+	Vector3 v2 = trig.GetVertex(2)->position();
+
+	if (isInside(v0, aabb) ||
+		isInside(v1, aabb) ||
+		isInside(v2, aabb)
 		)
 	{
 		return true;
-	}	
+	}
 
+	Vector3 c = aabb.centralPoint;
+	Vector3 e = aabb.length/2.0f;
+
+	v0 -= c;
+	v1 -= c;
+	v2 -= c;
+
+	Vector3 f0 = v1 - v0;
+	Vector3 f1 = v2 - v1;
+	Vector3 f2 = v0 - v2;
+
+	Vector3 u0 (1.0f, 0.0f, 0.0f);
+	Vector3 u1 (0.0f, 1.0f, 0.0f);
+	Vector3 u2 (0.0f, 0.0f, 1.0f);
+
+	Vector3 axis_u0_f0 = cross(u0, f0);
+	Vector3 axis_u0_f1 = cross(u0, f1);
+	Vector3 axis_u0_f2 = cross(u0, f2);
+
+	Vector3 axis_u1_f0 = cross(u0, f0);
+	Vector3 axis_u1_f1 = cross(u0, f1);
+	Vector3 axis_u1_f2 = cross(u0, f2);
+
+	Vector3 axis_u2_f0 = cross(u0, f0);
+	Vector3 axis_u2_f1 = cross(u0, f1);
+	Vector3 axis_u2_f2 = cross(u0, f2);
+
+	float p0 = dot(v0, axis_u0_f0);
+	float p1 = dot(v1, axis_u0_f0);
+	float p2 = dot(v2, axis_u0_f0);
+
+	float r = e.x()*abs(dot(u0, axis_u0_f0)) +
+			  e.y()*abs(dot(u1, axis_u0_f0)) +
+			  e.z()*abs(dot(u2, axis_u0_f0));
+
+	if (max(-Max(p0,p1,p2),Min(p0,p1,p2))>r)
+	{
+		return false;
+	}
 
 	return false;
 }
