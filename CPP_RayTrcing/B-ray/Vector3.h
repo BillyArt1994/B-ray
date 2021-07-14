@@ -43,6 +43,10 @@ public:
 		return Vector3(_x + b.x(), _y + b.y(), _z + b.z());
 	}
 
+	inline Vector3 operator +(const float &b) {
+		return Vector3(_x + b, _y + b, _z + b);
+	}
+
 	inline Vector3 operator +=(const Vector3 &b) {
 		_x += b.x();
 		_y += b.y();

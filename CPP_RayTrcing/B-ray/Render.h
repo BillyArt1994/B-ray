@@ -60,10 +60,11 @@ private:
 
 	Color ray_color(Ray& r, vector<GameObject>& worldObjet, OcterTree& root, Light& light) {
 
+#pragma region 八叉树遍历
 		float t = 0;
 		unsigned meshIndex = 0;
 		unsigned tirgIndex = 0;
-		bool ishit = root.Intersect(r, t,meshIndex,tirgIndex);
+		bool ishit = root.Intersect(r, t, meshIndex, tirgIndex);
 		if (ishit == true)
 		{
 			Vector3 normal = worldObjet[meshIndex].GetMesh()->GetTriangle()[tirgIndex].GetNormal();
@@ -81,51 +82,53 @@ private:
 			auto t = (dir.y() + 1.0f)*0.5f;
 			return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
 		}
+#pragma endregion
 
 #pragma region 传统全局遍历相交
-		/*
+		
 		//遍历求交
-		float minDis = FLT_MAX;
-		int minIndex = -1;
-		bool isHit = false;
-		int objIndex = -1;
+		//float minDis = FLT_MAX;
+		//int minIndex = -1;
+		//bool isHit = false;
+		//int objIndex = -1;
 
-		for (int i = 0; i < worldObjet.size(); i++)
-		{
-			vector<Triangle>* trig = &(worldObjet[i].GetMesh()->GetTriangle());
-			for (int j = 0; j < trig->size(); j++)
-			{
-				Triangle* hitTrig = &(trig->at(j));
-				if (hitTrig->IntersectTriangle(r) == true)
-				{
-					float dis = hitTrig->GetRayDis();
-					if (dis < minDis)
-					{
-						minDis = dis;
-						objIndex = i;
-						minIndex = j;
-						isHit = true;
-					}
-				}
-			}
-		}
+		//for (int i = 0; i < worldObjet.size(); i++)
+		//{
+		//	vector<Triangle>* trig = &(worldObjet[i].GetMesh()->GetTriangle());
+		//	for (int j = 0; j < trig->size(); j++)
+		//	{
+		//		float t;
+		//		Triangle* hitTrig = &(trig->at(j));
+		//		if (hitTrig->Intersect(r, t) == true)
+		//		{
+		//			float dis = t;
+		//			if (t < minDis)
+		//			{
+		//				minDis = dis;
+		//				objIndex = i;
+		//				minIndex = j;
+		//				isHit = true;
+		//			}
+		//		}
+		//	}
+		//}
 
-		if (isHit == true)
-		{
-			Vector3 normal = worldObjet[objIndex].GetMesh()->GetTriangle()[minIndex].GetNormal();
-			Vector3 vertexPos = r.RayRun(minDis);
-			Material* metl = worldObjet[objIndex].GetMaterial();
-			metl->SetLight(&light);
-			metl->SetNormal(normal);
-			metl->SetVertPos(vertexPos);
-			Color finalCol = metl->LambertModel();
-			return finalCol;
-		}
-		Vector3 dir = r.GetDirection();
-		auto t = (dir.y() + 1.0f)*0.5f;
-		return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
+		//if (isHit == true)
+		//{
+		//	Vector3 normal = worldObjet[objIndex].GetMesh()->GetTriangle()[minIndex].GetNormal();
+		//	Vector3 vertexPos = r.RayRun(minDis);
+		//	Material* metl = worldObjet[objIndex].GetMaterial();
+		//	metl->SetLight(&light);
+		//	metl->SetNormal(normal);
+		//	metl->SetVertPos(vertexPos);
+		//	Color finalCol = metl->LambertModel();
+		//	return normal;
+		//}
+		//Vector3 dir = r.GetDirection();
+		//auto t = (dir.y() + 1.0f)*0.5f;
+		//return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
 
-		*/
+		
 #pragma endregion
 
 	}

@@ -4,6 +4,7 @@
 #include <math.h> 
 
 class AABB {
+private:
 public:
 	Vector3 centralPoint = 0;
 	float length = 0;
@@ -135,7 +136,7 @@ bool isInside(const Vector3& v, const AABB& aabb) {
 }
 
 //判断三角面是否存在在包围盒内
-bool isContain(const Triangle& trig,const AABB& aabb) {
+bool isContain(const Triangle& trig, const AABB& aabb) {
 	Vector3 v0 = trig.GetVertex(0)->position();
 	Vector3 v1 = trig.GetVertex(1)->position();
 	Vector3 v2 = trig.GetVertex(2)->position();
@@ -149,46 +150,39 @@ bool isContain(const Triangle& trig,const AABB& aabb) {
 	}
 
 	Vector3 c = aabb.centralPoint;
-	Vector3 e = aabb.length/2.0f;
+	Vector3 e = aabb.length / 2.0f;
 
 	v0 -= c;
 	v1 -= c;
 	v2 -= c;
 
-	Vector3 f0 = v1 - v0;
-	Vector3 f1 = v2 - v1;
-	Vector3 f2 = v0 - v2;
+	Vector3 boxNormal[3]{ (1.0f, 0.0f, 0.0f),(0.0f, 1.0f, 0.0f),(0.0f, 0.0f, 1.0f) };
+	Vector3 tirgleEdge[3]{ v1 - v0,v2 - v1,v0 - v2 };
+	Vector3 axisArray[13] = {
+		boxNormal[0],boxNormal[1],boxNormal[2],
+		cross(tirgleEdge[0],tirgleEdge[1]),
+		cross(boxNormal[0],tirgleEdge[0]), cross(boxNormal[0], tirgleEdge[1]), cross(boxNormal[0], tirgleEdge[2]),
+		cross(boxNormal[1],tirgleEdge[0]), cross(boxNormal[1], tirgleEdge[1]), cross(boxNormal[1], tirgleEdge[2]),
+		cross(boxNormal[2],tirgleEdge[0]), cross(boxNormal[2], tirgleEdge[1]), cross(boxNormal[2], tirgleEdge[2]),
+	};
 
-	Vector3 u0 (1.0f, 0.0f, 0.0f);
-	Vector3 u1 (0.0f, 1.0f, 0.0f);
-	Vector3 u2 (0.0f, 0.0f, 1.0f);
-
-	Vector3 axis_u0_f0 = cross(u0, f0);
-	Vector3 axis_u0_f1 = cross(u0, f1);
-	Vector3 axis_u0_f2 = cross(u0, f2);
-
-	Vector3 axis_u1_f0 = cross(u0, f0);
-	Vector3 axis_u1_f1 = cross(u0, f1);
-	Vector3 axis_u1_f2 = cross(u0, f2);
-
-	Vector3 axis_u2_f0 = cross(u0, f0);
-	Vector3 axis_u2_f1 = cross(u0, f1);
-	Vector3 axis_u2_f2 = cross(u0, f2);
-
-	float p0 = dot(v0, axis_u0_f0);
-	float p1 = dot(v1, axis_u0_f0);
-	float p2 = dot(v2, axis_u0_f0);
-
-	float r = e.x()*abs(dot(u0, axis_u0_f0)) +
-			  e.y()*abs(dot(u1, axis_u0_f0)) +
-			  e.z()*abs(dot(u2, axis_u0_f0));
-
-	if (max(-Max(p0,p1,p2),Min(p0,p1,p2))>r)
+	for (int i = 0; i < 13; i++)
 	{
-		return false;
+		float p0 = dot(v0, axisArray[i]);
+		float p1 = dot(v1, axisArray[i]);
+		float p2 = dot(v2, axisArray[i]);
+
+		float r = e.x()*abs(dot(boxNormal[0], axisArray[i])) +
+				  e.y()*abs(dot(boxNormal[1], axisArray[i])) +
+				  e.z()*abs(dot(boxNormal[2], axisArray[i]));
+
+		if (Min(p0, p1, p2)>r||-Max(p0, p1, p2)>r)
+		{
+			return false;
+		}
 	}
 
-	return false;
+	return true;
 }
 
 

@@ -200,6 +200,7 @@ public:
 					float minDis = FLT_MAX;
 					meshIndex = 0;
 					tirgIndex = 0;
+
 					for (unsigned i = 0; i < index.size(); i++)
 					{
 						unsigned mIndex = index.at(i).first;
