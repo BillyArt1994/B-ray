@@ -23,7 +23,7 @@ public:
 		Vector3 camerPos = mainCamera.GetPos();
 
 #pragma region °Ë²æÊ÷	
-		int maxLength = INTMaxAABB(worldObjet, mainCamera);
+		int maxLength = MaximumAABB(worldObjet, mainCamera);
 		OcterTree root = OcterTree(worldObjet, maxLength*2,32,35);
 #pragma endregion
 
@@ -133,7 +133,7 @@ private:
 
 	}
 
-	int INTMaxAABB(vector<GameObject>& worldObjet, Camera camera) {
+	int MaximumAABB(vector<GameObject>& worldObjet, Camera camera) {
 		float maxDis = 0;
 		for (size_t i = 0; i < worldObjet.size(); i++)
 		{
@@ -157,6 +157,8 @@ private:
 		{
 			maxDis = size;
 		}
+
+
 
 		return ceil(maxDis);
 	}

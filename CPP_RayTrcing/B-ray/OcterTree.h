@@ -136,7 +136,7 @@ public:
 		{
 			for (unsigned j = 0; j < 8; j++)
 			{
-				if (isContain(world.at(index.at(i).first).GetMesh()->GetTriangle().at(index.at(i).second), subBounding.at(j)))
+				if (isContain(world.at(index.at(i).first).GetMesh()->GetTriangle().at(index.at(i).second), subBounding.at(j))==true)
 				{
 					subIndex[j].push_back(index.at(i));
 				}

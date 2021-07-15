@@ -6,7 +6,7 @@
 class AABB {
 private:
 public:
-	Vector3 centralPoint = 0;
+	Vector3 centralPoint = 0.0f;
 	float length = 0;
 
 	Vector3 minPoint;
@@ -156,7 +156,7 @@ bool isContain(const Triangle& trig, const AABB& aabb) {
 	v1 -= c;
 	v2 -= c;
 
-	Vector3 boxNormal[3]{ (1.0f, 0.0f, 0.0f),(0.0f, 1.0f, 0.0f),(0.0f, 0.0f, 1.0f) };
+	Vector3 boxNormal[3]{ Vector3(1.0f, 0.0f, 0.0f),Vector3(0.0f, 1.0f, 0.0f),Vector3(0.0f, 0.0f, 1.0f) };
 	Vector3 tirgleEdge[3]{ v1 - v0,v2 - v1,v0 - v2 };
 	Vector3 axisArray[13] = {
 		boxNormal[0],boxNormal[1],boxNormal[2],
