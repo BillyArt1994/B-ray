@@ -68,13 +68,13 @@ private:
 		if (ishit == true)
 		{
 			Vector3 normal = worldObjet[meshIndex].GetMesh()->GetTriangle()[tirgIndex].GetNormal();
-			//Vector3 vertexPos = r.RayRun(t);
-			//Material* metl = worldObjet[meshIndex].GetMaterial();
-			//metl->SetLight(&light);
-			//metl->SetNormal(normal);
-			//metl->SetVertPos(vertexPos);
-			//Color finalCol = metl->LambertModel();
-			return normal;
+			Vector3 vertexPos = r.RayRun(t);
+			Material* metl = worldObjet[meshIndex].GetMaterial();
+			metl->SetLight(&light);
+			metl->SetNormal(normal);
+			metl->SetVertPos(vertexPos);
+			Color finalCol = metl->LambertModel();
+			return finalCol;
 		}
 		else
 		{
@@ -133,14 +133,30 @@ private:
 
 	}
 
+	bool is_pow_of_2(int x) {
+		return !(x & (x - 1));
+	}
+
+	int highestOneBit(int i) {
+		if (is_pow_of_2(i))
+			return i;
+		i |= (i >> 1);
+		i |= (i >> 2);
+		i |= (i >> 4);
+		i |= (i >> 8);
+		i |= (i >> 16);
+		return i + 1;
+	}
+
 	int MaximumAABB(vector<GameObject>& worldObjet, Camera camera) {
 		float maxDis = 0;
-		for (size_t i = 0; i < worldObjet.size(); i++)
+
+		for (unsigned i = 0; i < worldObjet.size(); i++)
 		{
 			vector<Triangle> trig = worldObjet[i].GetMesh()->GetTriangle();
-			for (size_t i = 0; i < trig.size(); i++)
+			for (unsigned i = 0; i < trig.size(); i++)
 			{
-				for (int j = 0; j < 3; j++)
+				for (unsigned j = 0; j < 3; j++)
 				{
 					Vector3 v = trig.at(i).GetVertex(j)->position();
 					float size = CompareSize(v);
@@ -157,10 +173,7 @@ private:
 		{
 			maxDis = size;
 		}
-
-
-
-		return ceil(maxDis);
+		return highestOneBit(ceil(maxDis));
 	}
 };
 

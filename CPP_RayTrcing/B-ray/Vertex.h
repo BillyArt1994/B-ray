@@ -8,19 +8,19 @@ public:
 	Vertex(Vector3& position,Vector3& normal,Vector3& texcoord):
 		_position(position), _normal(normal), _texcoord(texcoord){}
 
-	Vertex(Vector3 vertex) :_position(vertex) {}
+	Vertex(const Vector3& vertex) :_position(vertex) {}
 
 	Vertex(){}
 
-	void SetVertex(Vector3& position) {
+	void SetVertex(const Vector3& position) {
 		_position = position;
 	}
 
-	void SetNormal(Vector3& normal) {
+	void SetNormal(const Vector3& normal) {
 		_normal = normal;
 	}
 
-	void SetTexcoord(Vector3& texcoord) {
+	void SetTexcoord(const Vector3& texcoord) {
 		_texcoord = texcoord;
 	}
 	

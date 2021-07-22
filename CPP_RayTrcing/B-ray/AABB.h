@@ -5,10 +5,10 @@
 
 class AABB {
 private:
+
 public:
 	Vector3 centralPoint = 0.0f;
 	float length = 0;
-
 	Vector3 minPoint;
 	Vector3 maxPoint;
 
@@ -181,10 +181,8 @@ bool isContain(const Triangle& trig, const AABB& aabb) {
 			return false;
 		}
 	}
-
 	return true;
 }
-
 
 #endif // !AABB_H
 

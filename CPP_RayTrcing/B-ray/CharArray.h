@@ -12,33 +12,33 @@ public:
 	CharArray(char c) { this->addElement(c); }
 
 	void addElement(char input) {
-		_array[size] = input;
+		m_data[size] = input;
 		size += 1;
 	}
 
 	void addElement(char input,unsigned index) {
-		_array[index] = input;
+		m_data[index] = input;
 		size += 1;
 	}
 
-	char at(const int index) {
-		return _array[index];
+	char at(const int index) const {
+		return m_data[index];
 	}
 
 	const char* readArrary()const {
-		return _array;
+		return m_data;
 	}
 
 	CharArray subchar(unsigned e) {
 		CharArray a;
-		strncpy(a._array, _array, e);
+		strncpy(a.m_data, m_data, e);
 		a.size = e;
 		return a;
 	}
 
 	void operator = (const CharArray& a) {
 		size = a.size;
-		strcpy(_array, a._array);
+		strcpy(this->m_data, a.m_data);
 	}
 
 	CharArray operator + (char value) {
@@ -63,7 +63,7 @@ public:
 		else
 		{
 
-			if (strncmp(_array, a.readArrary(), size) == 0)
+			if (strncmp(m_data, a.readArrary(), size) == 0)
 			{
 				return true;
 			}
@@ -74,9 +74,8 @@ public:
 		}
 	}
 
-
 private:
-	char _array[128] = { '\0' };
+	char m_data[128] = { '\0' };
 };
 
 namespace std

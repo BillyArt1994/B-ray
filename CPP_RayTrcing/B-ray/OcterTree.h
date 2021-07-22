@@ -7,7 +7,6 @@
 #include "AABB.h"
 #include "Math.h"
 using std::vector;
-
 #include "sparsehash/dense_hash_map"
 using google::dense_hash_map;
 
@@ -89,8 +88,9 @@ public:
 	unsigned maxDepth = -1;
 	unsigned maximum = -1;
 	unsigned length = -1;
+	unsigned gap = -1;
 	OcterTree(vector<GameObject>& t, unsigned  l, unsigned  md, unsigned  mi) :
-		world(t), length(l), maxDepth(md), maximum(mi)
+		world(t), length(l), maxDepth(md), maximum(mi), gap(4294967296/length)
 	{
 
 		localCode.set_empty_key(CharArray());
@@ -103,8 +103,7 @@ public:
 				index.push_back(std::pair<int, int>(i, j));
 			}
 		}
-
-		CreatTree(index, Vector3(0), UINT_MAX, CharArray());
+		CreatTree(index, Vector3(0), length, CharArray());
 	}
 
 	void CreatTree(vector<std::pair<unsigned, unsigned >> index, Vector3 centerPoint, float length, CharArray depthcode) {
@@ -168,7 +167,7 @@ public:
 		}
 	}
 
-	bool Intersect(Ray& r, float& t, unsigned & meshIndex, unsigned& tirgIndex) {
+	bool Intersect(Ray& r, float& t, unsigned& meshIndex, unsigned& tirgIndex) {
 
 		AABB root = AABB(Vector3(0), length);
 		Ray ray = r;
@@ -184,7 +183,7 @@ public:
 			}
 
 			//获得空间编码
-			CharArray qcode = EncodePosition(ray.GetOriginPos(), maxDepth);
+			CharArray qcode = EncodePosition(ray.GetOriginPos()*gap, maxDepth);
 
 			//最大匹配位置代码
 			dense_hash_map<CharArray, OcterNode* >::iterator mapIt = FindMaxMatch(qcode);
@@ -221,14 +220,13 @@ public:
 					{
 						return true;
 					}
-
 				}
 			}
 
 			//当前射线并未求到交点，则与立方体网格求交并找到出口点添加1单位的扰动量穿越到下一个立方体网格中
 			AABB box = mapIt->second->box;
 			box.intersects(ray, tStep);
-			tStep += 1;
+			tStep += 0.1f;
 			ray = Ray(ray.RayRun(tStep), ray.GetDirection());
 		}
 	}
