@@ -89,6 +89,7 @@ public:
 	unsigned maximum = -1;
 	unsigned length = -1;
 	unsigned gap = -1;
+
 	OcterTree(vector<GameObject>& t, unsigned  l, unsigned  md, unsigned  mi) :
 		world(t), length(l), maxDepth(md), maximum(mi), gap(4294967296/length)
 	{

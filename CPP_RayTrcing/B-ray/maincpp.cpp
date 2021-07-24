@@ -22,7 +22,7 @@ int main() {
 	Light light(Color(1.0f, 1.0f, 1.0f), Vector3(2.0f, 3.0f, -5.0f), Vector3(0.0f));
 
 	//Model
-	Mesh torusMesh = ReadObjFile("C:\\Users\\huang\\Desktop\\Tirg.obj");
+	Mesh torusMesh = ReadObjFile("C:\\Users\\huang\\Desktop\\Torus.obj");
 	//Mesh Box_BigMesh = ReadObjFile("C:\\Users\\huang\\Desktop\\Box_Big.obj");
 	//Mesh Box_SmallMesh = ReadObjFile("C:\\Users\\huang\\Desktop\\Box_Small.obj");
 
@@ -55,8 +55,8 @@ int main() {
 	end = clock();
 	double spendTime = double(end - start) / CLOCKS_PER_SEC;
 	int m = spendTime / 60;
-	float s = (int)spendTime % 60 + (spendTime - (int)spendTime);
-	std::cout << "time = " << m << "分" << s << "秒" << std::endl;
+	float s = (int)spendTime%60 + (spendTime - (int)spendTime);
+	std::cout << "渲染所花费时间：" << m << "分" << s << "秒" << std::endl;
 	return 0;
 #pragma endregion
 

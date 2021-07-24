@@ -1,6 +1,7 @@
 #ifndef CHARARRY_H
 #define CHARARRY_H
 #include <iostream>
+#include "highwayhash/highwayhash.h"
 
 class CharArray
 {
@@ -25,7 +26,7 @@ public:
 		return m_data[index];
 	}
 
-	const char* readArrary()const {
+	const char* readArrary() const {
 		return m_data;
 	}
 
@@ -74,6 +75,16 @@ public:
 		}
 	}
 
+	size_t hash()const {
+		size_t hash = 5381;
+		const char* key = this->m_data;
+		while (*key)
+		{
+			hash += (hash << 5) + (*key++);
+		}
+		return (hash & 0x7FFFFFFF);
+	}
+
 private:
 	char m_data[128] = { '\0' };
 };
@@ -86,9 +97,8 @@ namespace std
 	public:
 		size_t operator()(const CharArray& a) const
 		{
-			return hash<std::string>()(a.readArrary()) ^ hash<int>()(a.size);
+			return a.hash();
 		}
-
 	};
 }
 

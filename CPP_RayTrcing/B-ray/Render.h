@@ -24,7 +24,7 @@ public:
 
 #pragma region 八叉树	
 		int maxLength = MaximumAABB(worldObjet, mainCamera);
-		OcterTree root = OcterTree(worldObjet, maxLength*2,32,35);
+		OcterTree root = OcterTree(worldObjet, maxLength*2,32,20);
 #pragma endregion
 
 #pragma region 射线求交并绘制颜色
@@ -42,7 +42,7 @@ public:
 			}
 			if (i % 2 == 0)
 			{
-				int rate = ceil(i*(100.0f / (height - 1)));
+				int rate = floor(i*(100.0f / (height - 1)));
 				std::cout << rate << "%" << std::endl;
 			}
 		}
