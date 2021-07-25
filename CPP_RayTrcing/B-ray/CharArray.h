@@ -1,7 +1,6 @@
 #ifndef CHARARRY_H
 #define CHARARRY_H
 #include <iostream>
-#include "highwayhash/highwayhash.h"
 
 class CharArray
 {
@@ -75,7 +74,7 @@ public:
 		}
 	}
 
-	size_t hash()const {
+	inline size_t hash()const {
 		size_t hash = 5381;
 		const char* key = this->m_data;
 		while (*key)

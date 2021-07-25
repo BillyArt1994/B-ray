@@ -30,7 +30,6 @@ Mesh ReadObjFile(std::string filePath) {
 	vector<Vector3> texcoord;
 	std::ifstream ifs;
 	ifs.open(filePath, std::ios::in);
-
 	std::string buff;
 
 	while (getline(ifs, buff))
