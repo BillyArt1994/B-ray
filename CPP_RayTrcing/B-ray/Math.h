@@ -44,4 +44,19 @@ inline float CompareSize(Vector3 a) {
 	return minSize;
 }
 
+bool is_pow_of_2(int x) {
+	return !(x & (x - 1));
+}
+
+int Nearest2Power(int i) {
+	if (is_pow_of_2(i))
+		return i;
+	i |= (i >> 1);
+	i |= (i >> 2);
+	i |= (i >> 4);
+	i |= (i >> 8);
+	i |= (i >> 16);
+	return i + 1;
+}
+
 #endif // !MATH

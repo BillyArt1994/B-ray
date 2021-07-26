@@ -6,9 +6,9 @@
 #include "CharArray.h"
 #include "AABB.h"
 #include "Math.h"
-using std::vector;
 #include "sparsehash/dense_hash_map"
 using google::dense_hash_map;
+using std::vector;
 
 struct OcterNode
 {

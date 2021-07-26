@@ -46,7 +46,7 @@ public:
 				std::cout << rate << "%" << std::endl;
 			}
 		}
-		RenderTex(width, height, rgb);
+		RenderTex(width,height,rgb);
 	};
 #pragma endregion
 
@@ -133,21 +133,6 @@ private:
 
 	}
 
-	bool is_pow_of_2(int x) {
-		return !(x & (x - 1));
-	}
-
-	int highestOneBit(int i) {
-		if (is_pow_of_2(i))
-			return i;
-		i |= (i >> 1);
-		i |= (i >> 2);
-		i |= (i >> 4);
-		i |= (i >> 8);
-		i |= (i >> 16);
-		return i + 1;
-	}
-
 	int MaximumAABB(vector<GameObject>& worldObjet, Camera camera) {
 		float maxDis = 0;
 
@@ -173,7 +158,7 @@ private:
 		{
 			maxDis = size;
 		}
-		return highestOneBit(ceil(maxDis));
+		return Nearest2Power(ceil(maxDis));
 	}
 };
 
