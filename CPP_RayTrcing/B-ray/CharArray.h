@@ -74,14 +74,14 @@ public:
 		}
 	}
 
-	inline size_t hash()const {
+	size_t operator()()const {
 		size_t hash = 5381;
 		const char* key = this->m_data;
 		while (*key)
 		{
 			hash += (hash << 5) + (*key++);
 		}
-		return (hash & 0x7FFFFFFF);
+		return hash;
 	}
 
 private:
@@ -96,7 +96,7 @@ namespace std
 	public:
 		size_t operator()(const CharArray& a) const
 		{
-			return a.hash();
+			return a();
 		}
 	};
 }
