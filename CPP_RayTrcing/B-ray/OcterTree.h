@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include "Triangle.h"
 #include "CharArray.h"
+#include "NBHashMap.h"
 #include "AABB.h"
 #include "Math.h"
 #include "sparsehash/dense_hash_map"
@@ -22,7 +23,7 @@ class OcterTree {
 
 private:
 	//获得场景中最大匹配编码
-	dense_hash_map<CharArray, OcterNode* >::iterator FindMaxMatch(CharArray qcode) {
+	NBhash_map<CharArray, OcterNode* >::iterator FindMaxMatch(CharArray qcode) {
 
 #pragma region 二分法
 		//dense_hash_map<CharArray, OcterNode* >::iterator result;
@@ -51,7 +52,7 @@ private:
 		//	return result;
 #pragma endregion
 		int i = qcode.size;
-		dense_hash_map<CharArray, OcterNode* >::iterator result;
+		NBhash_map<CharArray, OcterNode* >::iterator result;
 		while (i > 0)
 		{
 			CharArray c = qcode.subchar(i);
@@ -65,6 +66,7 @@ private:
 				i--;
 			}
 		}
+
 	}
 
 	//获得坐标在空间中的编码
@@ -83,7 +85,7 @@ private:
 	}
 
 public:
-	dense_hash_map<CharArray, OcterNode* > localCode;
+	NBhash_map<CharArray, OcterNode* > localCode;
 	vector<GameObject>& world;
 	unsigned maxDepth = -1;
 	unsigned maximum = -1;
@@ -94,7 +96,7 @@ public:
 		world(t), length(l), maxDepth(md), maximum(mi), gap(4294967296/length)
 	{
 
-		localCode.set_empty_key(CharArray());
+//		localCode.set_empty_key(CharArray());
 		vector<std::pair<unsigned, unsigned >> index;
 
 		for (unsigned i = 0; i < world.size(); i++)
@@ -187,13 +189,11 @@ public:
 			CharArray qcode = EncodePosition(ray.GetOriginPos()*gap, maxDepth);
 
 			//最大匹配位置代码
-			dense_hash_map<CharArray, OcterNode* >::iterator mapIt = FindMaxMatch(qcode);
-
+			NBhash_map<CharArray, OcterNode* >::iterator mapIt = FindMaxMatch(qcode);
 			if (mapIt != localCode.end())
 			{
 				//匹配后检测此叶节点下 是否包含面片
 				vector<std::pair<unsigned, unsigned>> index = mapIt->second->data;
-
 				//进行面片求交
 				if (index.size() != 0)
 				{
