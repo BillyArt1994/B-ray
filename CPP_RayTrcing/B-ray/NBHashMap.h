@@ -46,46 +46,30 @@ struct hash_node
 template <class _Key, class _Value>
 class NBhash_map {
 private:
-	unsigned _capacity = 1 << 4;
+	unsigned _capacity = 1<<4;
 	unsigned _count = 0;
 	float _loadFactor = 0.75f;
-	unsigned long cryptTable[0x500];
 	hash_node<_Key, _Value>* hashtable = nullptr;
 
 	//hashº¯Êý
 	size_t hash(const char* input, unsigned ID) {
-		//unsigned char*key = (unsigned char*)input;
-		//unsigned long seed1 = 0x7FED7FED, seed2 = 0xEEEEEEEE;
-		//int ch;
-
-		//while (*key != 0)
-		//{
-		//	ch = toupper(*key++);
-		//	seed1 = cryptTable[(ID << 8) + ch] ^ (seed1 + seed2);
-		//	seed2 = ch + seed1 + seed2 + (seed2 << 5) + 3;
-		//}
-		//return seed1;
-
 		int hash = 0;
 		const char* key = input;
 		switch (ID)
 		{
 		case 0:
-			hash = 0;
 			while (*key)
 			{
 				hash = 131 * hash + *key++;
 			}
 			break;
 		case 1:
-			hash = 0;
 			while (*key)
 			{
 				hash = ((hash << 5) + hash) + *key++;
 			}
 			break;
 		case 2:
-			hash = 0;
 			int i= 0;
 			for (i = 0; *key; i++)
 			{
@@ -170,6 +154,7 @@ public:
 		index = startPos = GetIndex(hashCode);
 		size_t hashA = hash(key, HASH_A);
 		size_t hashB = hash(key, HASH_B);
+
 		do
 		{
 			hash_node<_Key, _Value>* nodePtr = &hashtable[index];
