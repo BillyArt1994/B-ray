@@ -46,43 +46,35 @@ struct hash_node
 template <class _Key, class _Value>
 class NBhash_map {
 private:
-	unsigned _capacity = 1<<4;
+	unsigned _capacity = 1 << 4;
 	unsigned _count = 0;
 	float _loadFactor = 0.75f;
 	hash_node<_Key, _Value>* hashtable = nullptr;
 
 	//hashº¯Êý
-	size_t hash(const char* input, unsigned ID) {
+	size_t hash(const char* input, unsigned length, unsigned ID) {
 		int hash = 0;
 		const char* key = input;
 		switch (ID)
 		{
 		case 0:
-			while (*key)
+			for (size_t i = 0; i < length; i++)
 			{
 				hash = 131 * hash + *key++;
 			}
 			break;
 		case 1:
-			while (*key)
+			for (size_t i = 0; i < length; i++)
 			{
 				hash = ((hash << 5) + hash) + *key++;
 			}
 			break;
 		case 2:
-			int i= 0;
-			for (i = 0; *key; i++)
+			for (size_t i = 0; i < length; i += 2)
 			{
-				if ((i & 1) == 0)
-				{
-					hash ^= ((hash << 7) ^ (*key++) ^ (hash >> 3));
-				}
-				else
-				{
-					hash ^= (~((hash << 11) ^ (*key++) ^ (hash >> 5)));
-				}
+				hash ^= ((hash << 7) ^ (*key++) ^ (hash >> 3));
+				hash ^= (~((hash << 11) ^ (*key++) ^ (hash >> 5)));
 			}
-
 			break;
 		}
 		return  (hash & 0x7FFFFFFF);
@@ -112,23 +104,6 @@ private:
 		delete[] old_hash_table;
 	}
 
-	void prepareCryptTable() {
-
-		unsigned long seed = 0x00100001, index1 = 0, index2 = 0, i;
-		for (index1 = 0; index1 < 0x100; index1++)
-		{
-			for (index2 = index1, i = 0; i < 5; i++, index2 += 0x100)
-			{
-				unsigned long temp1, temp2;
-				seed = (seed * 125 + 3) % 0x2AAAAB;
-				temp1 = (seed & 0xFFFF) << 0x10;
-				seed = (seed * 125 + 3) % 0x2AAAAB;
-				temp2 = (seed & 0xFFFF);
-				cryptTable[index2] = (temp1 | temp2);
-			}
-		}
-
-	}
 
 public:
 
@@ -149,11 +124,12 @@ public:
 		const int  HASH_OFFSET = 0, HASH_A = 1, HASH_B = 2;
 		CharArray c = input.first;
 		const char* key = c.readArrary();
-		size_t hashCode = hash(key, HASH_OFFSET);
+		unsigned length = c.size;
+		size_t hashCode = hash(key, length, HASH_OFFSET);
 		unsigned index, startPos;
 		index = startPos = GetIndex(hashCode);
-		size_t hashA = hash(key, HASH_A);
-		size_t hashB = hash(key, HASH_B);
+		size_t hashA = hash(key, length, HASH_A);
+		size_t hashB = hash(key, length, HASH_B);
 
 		do
 		{
@@ -226,12 +202,12 @@ public:
 
 	template<>
 	iterator find(const CharArray& key) {
-
+		unsigned length = key.size;
 		const char* str = key.readArrary();
 		const int  HASH_OFFSET = 0, HASH_A = 1, HASH_B = 2;
-		size_t hashPos = hash(str, HASH_OFFSET);
-		size_t hashA = hash(str, HASH_A);
-		size_t hashB = hash(str, HASH_B);
+		size_t hashPos = hash(str, length, HASH_OFFSET);
+		size_t hashA = hash(str, length, HASH_A);
+		size_t hashB = hash(str, length, HASH_B);
 		unsigned index, startPos;
 		index = startPos = GetIndex(hashPos);
 
