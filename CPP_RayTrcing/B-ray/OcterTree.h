@@ -51,9 +51,9 @@ private:
 		//}
 		//	return result;
 #pragma endregion
-		int i = qcode.size;
+		int i =1;
 		NBhash_map<CharArray, OcterNode* >::iterator result;
-		while (i > 0)
+		while (i <= qcode.size)
 		{
 			CharArray c = qcode.subchar(i);
 			result = localCode.find(c);
@@ -63,7 +63,7 @@ private:
 			}
 			else
 			{
-				i--;
+				i++;
 			}
 		}
 
