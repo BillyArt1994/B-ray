@@ -9,23 +9,31 @@ public:
 
 	CharArray() {}
 
-	CharArray(char c) { this->addElement(c); }
+	inline CharArray(char& c) { this->addElement(c); }
 
-	void addElement(char input) {
+	inline CharArray(const char* c) {
+		while (*c)
+		{
+			this->addElement(*c);
+			*c++;
+		}
+	}
+
+	inline void addElement(char input) {
 		m_data[size] = input;
 		size += 1;
 	}
 
-	void addElement(char input,unsigned index) {
+	inline void addElement(char input,unsigned index) {
 		m_data[index] = input;
 		size += 1;
 	}
 
-	char at(const int index) const {
+	inline char at(const int index) const {
 		return m_data[index];
 	}
 
-	const char* readArrary() const {
+	inline const char* readArrary() const {
 		return m_data;
 	}
 

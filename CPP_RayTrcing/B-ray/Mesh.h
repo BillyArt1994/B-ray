@@ -17,7 +17,7 @@ class Mesh {
 public:
 	vector<Triangle>& GetTriangle() { return _triangle; }
 	vector<Vertex>& GetVertexArray() { return _vertexArray; }
-
+	
 
 private:
 	vector<Triangle> _triangle;
@@ -55,6 +55,7 @@ Mesh ReadObjFile(std::string filePath) {
 				obj.GetVertexArray().back().SetIndex(obj.GetVertexArray().size() - 1);
 			}
 			break;
+
 		case 'f':
 			char ch[100];
 			strcpy_s(ch, buff.c_str());
@@ -87,7 +88,9 @@ Mesh ReadObjFile(std::string filePath) {
 			break;
 		}
 	}
+
 	ifs.close();
+
 	return obj;
 }
 #endif // !MESH_H

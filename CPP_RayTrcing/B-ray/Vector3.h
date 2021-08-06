@@ -9,11 +9,10 @@ private:
 	float _x;
 	float _y;
 	float _z;
-
 public:
-	float x() const { return this->_x; }
-	float y() const { return this->_y; }
-	float z() const { return this->_z; }
+	inline float x() const { return this->_x; }
+	inline float y() const { return this->_y; }
+	inline float z() const { return this->_z; }
 
 	void x(float value) { _x = value; }
 	void y(float value) { _y = value; }
