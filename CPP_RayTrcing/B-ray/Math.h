@@ -1,7 +1,7 @@
 #ifndef MATH_H
 #define MATH_H
-#include <string>
-#include <iostream>
+
+#include "Vector3.h"
 
 inline float Det3x3Multiply(Vector3& a, Vector3& b, Vector3& c) {
 	float positive = a.x()*b.y()*c.z() + a.z()*b.x()*c.y() + a.y()*b.z()*c.x();
@@ -17,13 +17,13 @@ inline Vector3 cross(const Vector3 &a, const Vector3 &b) {
 	return Vector3(a.y()*b.z() - a.z()*b.y(), a.z()*b.x() - a.x()*b.z(), a.x()*b.y() - a.y()*b.x());
 }
 
-inline float Max(float& a, float& b, float& c) {
-	return std::max(std::max(a, b), c);
-}
-
-inline float Min(float& a, float& b, float& c) {
-	return std::min(std::min(a, b), c);
-}
+//inline float Max(float& a, float& b, float& c) {
+//	return std::max(std::max(a, b), c);
+//}
+//
+//inline float Min(float& a, float& b, float& c) {
+//	return std::min(std::min(a, b), c);
+//}
 
 inline float CompareSize(Vector3 a) {
 	float minSize = 0;
@@ -57,6 +57,12 @@ int Nearest2Power(int i) {
 	i |= (i >> 8);
 	i |= (i >> 16);
 	return i + 1;
+}
+
+inline float clamp(float x, float min, float max) {
+	if (x < min) return min;
+	if (x > max) return max;
+	return x;
 }
 
 #endif // !MATH

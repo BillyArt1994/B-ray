@@ -54,26 +54,25 @@ private:
 	//hashº¯Êý
 	size_t hash(const char* input, unsigned length, unsigned ID) {
 		int hash = 0;
-		const char* key = input;
 		switch (ID)
 		{
 		case 0:
 			for (size_t i = 0; i < length; i++)
 			{
-				hash = 131 * hash + *key++;
+				hash = 131 * hash + *input++;
 			}
 			break;
 		case 1:
 			for (size_t i = 0; i < length; i++)
 			{
-				hash = ((hash << 5) + hash) + *key++;
+				hash = ((hash << 5) + hash) + *input++;
 			}
 			break;
 		case 2:
 			for (size_t i = 0; i < length; i += 2)
 			{
-				hash ^= ((hash << 7) ^ (*key++) ^ (hash >> 3));
-				hash ^= (~((hash << 11) ^ (*key++) ^ (hash >> 5)));
+				hash ^= ((hash << 7) ^ (*input++) ^ (hash >> 3));
+				hash ^= (~((hash << 11) ^ (*input++) ^ (hash >> 5)));
 			}
 			break;
 		}

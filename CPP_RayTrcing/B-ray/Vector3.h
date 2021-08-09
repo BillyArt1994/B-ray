@@ -14,9 +14,9 @@ public:
 	inline float y() const { return this->_y; }
 	inline float z() const { return this->_z; }
 
-	void x(float value) { _x = value; }
-	void y(float value) { _y = value; }
-	void z(float value) { _z = value; }
+	inline void x(float value) { _x = value; }
+	inline void y(float value) { _y = value; }
+	inline void z(float value) { _z = value; }
 
 	Vector3(float x, float y, float z) :
 		_x(x), _y(y), _z(z) {}
