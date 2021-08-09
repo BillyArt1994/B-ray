@@ -86,10 +86,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,21 +131,14 @@
     <ClCompile Include="maincpp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AABB.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CharArray.h" />
     <ClInclude Include="Color.h" />
-    <ClInclude Include="Function.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Image.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="Math.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="NBHashMap.h" />
-    <ClInclude Include="OcterTree.h" />
-    <ClInclude Include="Ray.h" />
-    <ClInclude Include="Render.h" />
+    <ClInclude Include="OBJLoader.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="svpng.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vector3.h" />

@@ -29,9 +29,6 @@
     <ClInclude Include="Color.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Ray.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -41,40 +38,22 @@
     <ClInclude Include="Vertex.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Math.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Image.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Function.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="OcterTree.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="AABB.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CharArray.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="NBHashMap.h">
+    <ClInclude Include="OBJLoader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -7,8 +7,6 @@
 #include "Color.h"
 #include "Ray.h"
 #include "Mesh.h"
-#include "GameObject.h"
-#include "OcterTree.h"
 
 class Render
 {
@@ -22,10 +20,12 @@ public:
 		Vector3 vertical = mainCamera.GetVertical();
 		Vector3 camerPos = mainCamera.GetPos();
 
+/*
 #pragma region 八叉树	
 		int maxLength = MaximumAABB(worldObjet, mainCamera);
 		OcterTree root = OcterTree(worldObjet, maxLength*2,32,20);
 #pragma endregion
+*/
 
 #pragma region 射线求交并绘制颜色
 		for (unsigned i = 0; i < height; i++) {
@@ -133,6 +133,7 @@ private:
 
 	}
 
+	/*
 	int MaximumAABB(vector<GameObject>& worldObjet, Camera camera) {
 		float maxDis = 0;
 
@@ -161,6 +162,6 @@ private:
 		return Nearest2Power(ceil(maxDis));
 	}
 };
-
+*/
 #endif // !RENDER_H
 

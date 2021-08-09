@@ -2,42 +2,12 @@
 #define VERTEX_H
 #include "Vector3.h"
 
-class Vertex
+struct Vertex
 {
-public:
-	Vertex(Vector3& position,Vector3& normal,Vector3& texcoord):
-		_position(position), _normal(normal), _texcoord(texcoord){}
-
-	Vertex(const Vector3& vertex) :_position(vertex) {}
-
-	Vertex(){}
-
-	void SetVertex(const Vector3& position) {
-		_position = position;
-	}
-
-	void SetNormal(const Vector3& normal) {
-		_normal = normal;
-	}
-
-	void SetTexcoord(const Vector3& texcoord) {
-		_texcoord = texcoord;
-	}
-	
-	void SetIndex(unsigned index) {
-		_index = index;
-	}
-
-	Vector3 position()const { return _position; }
-	Vector3 normal()const { return _normal; }
-	Vector3 texcoord()const { return _texcoord; }
-	int index()const { return _index; }
-
-private:
-	Vector3 _position;
-	Vector3 _normal;
-	Vector3 _texcoord;
-	int _index;
+	Vertex(Vector3 pos, Vector3 nor, Vector3 uv) :position(pos), normal(nor), texcoord(uv) {}
+	Vector3 position;
+	Vector3 normal;
+	Vector3 texcoord;
 };
 #endif // !VERTEX_H
 

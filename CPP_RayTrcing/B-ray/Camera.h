@@ -1,33 +1,33 @@
 #ifndef CAMERA_H
 #define CAMERA_H
+
 #include "Vector3.h"
-class Camera
+
+struct Camera
 {
-public:
-	Camera(Vector3 cameraPos,float cilp,float aspect_ratio) {
-		//Camera
-		auto viewport_height = 2.0f;
-		auto viewport_width = aspect_ratio * viewport_height;
-		_cilp = cilp;
+	Camera(Vector3 cameraPos, float cilp, float aspect_ratio);
 
-		_cameraPosition = cameraPos;
-		_horizontal = Vector3(viewport_width, 0.0f, 0.0f);
-		_vertical = Vector3(0.0f, viewport_height, 0.0f);
-		_high_left_corner = cameraPos - _horizontal / 2 + _vertical / 2 - Vector3(0.0f, 0.0f, _cilp);
-	}
-
-	Vector3 GetPos()const { return _cameraPosition; }
-	Vector3 GetLC()const { return _high_left_corner; }
-	Vector3 GetHorizontal()const { return _horizontal; }
-	Vector3 GetVertical()const { return _vertical; }
-	friend class Render;
-private:
-	Vector3 _cameraPosition;
-	Vector3 _high_left_corner;
-	Vector3 _horizontal;
-	Vector3 _vertical;
-	float _cilp;
+	//摄像机坐标
+	Vector3 cameraPosition;
+	//画布左上角坐标
+	Vector3 high_left_corner;
+	//画布水平向量-U
+	Vector3 horizontal;
+	//画布垂直向量-V
+	Vector3 vertical;
+	float cilp;
 };
 
+Camera::Camera(Vector3 cameraPosV, float cilpV, float aspect_ratio) {
+		//Camera
+		float viewport_height = 2.0f;
+		float viewport_width = aspect_ratio * viewport_height;
+
+		cilp = cilpV;
+		cameraPosition = cameraPosV;
+		horizontal = Vector3(viewport_width, 0.0f, 0.0f);
+		vertical = Vector3(0.0f, viewport_height, 0.0f);
+		high_left_corner = cameraPosV - horizontal / 2 + vertical / 2 - Vector3(0.0f, 0.0f, cilp);
+}
 
 #endif // !CAMERA_H
