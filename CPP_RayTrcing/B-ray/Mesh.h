@@ -7,7 +7,7 @@
 using std::vector;
 
 struct Mesh {
-	const char* name;
+	std::string name;
 	vector<Triangle> triangleArray;
 	vector<Vertex> vertexArray;
 	unsigned vertexs_Count = 0;

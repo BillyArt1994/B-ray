@@ -18,7 +18,7 @@ struct Camera
 	float cilp;
 };
 
-Camera::Camera(Vector3 cameraPosV, float cilpV, float aspect_ratio) {
+Camera::Camera( Vector3 cameraPosV, float cilpV,float aspect_ratio) {
 		//Camera
 		float viewport_height = 2.0f;
 		float viewport_width = aspect_ratio * viewport_height;

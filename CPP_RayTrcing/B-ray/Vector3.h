@@ -18,12 +18,12 @@ public:
 	inline void y(float value) { _y = value; }
 	inline void z(float value) { _z = value; }
 
-	Vector3(float x, float y, float z) :
+	Vector3(const float x, const float y, const float z) :
 		_x(x), _y(y), _z(z) {}
 
 	Vector3() {}
 
-	Vector3(float value) :_x(value), _y(value), _z(value) {}
+	Vector3(const float value) :_x(value), _y(value), _z(value) {}
 
 	float length() {
 		return sqrt(this->x()*this->x() + this->y()*this->y() + this->z()*this->z());

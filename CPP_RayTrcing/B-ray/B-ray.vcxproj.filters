@@ -56,9 +56,6 @@
     <ClInclude Include="OBJLoader.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Render.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -69,6 +66,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Math.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

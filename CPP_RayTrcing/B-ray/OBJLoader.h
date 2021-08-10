@@ -11,16 +11,9 @@
 class OBJLoader
 {
 public:
-	OBJLoader();
 	static Mesh ReadObjectFile(std::string filePath);
 private:
-
 };
-
-OBJLoader::OBJLoader()
-{
-
-}
 
 Mesh OBJLoader::ReadObjectFile(std::string filePath) {
 	//GameObject gameObject_00;

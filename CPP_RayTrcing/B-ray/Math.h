@@ -6,7 +6,7 @@
 inline float Det3x3Multiply(Vector3& a, Vector3& b, Vector3& c) {
 	float positive = a.x()*b.y()*c.z() + a.z()*b.x()*c.y() + a.y()*b.z()*c.x();
 	float negative = c.x()*b.y()*a.z() + c.z()*b.x()*a.y() + c.y()*a.x()*b.z();
-	return positive - negative;
+	return positive-negative;
 }
 
 inline float dot(const Vector3 &a, const Vector3 &b) {
@@ -44,11 +44,12 @@ inline float CompareSize(Vector3 a) {
 	return minSize;
 }
 
-bool is_pow_of_2(int x) {
+
+inline bool is_pow_of_2(int x) {
 	return !(x & (x - 1));
 }
 
-int Nearest2Power(int i) {
+inline int Nearest2Power(int i) {
 	if (is_pow_of_2(i))
 		return i;
 	i |= (i >> 1);
