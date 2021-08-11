@@ -19,9 +19,10 @@ Mesh OBJLoader::ReadObjectFile(std::string filePath) {
 	//GameObject gameObject_00;
 	//gameObject_00.name = getFileName(filePath);
 	Mesh obj;
-	vector<Vector3> normal;
-	vector<Vector3> texcoord;
-
+	vector<Vector3> normal, texcoord;
+	vector<Triangle> triangle_array;
+	vector<Vertex> vertex_array;
+	unsigned vertexs_Count = 0, faces_Count=0;
 	//for (size_t i = 0; i < 10; i++)
 	//{
 	//	obj.vertexArray.push_back(Vertex(Vector3(i), Vector3(0), Vector3(0)));
@@ -30,14 +31,14 @@ Mesh OBJLoader::ReadObjectFile(std::string filePath) {
 
 	std::ifstream ifs;
 	ifs.open(filePath, std::ios::in);
-
+	std::string buff;
 
 	if (!ifs)
 	{
 		MessageBox(NULL, (LPCTSTR)TEXT("文件打开失败"), (LPCTSTR)TEXT("提示"), MB_OK);
 	}
 
-	std::string buff;
+	
 
 	if (ifs.get() == EOF)
 	{
@@ -46,13 +47,9 @@ Mesh OBJLoader::ReadObjectFile(std::string filePath) {
 
 	while (getline(ifs, buff))
 	{
-
 		char buff_line[128];
 		strcpy_s(buff_line, buff.c_str());
 		float x, y, z;
-		unsigned vertexs_Count = 0;
-		unsigned faces_Count = 0;
-
 		switch (buff_line[0])
 		{
 			//case '#':
@@ -71,7 +68,7 @@ Mesh OBJLoader::ReadObjectFile(std::string filePath) {
 			{
 				sscanf(buff_line, "v %f %f %f", &x, &y, &z);
 				Vertex vert(Vector3(x, y, z), Vector3(0), Vector3(0));
-				obj.vertexArray.push_back(vert);
+				vertex_array.push_back(vert);
 				vertexs_Count += 1;
 			}
 
@@ -98,22 +95,23 @@ Mesh OBJLoader::ReadObjectFile(std::string filePath) {
 
 			for (size_t i = 0; i < 3; i++)
 			{
-				obj.vertexArray.at(vertexIndex[i] - 1).normal = normal.at(normalIndex[i] - 1);
-				obj.vertexArray.at(vertexIndex[i] - 1).texcoord = texcoord.at(uvIndex[i] - 1);
+				vertex_array.at(vertexIndex[i] - 1).normal = normal.at(normalIndex[i] - 1);
+				vertex_array.at(vertexIndex[i] - 1).texcoord = texcoord.at(uvIndex[i] - 1);
 			}
 
-			Triangle tri(&(obj.vertexArray.at(vertexIndex[0] - 1)),
-				&(obj.vertexArray.at(vertexIndex[1] - 1)),
-				&(obj.vertexArray.at(vertexIndex[2] - 1)));
-			obj.triangleArray.push_back(tri);
+			Triangle tri(&(vertex_array.at(vertexIndex[0] - 1)),
+				&(vertex_array.at(vertexIndex[1] - 1)),
+				&(vertex_array.at(vertexIndex[2] - 1)));
+			triangle_array.push_back(tri);
 			faces_Count += 1;
 			break;
 		}
-		obj.setFaceCount(faces_Count);
-		obj.setVertexCount(vertexs_Count);
 	}
+	obj.setFaceCount(faces_Count);
+	obj.setVertexCount(vertexs_Count);
+	vertex_array.swap(obj.vertexArray);
+	triangle_array.swap(obj.triangleArray);
 	ifs.close();
-
 	return obj;
 }
 

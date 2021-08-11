@@ -8,18 +8,17 @@
 #include "OBJLoader.h"
 #include "RenderManager.h"
 #include <iostream>
-#include <time.h>　
+#include <chrono> 
 
 int main() {
 	//计时
-	clock_t start, end;
-	start = clock();
+	auto start = std::chrono::system_clock::now();
 
 	//Light
 	Light light(Color(1.0f, 1.0f, 1.0f), Vector3(2.0f, 3.0f, -5.0f), Vector3(0.0f));
 
 	//Model
-	Mesh torusMesh = OBJLoader::ReadObjectFile("C:\\Users\\huang\\Desktop\\Torus.obj");
+	Mesh torusMesh = OBJLoader::ReadObjectFile("Torus.obj");
 
 	//Image
 	//输出图形比例-长比宽,尺寸
@@ -50,11 +49,9 @@ int main() {
 	SSGE.run();
 
 #pragma region 打印花费时间
-	end = clock();
-	double spendTime = double(end - start) / CLOCKS_PER_SEC;
-	int m = static_cast<int>(spendTime / 60);
-	float s = static_cast<float> (static_cast<int>(spendTime)%60 + (spendTime - static_cast<int>(spendTime)));
-	std::cout << "渲染所花费时间：" << m << "分" << s << "秒" << std::endl;
+	auto end = std::chrono::system_clock::now();
+	double duration_second = std::chrono::duration<double>(end-start).count();
+	std::cout << "渲染所花费时间：" << duration_second << "秒" << std::endl;
 	return 0;
 #pragma endregion
 
