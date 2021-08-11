@@ -4,68 +4,51 @@
 #include <cmath>
 #include <iostream>
 
-class Vector3 {
-private:
-	float _x;
-	float _y;
-	float _z;
-public:
-	inline float x() const { return this->_x; }
-	inline float y() const { return this->_y; }
-	inline float z() const { return this->_z; }
+struct Vector3 {
 
-	inline void x(float value) { _x = value; }
-	inline void y(float value) { _y = value; }
-	inline void z(float value) { _z = value; }
+	float x = 0.0f, y = 0.0f, z = 0.0f;
 
-	Vector3(const float x, const float y, const float z) :
-		_x(x), _y(y), _z(z) {}
+	Vector3(const float a, const float b, const float c) :
+		x(a), y(b), z(c) {}
 
 	Vector3() {}
 
-	Vector3(const float value) :_x(value), _y(value), _z(value) {}
+	Vector3(const float value) :x(value), y(value), z(value) {}
 
-	float length() {
-		return sqrt(this->x()*this->x() + this->y()*this->y() + this->z()*this->z());
-	}
-
-	Vector3 normalize() {
-		return *this / this->length();
-	}
 
 	//ÔËËã·ûÖØÔØ
 	inline Vector3 operator -(const Vector3 &b) {
-		return Vector3(_x - b.x(), _y - b.y(), _z - b.z());
+		return Vector3(x - b.x, y - b.y, z - b.z);
 	}
 
 	inline Vector3 operator +(const Vector3 &b) {
-		return Vector3(_x + b.x(), _y + b.y(), _z + b.z());
+		return Vector3(x + b.x, y + b.y, z + b.z);
 	}
 
 	inline Vector3 operator +(const float &b) {
-		return Vector3(_x + b, _y + b, _z + b);
+		return Vector3(x + b, y + b, z + b);
 	}
 
 	inline Vector3 operator +=(const Vector3 &b) {
-		_x += b.x();
-		_y += b.y();
-		_z += b.z();
+		x += b.x;
+		y += b.y;
+		z += b.z;
 		return *this;
 	}
 
 	inline Vector3& operator *=(const float &b) {
-		_x = _x * b;
-		_y = _y * b;
-		_z = _z * b;
+		x = x * b;
+		y = y * b;
+		z = z * b;
 		return *this;
 	}
 
 	inline Vector3 operator /(const float &b) {
-		return Vector3(_x / b, _y / b, _z / b);
+		return Vector3(x / b, y / b, z / b);
 	}
 
 	inline bool operator ==(const Vector3& b) {
-		if (_x == b.x() && _y == b.y() && _z == b.z())
+		if (x == b.x && y == b.y && z == b.z)
 		{
 			return true;
 		}
@@ -76,7 +59,7 @@ public:
 	}
 
 	inline bool operator !=(const Vector3& b) {
-		if (_x == b.x() && _y == b.y() && _z == b.z())
+		if (x == b.x && y == b.y && z == b.z)
 		{
 			return false;
 		}
@@ -86,31 +69,39 @@ public:
 		}
 	}
 
-	inline Vector3 operator - () {
-		_x =-_x;
-		_y =-_y;
-		_z =-_z;
+	inline float length() {
+		return sqrt(this->x*this->x + this->y*this->y + this->z*this->z);
+	}
+
+	inline Vector3 normalize() {
+		return *this / this->length();
+	}
+
+	inline Vector3 operator -() {
+		x = -x;
+		y = -y;
+		z = -z;
 		return *this;
 	}
 
 	inline Vector3 operator -=  (const Vector3 b) {
-		_x -= b.x();
-		_y -= b.y();
-		_z -= b.z();
+		x -= b.x;
+		y -= b.y;
+		z -= b.z;
 		return *this;
 	}
 };
 
 inline Vector3 operator *(const Vector3& a, const float &b) {
-	return Vector3(a.x()*b, a.y()*b, a.z()*b);
+	return Vector3(a.x*b, a.y*b, a.z*b);
 }
 
 inline Vector3 operator *(const float& a, const Vector3 &b) {
-	return Vector3(a*b.x(), a*b.y(), a*b.z());
+	return Vector3(a*b.x, a*b.y, a*b.z);
 }
 
 inline Vector3 operator /(const float &a, const Vector3 &b) {
-	return Vector3(a / b.x(), a / b.y(), a / b.z());
+	return Vector3(a / b.x, a / b.y, a / b.z);
 }
 
 using Color = Vector3;

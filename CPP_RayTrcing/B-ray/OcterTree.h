@@ -1,5 +1,6 @@
 #ifndef OcterTree_H
 #define OcterTree_H
+
 #include <Vector>
 #include "Vector3.h"
 #include "Triangle.h"
@@ -7,16 +8,13 @@
 #include "NBHashMap.h"
 #include "AABB.h"
 #include "Math.h"
-#include "sparsehash/dense_hash_map"
-using google::dense_hash_map;
 using std::vector;
 
 struct OcterNode
 {
+	OcterNode()
 	vector<std::pair<unsigned, unsigned >>data;
 	AABB box;
-	OcterNode() {}
-	OcterNode(vector<std::pair<unsigned, unsigned >>index, AABB abbox) :data(index), box(abbox) {}
 };
 
 class OcterTree {
@@ -71,15 +69,15 @@ private:
 
 	//获得坐标在空间中的编码
 	CharArray EncodePosition(const Vector3& pos, const unsigned  bits) {
-		int x = floor(pos.x());
-		int y = floor(pos.y());
-		int z = floor(pos.z());
+		int x = floor(pos.x);
+		int y = floor(pos.y);
+		int z = floor(pos.z);
 
 		CharArray result;
 		for (unsigned i = 0; i < bits; i++)
 		{
 			unsigned  r = ((x >> i) & 1) + 2 * ((y >> i) & 1) + 4 * ((z >> i) & 1);
-			result.addElement(r + '0', bits - 1 - i);
+			result.addElement(r+'0', bits - 1 - i);
 		}
 		return result;
 	}
@@ -96,7 +94,6 @@ public:
 		world(t), length(l), maxDepth(md), maximum(mi), gap(4294967296/length)
 	{
 
-//		localCode.set_empty_key(CharArray());
 		vector<std::pair<unsigned, unsigned >> index;
 
 		for (unsigned i = 0; i < world.size(); i++)
@@ -206,7 +203,7 @@ public:
 						unsigned mIndex = index.at(i).first;
 						unsigned tIndex = index.at(i).second;
 						Triangle* trig = &(world.at(mIndex).GetMesh()->GetTriangle().at(tIndex));
-						if (trig->Intersect(r, t))
+						if (trig->IntersectTriangle(r, t))
 						{
 							if (t< minDis)
 							{

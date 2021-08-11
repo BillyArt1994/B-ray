@@ -50,6 +50,8 @@ Mesh OBJLoader::ReadObjectFile(std::string filePath) {
 		char buff_line[128];
 		strcpy_s(buff_line, buff.c_str());
 		float x, y, z;
+		unsigned vertexs_Count = 0;
+		unsigned faces_Count = 0;
 
 		switch (buff_line[0])
 		{
@@ -70,7 +72,7 @@ Mesh OBJLoader::ReadObjectFile(std::string filePath) {
 				sscanf(buff_line, "v %f %f %f", &x, &y, &z);
 				Vertex vert(Vector3(x, y, z), Vector3(0), Vector3(0));
 				obj.vertexArray.push_back(vert);
-				obj.vertexs_Count += 1;
+				vertexs_Count += 1;
 			}
 
 			if (buff_line[1] == 'n')
@@ -104,9 +106,11 @@ Mesh OBJLoader::ReadObjectFile(std::string filePath) {
 				&(obj.vertexArray.at(vertexIndex[1] - 1)),
 				&(obj.vertexArray.at(vertexIndex[2] - 1)));
 			obj.triangleArray.push_back(tri);
-			obj.faces_Count += 1;
+			faces_Count += 1;
 			break;
 		}
+		obj.setFaceCount(faces_Count);
+		obj.setVertexCount(vertexs_Count);
 	}
 	ifs.close();
 

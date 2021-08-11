@@ -17,8 +17,7 @@ public:
 	Vector3 GetCol()const { return _Color; }
 private:
 	Color _Color = Color(1.0f,1.0f,1.0f);
-	Vector3 _position = Vector3(0.0f);
-	Vector3 _roatiton = Vector3(0.0f);
+	Vector3 _position ,_roatiton;
 };
 #endif // !LIGHT_H
 

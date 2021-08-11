@@ -10,7 +10,9 @@ public:
 	SceneManager(Scene* m_scene):currentScene(m_scene){};
 	~SceneManager() {};
 	bool startUp();
-	Scene* getCurrentScene()const {	return currentScene;}
+	void shuDown();
+	void updata();
+	Scene* getCurrentScene();
 private:
 	Scene* currentScene;
 };
@@ -23,7 +25,9 @@ bool SceneManager::startUp() {
 	}
 	return true;
 }
-
+Scene* SceneManager::getCurrentScene() {
+	return currentScene;
+}
 
 #endif // !SCENEMANAGER_H
 

@@ -18,8 +18,7 @@ public:
 	}
 
 private:
-	Vector3 _dirction;
-	Vector3 _originPos;
+	Vector3 _dirction, _originPos;
 };
 
 #endif

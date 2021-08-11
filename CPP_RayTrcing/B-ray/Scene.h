@@ -10,7 +10,8 @@ using std::vector;
 class Scene {
 public:
 	Scene(std::string sceneID):name(sceneID){}
-
+	Scene(){}
+	~Scene();
 	std::string name= "SimpleScene";
 	vector<Mesh*> sceneMeshList;
 	vector<Light*> sceneLightList;
@@ -36,6 +37,10 @@ bool Scene::checkEmptyScene() {
 		return true;
 	}
 	return false;
+}
+
+Scene::~Scene() {
+
 }
 #endif // !SCENE_H
 

@@ -38,10 +38,9 @@ public:
 	}
 
 	CharArray subchar(unsigned e) {
-		CharArray a;
-		strncpy(a.m_data, m_data, e);
-		a.size = e;
-		return a;
+		strncpy(this->m_data, m_data, e);
+		this->size = e;
+		return *this;
 	}
 
 	void operator = (const CharArray& a) {
@@ -50,17 +49,13 @@ public:
 	}
 
 	CharArray operator + (char value) {
-		CharArray a;
-		a = *this;
-		a.addElement(value);
-		return a;
+		this->m_data[size] = value;
+		return *this;
 	}
 
 	CharArray operator + (int value) {
-		CharArray a;
-		a = *this;
-		a.addElement(value+'0');
-		return a;
+		this->m_data[size]=value+'0';
+		return *this;
 	}
 
 	bool operator == (const CharArray& a) const {
@@ -80,16 +75,6 @@ public:
 				return false;
 			}
 		}
-	}
-
-	size_t operator()()const {
-		size_t hash = 5381;
-		const char* key = this->m_data;
-		while (*key)
-		{
-			hash += (hash << 5) + (*key++);
-		}
-		return hash;
 	}
 
 private:

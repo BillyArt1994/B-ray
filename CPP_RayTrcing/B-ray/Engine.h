@@ -37,7 +37,7 @@ bool Engine::StartUp() {
 
 	 if (success)
 	 {
-		 printf("渲染系统启动成功。\n");
+		 printf("渲染系统启动成功\n");
 	 }
 	 return success;
 }
