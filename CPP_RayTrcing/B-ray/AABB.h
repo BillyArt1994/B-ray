@@ -34,7 +34,11 @@ struct AABB {
 
 	bool checkIfInside(const Vector3& point);
 
+	bool checkIfInside(const Triangle& trig);
+
 	array<AABB,8> getEightSubAABB();
+
+
 };
 
 AABB::AABB(Vector3 maxP, Vector3 minP) :minPoint(minP), maxPoint(maxP) {}
@@ -46,6 +50,22 @@ bool AABB::checkIfInside(const Vector3& point) {
 		return false;
 	}
 	return true;
+}
+
+bool AABB::checkIfInside(const Triangle& trig) {
+	if (checkIfInside(trig._vertexArray[0]->position))
+	{
+		return true;
+	}
+	if (checkIfInside(trig._vertexArray[1]->position))
+	{
+		return true;
+	}
+	if (checkIfInside(trig._vertexArray[2]->position))
+	{
+		return true;
+	}
+	return false;
 }
 
 array<AABB,8> AABB::getEightSubAABB() {

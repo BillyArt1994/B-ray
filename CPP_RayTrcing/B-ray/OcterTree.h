@@ -2,6 +2,7 @@
 #define OcterTree_H
 
 #include <Vector>
+#include <array>
 #include "Vector3.h"
 #include "Triangle.h"
 #include "CharArray.h"
@@ -9,6 +10,7 @@
 #include "AABB.h"
 #include "Math.h"
 using std::vector;
+using std::array;
 
 struct OcterNode
 {
@@ -22,33 +24,6 @@ class OcterTree {
 private:
 	//获得场景中最大匹配编码
 	NBhash_map<CharArray, OcterNode* >::iterator FindMaxMatch(CharArray qcode) {
-
-#pragma region 二分法
-		//dense_hash_map<CharArray, OcterNode* >::iterator result;
-		//dense_hash_map<CharArray, OcterNode* >::iterator mapIt = localCode.end();
-
-		//int a = 0;
-		//int b = qcode.size;
-		//int i = (a + b) / 2;
-
-		//while (a < b - 1)
-		//{
-		//	CharArray c = qcode.subchar(i);
-		//	result = localCode.find(c);
-		//	if (result != localCode.end())
-		//	{
-		//		mapIt = result;
-		//		a = i;
-		//		i = (a + b) / 2;
-		//	}
-		//	else
-		//	{
-		//		b = i;
-		//		i = (a + b) / 2;
-		//	}
-		//}
-		//	return result;
-#pragma endregion
 		int i =1;
 		NBhash_map<CharArray, OcterNode* >::iterator result;
 		while (i <= qcode.size)
@@ -82,6 +57,7 @@ private:
 		return result;
 	}
 
+	AABB baseBound;
 public:
 	NBhash_map<CharArray, OcterNode* > localCode;
 	vector<GameObject>& world;
@@ -89,22 +65,10 @@ public:
 	unsigned maximum = -1;
 	unsigned length = -1;
 	unsigned gap = -1;
+	
 
 	OcterTree(vector<GameObject>& t, unsigned  l, unsigned  md, unsigned  mi) :
-		world(t), length(l), maxDepth(md), maximum(mi), gap(4294967296/length)
-	{
-
-		vector<std::pair<unsigned, unsigned >> index;
-
-		for (unsigned i = 0; i < world.size(); i++)
-		{
-			for (unsigned j = 0; j < world.at(i).GetMesh()->GetTriangle().size(); j++)
-			{
-				index.push_back(std::pair<int, int>(i, j));
-			}
-		}
-		CreatTree(index, Vector3(0), length, CharArray());
-	}
+		world(t), length(l), maxDepth(md), maximum(mi), gap(4294967296/length){}
 
 	void CreatTree(vector<std::pair<unsigned, unsigned >> index, Vector3 centerPoint, float length, CharArray depthcode) {
 
@@ -126,8 +90,7 @@ public:
 			return;
 		}
 
-		AABB Bounding(centerPoint, length);
-		vector<AABB> subBounding = Bounding.GetEightSubAABB();
+		array<AABB,8> subBounding = baseBound.getEightSubAABB();
 		vector<std::pair<unsigned, unsigned >> subIndex[8];
 
 		//所有三角面进行八叉树分割
@@ -135,7 +98,7 @@ public:
 		{
 			for (unsigned j = 0; j < 8; j++)
 			{
-				if (isContain(world.at(index.at(i).first).GetMesh()->GetTriangle().at(index.at(i).second), subBounding.at(j))==true)
+				if (subBounding[j].checkIfInside())
 				{
 					subIndex[j].push_back(index.at(i));
 				}
@@ -169,15 +132,13 @@ public:
 
 	bool Intersect(Ray& r, float& t, unsigned& meshIndex, unsigned& tirgIndex) {
 
-		AABB root = AABB(Vector3(0), length);
 		Ray ray = r;
-
 		while (true)
 		{
 			float tStep = 0;
 
 			//检测射线是否还在场景内部
-			if (isInside(ray.GetOriginPos(), root) == false)
+			if (!baseBound.checkIfInside(ray.GetOriginPos()))
 			{
 				return false;
 			}

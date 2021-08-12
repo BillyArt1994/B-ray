@@ -8,13 +8,12 @@ struct Vector3 {
 
 	float x = 0.0f, y = 0.0f, z = 0.0f;
 
-	Vector3(const float a, const float b, const float c) :
-		x(a), y(b), z(c) {}
-
 	Vector3() {}
 
 	Vector3(const float value) :x(value), y(value), z(value) {}
 
+	Vector3(const float a, const float b, const float c) :
+		x(a), y(b), z(c) {}
 
 	//‘ÀÀ„∑˚÷ÿ‘ÿ
 	inline Vector3 operator -(const Vector3 &b) {

@@ -45,7 +45,7 @@ void Render::Rendering() {
 			*p++ = (unsigned char)pixel_color.y;    //G
 			*p++ = (unsigned char)pixel_color.z;    //B
 		}
-		int rate = ((i/(height-1.0f))*100);
+		int rate = static_cast<int>((i/(height-1.0f))*100);
 		std::cout << rate << "%" << std::endl;
 	}
 }
