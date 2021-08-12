@@ -31,7 +31,7 @@ void RenderManager::run() {
 }
 
 RenderManager::~RenderManager() {
-	//delete[] m_renader;
-	//delete[] rgb;
+	delete m_renader;
+	delete[] rgb;
 }
 #endif // !RenderManager

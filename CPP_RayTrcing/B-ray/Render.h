@@ -57,6 +57,7 @@ void Render::SaveTexture() {
 }
 
 Vector3 Render::ray_color(const Ray& r) {
+
 #pragma region 传统全局遍历相交
 	float minDis = FLT_MAX;
 	int minIndex = -1;
@@ -86,10 +87,10 @@ Vector3 Render::ray_color(const Ray& r) {
 	{
 		return Color(1.0f, 0.0f, 0.0f);
 	}
-	Vector3 dir = r.GetDirection();
-	auto t = (dir.y + 1.0f)*0.5f;
-	return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
 #pragma endregion
+	float t = (r.GetDirection().y + 1.0f)*0.5f;
+	return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
+
 }
 
 #endif // !RENDER_H
