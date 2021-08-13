@@ -81,18 +81,5 @@ private:
 	char m_data[128] = { '\0' };
 };
 
-namespace std
-{
-	template<>
-	class hash<CharArray>
-	{
-	public:
-		size_t operator()(const CharArray& a) const
-		{
-			return a();
-		}
-	};
-}
-
 #endif // !CHARARRY_H
 

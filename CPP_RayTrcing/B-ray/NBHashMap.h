@@ -8,48 +8,27 @@
 #include <iterator>
 using std::pair;
 
-template <class _Key, class _Value>
+template <class T_Value>
 struct hash_node
 {
 	hash_node() {}
-	hash_node(pair<_Key, _Value> p) :_data(p) {}
-	pair<_Key, _Value> _data;
+	hash_node(CharArray k, T_Value v) :_key(k), _value(v){}
+	CharArray _key;
+	T_Value _value;
 	size_t _hashA = -1;
 	size_t _hashB = -1;
 	bool bExists = false;
-
-	bool operator ==(const hash_node& a) {
-		if (this->_data == a._data)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	bool operator !=(const hash_node& a) {
-		if (this->_data == a._data)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-
 };
 
 //Hash±í
-template <class _Key, class _Value>
+template <class T_Value>
 class NBhash_map {
 private:
 	unsigned _capacity = 1 << 4;
 	unsigned _count = 0;
 	float _loadFactor = 0.75f;
-	hash_node<_Key, _Value>* hashtable = nullptr;
+
+	hash_node<T_Value>* hashtable = nullptr;
 
 	//hashº¯Êý
 	size_t hash(const char* input, unsigned length, unsigned ID) {
@@ -86,18 +65,18 @@ private:
 
 	void reSize() {
 
-		hash_node<CharArray, _Value>* old_hash_table = hashtable;
+		hash_node<T_Value>* old_hash_table = hashtable;
 		int old_capacity = _capacity;
 		unsigned new_capacity = Nearest2Power(_capacity + 1);
-		hashtable = new hash_node<CharArray, _Value>[new_capacity];
+		hashtable = new hash_node<T_Value>[new_capacity];
 		_capacity = new_capacity;
 		_count = 0;
 		for (size_t i = 0; i < old_capacity; i++)
 		{
-			hash_node<CharArray, _Value>* node = &old_hash_table[i];
+			hash_node<T_Value>* node = &old_hash_table[i];
 			if (node->bExists)
 			{
-				this->insert(node->_data);
+				this->insert(node->_key, node->_value);
 			}
 		}
 		delete[] old_hash_table;
@@ -106,14 +85,14 @@ private:
 
 public:
 
-	NBhash_map() :hashtable(new hash_node<_Key, _Value>[_capacity]) {
+	NBhash_map() :hashtable(new hash_node<T_Value>[_capacity]) {
 	}
 
 	~NBhash_map() {
 		delete[] hashtable;
 	}
 
-	void insert(const pair< _Key, _Value > input) {
+	void insert(CharArray key, T_Value vlue) {
 
 		if (_count >= _loadFactor * _capacity)
 		{
@@ -121,21 +100,20 @@ public:
 		}
 
 		const int  HASH_OFFSET = 0, HASH_A = 1, HASH_B = 2;
-		CharArray c = input.first;
-		const char* key = c.readArrary();
-		unsigned length = c.size;
+		const char* key = key.readArrary();
+		unsigned length = key.size;
 		size_t hashCode = hash(key, length, HASH_OFFSET);
 		unsigned index, startPos;
 		index = startPos = GetIndex(hashCode);
-		size_t hashA = hash(key, length, HASH_A);
-		size_t hashB = hash(key, length, HASH_B);
+		size_t hashA = hash(key,length, HASH_A);
+		size_t hashB = hash(key,length, HASH_B);
 
 		do
 		{
-			hash_node<_Key, _Value>* nodePtr = &hashtable[index];
+			hash_node<T_Value>* nodePtr = &hashtable[index];
 			if (nodePtr->bExists == false)
 			{
-				nodePtr->_data = input;
+				nodePtr->_key = key;
 				nodePtr->_hashA = hashA;
 				nodePtr->_hashB = hashB;
 				nodePtr->bExists = true;
@@ -150,57 +128,12 @@ public:
 			}
 
 			index = GetIndex(index + 1);
+
 		} while (index != startPos);
 	}
 
-	class iterator
-	{
-	private:
-		hash_node<_Key, _Value>* m_ptr;
-	public:
-		iterator() {}
-		iterator(hash_node<_Key, _Value>* p) : m_ptr(p) {}
-
-		pair<_Key, _Value>* operator ->() const {
-			return &(this->m_ptr->_data);
-		}
-
-		void operator = (iterator a) {
-			this->m_ptr = a.m_ptr;
-		}
-
-		bool operator == (iterator a) {
-
-			if (this->m_ptr->_data == a.m_ptr->_data)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-
-		}
-
-		bool operator != (iterator a) {
-			if (this->m_ptr->_data == a.m_ptr->_data)
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		}
-	};
-
-	template<class _K>
-	iterator find(const _K& key) {
-		return NULL;
-	}
-
-	template<>
 	iterator find(const CharArray& key) {
+
 		unsigned length = key.size;
 		const char* str = key.readArrary();
 		const int  HASH_OFFSET = 0, HASH_A = 1, HASH_B = 2;
@@ -246,11 +179,11 @@ public:
 		return iterator(&(hashtable[0]));
 	}
 
-	unsigned count() const {
+	unsigned getcount() const {
 		return _count;
 	}
 
-	unsigned capacity() const {
+	unsigned getcapacity() const {
 		return _capacity;
 	}
 
