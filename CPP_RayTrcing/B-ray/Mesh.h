@@ -16,12 +16,22 @@ public:
 	AABB* Bound;
 	unsigned int getVertexCount() const { return vertexs_Count; }
 	unsigned int getFaceCount() const { return faces_Count; }
-
 	void setVertexCount(const unsigned& num) { vertexs_Count = num ;}
 	void setFaceCount(const unsigned& num) { faces_Count = num ;}
+	void buildBound();
+
+	~Mesh();
 private:
 	unsigned vertexs_Count = 0, faces_Count = 0;
 };
 
+void Mesh::buildBound() {
+	Bound = new AABB();
+	Bound->buildAABB(*this);
+}
+
+Mesh::~Mesh() {
+	delete Bound;
+}
 #endif // !MESH_H
 

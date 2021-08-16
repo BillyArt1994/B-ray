@@ -12,10 +12,10 @@ class Render
 {
 public:
 	Render() {};
-	Render(Camera* c, vector<Mesh*>& sML, vector<Light*>& sLL, InputManager& iM, unsigned char *p) :
+	Render(Camera* c, vector<Mesh*>& sML, vector<Light*>& sLL, InputManager& iM, unsigned char *p,OcterTree& tree) :
 		high_left_corner(c->high_left_corner), horizontal(c->horizontal), vertical(c->vertical),
 		camerPos(c->cameraPosition), width(iM.image_width), height(iM.image_height),
-		sceneMeshList(sML), sceneLightList(sLL), rgb(p) {}
+		sceneMeshList(sML), sceneLightList(sLL), rgb(p), root(tree){}
 
 	void Rendering();
 	void SaveTexture();
@@ -31,6 +31,7 @@ private:
 	vector<Mesh*> sceneMeshList;
 	vector<Light*> sceneLightList;
 	Vector3 ray_color(const Ray& r);
+	OcterTree root;
 };
 
 void Render::Rendering() {
@@ -57,7 +58,16 @@ void Render::SaveTexture() {
 }
 
 Vector3 Render::ray_color(const Ray& r) {
+	unsigned meshIndex = 0;
+	unsigned trigIndex = 0;
+	float t = 0.0f;
 
+	if (root.Intersect(r, t, meshIndex, trigIndex))
+	{
+		return Color(1.0f, 0.0f, 0.0f);
+	}
+
+/*
 #pragma region 传统全局遍历相交
 	float minDis = FLT_MAX;
 	int minIndex = -1;
@@ -88,9 +98,10 @@ Vector3 Render::ray_color(const Ray& r) {
 		return Color(1.0f, 0.0f, 0.0f);
 	}
 #pragma endregion
+*/
 
-	float t = (r.GetDirection().y + 1.0f)*0.5f;
-	return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
+	float bg_t = (r.GetDirection().y + 1.0f)*0.5f;
+	return Color(1.0f, 1.0f, 1.0f)*(1.0f - bg_t) + Color(0.5f, 0.7f, 1.0f)*bg_t;
 }
 
 #endif // !RENDER_H

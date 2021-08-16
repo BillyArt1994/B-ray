@@ -146,7 +146,7 @@ public:
 		
 	}
 
-	bool Intersect(Ray& r, float& t, unsigned& meshIndex, unsigned& tirgIndex) {
+	bool Intersect(const Ray& r, float& t, unsigned& meshIndex, unsigned& tirgIndex) {
 
 		Ray ray = r;
 		OcterNode* node = nullptr;

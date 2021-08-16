@@ -6,7 +6,6 @@
 struct Camera
 {
 	Camera(Vector3 cameraPos, float cilp, float aspect_ratio);
-
 	//摄像机坐标//画布左上角坐标//画布水平向量-U//画布垂直向量-V
 	Vector3 cameraPosition, high_left_corner, horizontal, vertical;
 	float cilp;

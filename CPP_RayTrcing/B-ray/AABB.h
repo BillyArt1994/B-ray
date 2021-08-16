@@ -9,11 +9,12 @@ using std::array;
 
 struct AABB {
 	AABB() {}
+	~AABB(){}
 	AABB(Vector3 maxP, Vector3 minP);
 	Vector3 minPoint = 0;
 	Vector3 maxPoint = 0;
 
-	void buildBoxAABB(const Mesh& mesh) {
+	void buildAABB(const Mesh& mesh) {
 		Vector3 minValue(FLT_MAX, FLT_MAX, FLT_MAX);
 		Vector3 maxValue(FLT_MIN, FLT_MIN, FLT_MIN);
 		int length = mesh.getVertexCount();

@@ -55,6 +55,10 @@ void Scene::buildOctree() {
 }
 
 void Scene::buildBound() {
+	for (unsigned i = 0; i < scene_MeshList.size(); i++)
+	{
+		scene_MeshList[i]->buildBound();
+	}
 	if (scene_MeshList.size()==1)
 	{
 		scene_BoxBound = *(scene_MeshList[0]->Bound);
@@ -62,7 +66,7 @@ void Scene::buildBound() {
 }
 
 Scene::~Scene() {
-
+	
 }
 
 
