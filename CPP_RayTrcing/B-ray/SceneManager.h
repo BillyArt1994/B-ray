@@ -20,12 +20,8 @@ private:
 };
 
 bool SceneManager::startUp() {
-	if (currentScene->checkEmptyScene())
-	{
-		printf("场景无任何对象\n");
-		return false;
-	}
-
+	currentScene->buildBound();
+	currentScene->buildOctree();
 	return true;
 }
 Scene* SceneManager::getCurrentScene() {

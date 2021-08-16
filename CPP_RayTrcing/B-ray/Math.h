@@ -25,6 +25,8 @@ inline float Max(const float& x, const float& y, const float& z) {
 	return x > y ? (x > z ? x : z) : (y > z ? y : z);
 }
 
+inline int Abs(int x) { int a = x >> 31; return ((x ^ a) - a); }
+
 inline float Min(const float& x, const float& y) {
 	return x < y ? x:y;
 }

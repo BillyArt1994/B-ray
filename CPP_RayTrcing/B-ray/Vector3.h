@@ -42,6 +42,13 @@ struct Vector3 {
 		return *this;
 	}
 
+	inline Vector3& operator *=(const int &b) {
+		x = x * b;
+		y = y * b;
+		z = z * b;
+		return *this;
+	}
+
 	inline Vector3 operator /(const float &b) {
 		return Vector3(x / b, y / b, z / b);
 	}

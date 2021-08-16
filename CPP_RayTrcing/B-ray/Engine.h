@@ -7,8 +7,8 @@
 class Engine {
 public:
 
-	Engine(RenderManager rM, SceneManager sM, InputManager iM):
-		_renderManager(rM), _sceneManager(sM), _inputManager(iM){}
+	Engine(RenderManager rM, SceneManager sM, InputManager iM) :
+		_renderManager(rM), _sceneManager(sM), _inputManager(iM) {}
 	~Engine() {}
 
 	bool StartUp();
@@ -25,21 +25,21 @@ void Engine::run() {
 
 bool Engine::StartUp() {
 	bool success = true;
-	 if (!_sceneManager.startUp())
-	 {
-		 printf("场景系统加载失败.....\n");
-	 }
+	if (!_sceneManager.startUp())
+	{
+		printf("场景系统加载失败.....\n");
+	}
 
-	 if (!_renderManager.startUp(_inputManager, _sceneManager))
-	 {
-		 printf("渲染系统启动失败.....\n");
-	 }
+	if (!_renderManager.startUp(_inputManager, _sceneManager))
+	{
+		printf("渲染系统启动失败.....\n");
+	}
 
-	 if (success)
-	 {
-		 printf("渲染系统启动成功\n");
-	 }
-	 return success;
+	if (success)
+	{
+		printf("渲染系统启动成功\n");
+	}
+	return success;
 }
 
 #endif // !ENGINE_H

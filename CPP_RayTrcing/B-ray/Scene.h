@@ -46,9 +46,11 @@ bool Scene::checkEmptyScene() {
 }
 
 void Scene::buildOctree() {
-	float maxValue = std::abs( Max(scene_BoxBound.maxPoint.x, scene_BoxBound.maxPoint.y, scene_BoxBound.maxPoint.z));
-	int sceneSize = Nearest2Power(static_cast<int>(maxValue));
-	scene_OT = OcterTree(scene_MeshList, 20,sceneSize);
+	float maxValue = Max(Max(Abs(scene_BoxBound.minPoint.x), Abs(scene_BoxBound.maxPoint.x)),
+				   Max(Abs(scene_BoxBound.minPoint.y), Abs(scene_BoxBound.maxPoint.y)),
+				   Max(Abs(scene_BoxBound.minPoint.z), Abs(scene_BoxBound.maxPoint.z)));
+	int length = Nearest2Power(static_cast<int>(maxValue));
+	scene_OT = OcterTree(scene_MeshList,20, AABB(Vector3(length, length, length), Vector3(-length, -length, -length)));
 	scene_OT.BuildTree();
 }
 
@@ -60,6 +62,7 @@ void Scene::buildBound() {
 }
 
 Scene::~Scene() {
+
 }
 
 

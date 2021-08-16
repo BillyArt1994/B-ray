@@ -13,7 +13,7 @@ struct AABB {
 	Vector3 minPoint = 0;
 	Vector3 maxPoint = 0;
 
-	void buildAABB(const Mesh& mesh) {
+	void buildBoxAABB(const Mesh& mesh) {
 		Vector3 minValue(FLT_MAX, FLT_MAX, FLT_MAX);
 		Vector3 maxValue(FLT_MIN, FLT_MIN, FLT_MIN);
 		int length = mesh.getVertexCount();

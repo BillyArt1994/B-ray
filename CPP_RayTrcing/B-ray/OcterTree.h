@@ -28,9 +28,8 @@ class OcterTree {
 private:
 	NBhash_map<OcterNode*> localCode;
 	vector<Mesh*> meshList;
-	unsigned maxOfTirg = -1;
-	unsigned sceneSize = -1;
-	int gap = -1;
+	unsigned maxOfTirg;
+	int gap;
 	AABB sceneBound;
 
 	//获得场景中最大匹配编码
@@ -68,15 +67,7 @@ private:
 		return result;
 	}
 
-public:
-
-	OcterTree(){}
-	OcterTree(vector<Mesh*>& m_meshList, unsigned  m_maxfTrig, unsigned  m_sceneSize) :
-		meshList(m_meshList), sceneSize(m_sceneSize), maxOfTirg(m_maxfTrig),
-		gap(static_cast<int>(4294967296 / m_sceneSize)), sceneBound(Vector3(m_sceneSize),Vector3(m_sceneSize)){}
-
-	//构建树
-	void BuildTree(vector<std::pair<unsigned, unsigned >> index, AABB bound, CharArray depthcode) {
+	void octreeBuild(vector<std::pair<unsigned, unsigned >>& index, AABB& bound, CharArray depthcode) {
 
 		//三角面数量低于Maximum时设为叶节点并且存入哈希表中
 		if (index.size() <= maxOfTirg)
@@ -112,26 +103,47 @@ public:
 		//迭代分割并进行编码
 		if (depthcode.size >= 1)
 		{
-			BuildTree(subIndex[0], subBounding[0], depthcode + 7);
-			BuildTree(subIndex[1], subBounding[1], depthcode + 6);
-			BuildTree(subIndex[2], subBounding[2], depthcode + 5);
-			BuildTree(subIndex[3], subBounding[3], depthcode + 4);
-			BuildTree(subIndex[4], subBounding[4], depthcode + 3);
-			BuildTree(subIndex[5], subBounding[5], depthcode + 2);
-			BuildTree(subIndex[6], subBounding[6], depthcode + 1);
-			BuildTree(subIndex[7], subBounding[7], depthcode + 0);
+			octreeBuild(subIndex[0], subBounding[0], depthcode + 7);
+			octreeBuild(subIndex[1], subBounding[1], depthcode + 6);
+			octreeBuild(subIndex[2], subBounding[2], depthcode + 5);
+			octreeBuild(subIndex[3], subBounding[3], depthcode + 4);
+			octreeBuild(subIndex[4], subBounding[4], depthcode + 3);
+			octreeBuild(subIndex[5], subBounding[5], depthcode + 2);
+			octreeBuild(subIndex[6], subBounding[6], depthcode + 1);
+			octreeBuild(subIndex[7], subBounding[7], depthcode + 0);
 		}
 		else
 		{
-			BuildTree(subIndex[0], subBounding[0], depthcode + 0);
-			BuildTree(subIndex[1], subBounding[1], depthcode + 1);
-			BuildTree(subIndex[2], subBounding[2], depthcode + 2);
-			BuildTree(subIndex[3], subBounding[3], depthcode + 3);
-			BuildTree(subIndex[4], subBounding[4], depthcode + 4);
-			BuildTree(subIndex[5], subBounding[5], depthcode + 5);
-			BuildTree(subIndex[6], subBounding[6], depthcode + 6);
-			BuildTree(subIndex[7], subBounding[7], depthcode + 7);
+			octreeBuild(subIndex[0], subBounding[0], depthcode + 0);
+			octreeBuild(subIndex[1], subBounding[1], depthcode + 1);
+			octreeBuild(subIndex[2], subBounding[2], depthcode + 2);
+			octreeBuild(subIndex[3], subBounding[3], depthcode + 3);
+			octreeBuild(subIndex[4], subBounding[4], depthcode + 4);
+			octreeBuild(subIndex[5], subBounding[5], depthcode + 5);
+			octreeBuild(subIndex[6], subBounding[6], depthcode + 6);
+			octreeBuild(subIndex[7], subBounding[7], depthcode + 7);
 		}
+	}
+
+public:
+
+	OcterTree(){}
+	OcterTree (vector<Mesh*>& m_meshList,unsigned m_maxfTrig,AABB& Bounding) :
+		meshList(m_meshList), maxOfTirg(m_maxfTrig), sceneBound(Bounding),
+		gap(static_cast<int>(2147483648/Bounding.maxPoint.x)){}
+
+	//构建树
+	void BuildTree() {
+		vector<std::pair<unsigned, unsigned >> vertexIndex;
+		for (unsigned i = 0; i < meshList.size(); i++)
+		{
+			for (unsigned j = 0; j < meshList[i]->getVertexCount(); i++)
+			{
+				vertexIndex.push_back({ i,j });
+			}
+		}
+		octreeBuild(vertexIndex, sceneBound,0);
+		
 	}
 
 	bool Intersect(Ray& r, float& t, unsigned& meshIndex, unsigned& tirgIndex) {
@@ -156,7 +168,7 @@ public:
 			}
 
 			//获得空间编码
-			qcode = EncodePosition(ray.GetOriginPos()*gap);
+			qcode = EncodePosition( ray.GetOriginPos()*gap ) ;
 
 			//最大匹配位置代码
 
