@@ -12,7 +12,7 @@ template <class T_Value>
 struct hash_node
 {
 	hash_node() {}
-	hash_node(CharArray k, T_Value v) :_key(k), _value(v){}
+	hash_node(CharArray k, T_Value v) :_key(k), _value(v) {}
 	CharArray _key;
 	T_Value _value;
 	size_t _hashA = -1;
@@ -100,13 +100,13 @@ public:
 		}
 
 		const int  HASH_OFFSET = 0, HASH_A = 1, HASH_B = 2;
-		const char* key = key.readArrary();
+		const char* code = key.readArrary();
 		unsigned length = key.size;
-		size_t hashCode = hash(key, length, HASH_OFFSET);
+		size_t hashCode = hash(code, length, HASH_OFFSET);
 		unsigned index, startPos;
 		index = startPos = GetIndex(hashCode);
-		size_t hashA = hash(key,length, HASH_A);
-		size_t hashB = hash(key,length, HASH_B);
+		size_t hashA = hash(code, length, HASH_A);
+		size_t hashB = hash(code, length, HASH_B);
 
 		do
 		{
@@ -132,7 +132,7 @@ public:
 		} while (index != startPos);
 	}
 
-	iterator find(const CharArray& key) {
+	bool find(const CharArray& key,T_Value& v) {
 
 		unsigned length = key.size;
 		const char* str = key.readArrary();
@@ -145,17 +145,18 @@ public:
 
 		do
 		{
-			hash_node<CharArray, _Value>* node = &(hashtable[index]);
+			hash_node<T_Value>* node = &(hashtable[index]);
 
 			if (node->bExists == false)
 			{
-				return this->end();
+				return false;
 			}
 
 			if (node->_hashA == hashA && node->_hashB == hashB)
 			{
 
-				return iterator(node);
+				v = node->_value;
+				return true;
 
 			}
 
@@ -168,25 +169,8 @@ public:
 
 		} while (index != startPos);
 
-		return this->end();
+		return false;
 	}
-
-	iterator end() const {
-		return iterator(&(hashtable[_capacity + 1]));
-	}
-
-	iterator begin() const {
-		return iterator(&(hashtable[0]));
-	}
-
-	unsigned getcount() const {
-		return _count;
-	}
-
-	unsigned getcapacity() const {
-		return _capacity;
-	}
-
 };
 
 #endif

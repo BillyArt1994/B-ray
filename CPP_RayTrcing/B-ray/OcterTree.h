@@ -26,42 +26,43 @@ struct OcterNode
 class OcterTree {
 
 private:
-	NBhash_map<CharArray, OcterNode* > localCode;
+	NBhash_map<OcterNode*> localCode;
 	vector<Mesh*> meshList;
 	unsigned maxOfTirg = -1;
 	unsigned sceneSize = -1;
-	unsigned gap = -1;
+	int gap = -1;
 	AABB sceneBound;
 
 	//获得场景中最大匹配编码
-	NBhash_map<CharArray, OcterNode* >::iterator FindMaxMatch(CharArray qcode) {
-		int i = 1;
-		NBhash_map<CharArray, OcterNode* >::iterator result;
+	bool FindMaxMatch(CharArray qcode, OcterNode* value) {
+		unsigned i = 1;
 		while (i <= qcode.size)
 		{
 			CharArray c = qcode.subchar(i);
-			result = localCode.find(c);
-			if (result != localCode.end())
+
+			if (localCode.find(c, value))
 			{
-				return result;
+				return true;
 			}
 			else
 			{
 				i++;
 			}
 		}
+		return false;
 	}
 
 	//获得坐标在空间中的编码
 	CharArray EncodePosition(const Vector3& pos) {
-		int x = floor(pos.x);
-		int y = floor(pos.y);
-		int z = floor(pos.z);
+		int x = static_cast<int>(floor(pos.x)),
+			y = static_cast<int>(floor(pos.y)),
+			z = static_cast<int>(floor(pos.z));
 
 		CharArray result;
+		unsigned  r;
 		for (unsigned i = 0; i < 32; i++)
 		{
-			unsigned  r = ((x >> i) & 1) + 2 * ((y >> i) & 1) + 4 * ((z >> i) & 1);
+			r = ((x >> i) & 1) + 2 * ((y >> i) & 1) + 4 * ((z >> i) & 1);
 			result.addElement(r + '0', 31 - i);
 		}
 		return result;
@@ -69,8 +70,10 @@ private:
 
 public:
 
+	OcterTree(){}
 	OcterTree(vector<Mesh*>& m_meshList, unsigned  m_maxfTrig, unsigned  m_sceneSize) :
-		meshList(m_meshList), sceneSize(m_sceneSize), maxOfTirg(m_maxfTrig), gap(4294967296 / m_sceneSize) {}
+		meshList(m_meshList), sceneSize(m_sceneSize), maxOfTirg(m_maxfTrig),
+		gap(static_cast<int>(4294967296 / m_sceneSize)), sceneBound(Vector3(m_sceneSize),Vector3(m_sceneSize)){}
 
 	//构建树
 	void BuildTree(vector<std::pair<unsigned, unsigned >> index, AABB bound, CharArray depthcode) {
@@ -79,7 +82,7 @@ public:
 		if (index.size() <= maxOfTirg)
 		{
 			OcterNode* node = new OcterNode(index, bound);
-			localCode.insert({ depthcode,node });
+			localCode.insert(depthcode, node);
 			return;
 		}
 
@@ -87,7 +90,7 @@ public:
 		if (depthcode.size >= 32)
 		{
 			OcterNode* node = new OcterNode(index, bound);
-			localCode.insert({ depthcode,node });
+			localCode.insert(depthcode, node);
 			return;
 		}
 
@@ -132,7 +135,15 @@ public:
 	}
 
 	bool Intersect(Ray& r, float& t, unsigned& meshIndex, unsigned& tirgIndex) {
+
 		Ray ray = r;
+		OcterNode* node = nullptr;
+		CharArray qcode;
+		vector<std::pair<unsigned, unsigned>>index;
+		unsigned m_Index = -1;
+		unsigned t_Index = -1;
+		float minDis = 0.0f;
+		Triangle* trig = nullptr;
 
 		while (true)
 		{
@@ -145,26 +156,26 @@ public:
 			}
 
 			//获得空间编码
-			CharArray qcode = EncodePosition(ray.GetOriginPos()*gap);
+			qcode = EncodePosition(ray.GetOriginPos()*gap);
 
 			//最大匹配位置代码
-			NBhash_map<CharArray, OcterNode* >::iterator mapIt = FindMaxMatch(qcode);
-			if (mapIt != localCode.end())
+
+			if (FindMaxMatch(qcode, node))
 			{
+				index.swap(node->data);
 				//匹配后检测此叶节点下 是否包含面片
-				vector<std::pair<unsigned, unsigned>> index = mapIt->second->data;
 				//进行面片求交
 				if (index.size())
 				{
-					float minDis = FLT_MAX;
+					minDis = FLT_MAX;
 					meshIndex = 0;
 					tirgIndex = 0;
 
 					for (unsigned i = 0; i < index.size(); i++)
 					{
-						unsigned m_Index = index.at(i).first;
-						unsigned t_Index = index.at(i).second;
-						Triangle* trig = &(meshList[m_Index]->triangleArray[t_Index]);
+						m_Index = index.at(i).first;
+						t_Index = index.at(i).second;
+						trig = &(meshList[m_Index]->triangleArray[t_Index]);
 						if (trig->IntersectTriangle(r, t))
 						{
 							if (t < minDis)
@@ -184,8 +195,7 @@ public:
 			}
 
 			//当前射线并未求到交点，则与立方体网格求交并找到出口点添加1单位的扰动量穿越到下一个立方体网格中
-			AABB box = mapIt->second->box;
-			box.intersects(ray, t_Step);
+			node->box.intersects(ray, t_Step);
 			t_Step += 0.1f;
 			ray = Ray(ray.RayRun(t_Step), ray.GetDirection());
 		}

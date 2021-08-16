@@ -68,10 +68,11 @@ inline int Nearest2Power(int i) {
 	return i + 1;
 }
 
-inline float clamp(float x, float min, float max) {
+inline float clamp(const float x, const float min, const float max) {
 	if (x < min) return min;
 	if (x > max) return max;
 	return x;
 }
+
 
 #endif // !MATH

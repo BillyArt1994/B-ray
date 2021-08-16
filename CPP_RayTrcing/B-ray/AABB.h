@@ -3,6 +3,7 @@
 
 #include "Vector3.h"
 #include "Math.h"
+#include "Mesh.h"
 #include <array>
 using std::array;
 
@@ -12,25 +13,25 @@ struct AABB {
 	Vector3 minPoint = 0;
 	Vector3 maxPoint = 0;
 
-	//void buildAABB(const Mesh& mesh) {
-	//	Vector3 minValue(FLT_MAX, FLT_MAX, FLT_MAX);
-	//	Vector3 maxValue(FLT_MIN, FLT_MIN, FLT_MIN);
-	//	int length = mesh.getVertexCount();
+	void buildAABB(const Mesh& mesh) {
+		Vector3 minValue(FLT_MAX, FLT_MAX, FLT_MAX);
+		Vector3 maxValue(FLT_MIN, FLT_MIN, FLT_MIN);
+		int length = mesh.getVertexCount();
 
-	//	for (size_t i = 0; i < length; i++)
-	//	{
-	//		minValue.x = Min(mesh.vertexArray[i].position.x, minValue.x);
-	//		minValue.y = Min(mesh.vertexArray[i].position.y, minValue.y);
-	//		minValue.z = Min(mesh.vertexArray[i].position.z, minValue.z);
+		for (size_t i = 0; i < length; i++)
+		{
+			minValue.x = Min(mesh.vertexArray[i].position.x, minValue.x);
+			minValue.y = Min(mesh.vertexArray[i].position.y, minValue.y);
+			minValue.z = Min(mesh.vertexArray[i].position.z, minValue.z);
 
-	//		maxValue.x = Max(mesh.vertexArray[i].position.x, minValue.x);
-	//		maxValue.y = Max(mesh.vertexArray[i].position.y, minValue.y);
-	//		maxValue.z = Max(mesh.vertexArray[i].position.z, minValue.z);
-	//	}
+			maxValue.x = Max(mesh.vertexArray[i].position.x, minValue.x);
+			maxValue.y = Max(mesh.vertexArray[i].position.y, minValue.y);
+			maxValue.z = Max(mesh.vertexArray[i].position.z, minValue.z);
+		}
 
-	//	minPoints = minValue;
-	//	maxPoints = maxValue;
-	//}
+		minPoint = minValue;
+		maxPoint = maxValue;
+	}
 
 	bool checkIfInside(const Vector3& point);
 

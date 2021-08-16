@@ -146,6 +146,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="NBHashMap.h" />
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="OcterTree.h" />
     <ClInclude Include="Ray.h" />

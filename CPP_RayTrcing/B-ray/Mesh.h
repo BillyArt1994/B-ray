@@ -1,17 +1,19 @@
 #ifndef MESH_H
 #define MESH_H
+
 #include "Vector3.h"
 #include <vector>
 #include "Triangle.h"
 #include "Vertex.h"
 using std::vector;
 
+struct AABB;
 struct Mesh {
 public:
 	std::string name;
 	vector<Triangle> triangleArray;
 	vector<Vertex> vertexArray;
-//	AABB Bound;
+	AABB* Bound;
 	unsigned int getVertexCount() const { return vertexs_Count; }
 	unsigned int getFaceCount() const { return faces_Count; }
 

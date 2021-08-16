@@ -88,9 +88,9 @@ Vector3 Render::ray_color(const Ray& r) {
 		return Color(1.0f, 0.0f, 0.0f);
 	}
 #pragma endregion
+
 	float t = (r.GetDirection().y + 1.0f)*0.5f;
 	return Color(1.0f, 1.0f, 1.0f)*(1.0f - t) + Color(0.5f, 0.7f, 1.0f)*t;
-
 }
 
 #endif // !RENDER_H

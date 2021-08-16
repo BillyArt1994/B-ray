@@ -2,6 +2,7 @@
 #define SCENEMANAGER_H
 #include <string>
 #include "Scene.h"
+#include "OcterTree.h"
 
 class SceneManager
 {
@@ -13,6 +14,7 @@ public:
 	void shuDown();
 	void updata();
 	Scene* getCurrentScene();
+
 private:
 	Scene* currentScene;
 };
@@ -23,6 +25,7 @@ bool SceneManager::startUp() {
 		printf("场景无任何对象\n");
 		return false;
 	}
+
 	return true;
 }
 Scene* SceneManager::getCurrentScene() {

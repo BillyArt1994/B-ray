@@ -24,7 +24,7 @@ public:
 		size += 1;
 	}
 
-	inline void addElement(char input,unsigned index) {
+	inline void addElement(char input, unsigned index) {
 		m_data[index] = input;
 		size += 1;
 	}
@@ -54,7 +54,7 @@ public:
 	}
 
 	CharArray operator + (int value) {
-		this->m_data[size]=value+'0';
+		this->m_data[size] = value + '0';
 		return *this;
 	}
 
@@ -78,6 +78,7 @@ public:
 	}
 
 private:
+
 	char m_data[128] = { '\0' };
 };
 

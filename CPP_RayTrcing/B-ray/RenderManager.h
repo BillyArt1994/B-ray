@@ -21,7 +21,7 @@ private:
 bool RenderManager::startUp(InputManager& iM, SceneManager& sM)
 {
 	rgb = new unsigned char[iM.image_width *iM.image_height *3];
-	m_renader = new Render((sM.getCurrentScene()->mainCamera),sM.getCurrentScene()->sceneMeshList,sM.getCurrentScene()->sceneLightList,iM, rgb);
+	m_renader = new Render(sM.getCurrentScene()->mainCamera,sM.getCurrentScene()->scene_MeshList,sM.getCurrentScene()->scene_LightList,iM, rgb);
 	return true;
 }
 
