@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "Math.h"
 #include "AABB.h"
+#include "GameObject.h"
 #include <string>
 using std::vector;
 
@@ -17,12 +18,14 @@ public:
 	~Scene();
 	std::string name= "SimpleScene";
 	vector<Mesh*> scene_MeshList;
+	vector<GameObject*> scene_GameObject;
 	vector<Light*> scene_LightList;
 	Camera *mainCamera =nullptr;
 	OcterTree scene_OT;
 	AABB scene_BoxBound;
 
 	void addMeshElement(Mesh* n_mesh);
+	void addGameObjElement(GameObject* n_gameObj);
 	void addLightElement(Light* n_light);
 	bool checkEmptyScene();
 	void buildOctree();
@@ -35,6 +38,11 @@ void Scene::addMeshElement(Mesh* n_mesh ) {
 
 void Scene::addLightElement(Light* n_light) {
 	scene_LightList.push_back(n_light);
+}
+
+void Scene::addGameObjElement(GameObject* n_gameObject) {
+	scene_GameObject.push_back(n_gameObject);
+	addMeshElement(n_gameObject->getMesh());
 }
 
 bool Scene::checkEmptyScene() {
@@ -55,14 +63,12 @@ void Scene::buildOctree() {
 }
 
 void Scene::buildBound() {
-	for (unsigned i = 0; i < scene_MeshList.size(); i++)
+
+	for (unsigned i = 0; i < scene_GameObject.size(); i++)
 	{
-		scene_MeshList[i]->buildBound();
-	}
-	if (scene_MeshList.size()==1)
-	{
-		scene_BoxBound = *(scene_MeshList[0]->Bound);
-	}
+		scene_GameObject[i]->buildBound();
+	};
+	scene_BoxBound = *scene_GameObject[0]->getBound();
 }
 
 Scene::~Scene() {

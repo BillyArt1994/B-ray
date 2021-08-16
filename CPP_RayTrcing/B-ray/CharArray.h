@@ -9,7 +9,7 @@ public:
 
 	CharArray() {}
 
-	inline CharArray(char& c) { this->addElement(c); }
+	inline CharArray(char c) { this->addElement(c); }
 
 	inline CharArray(const char* c) {
 		while (*c)

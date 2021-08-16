@@ -22,6 +22,7 @@ private:
 bool SceneManager::startUp() {
 	currentScene->buildBound();
 	currentScene->buildOctree();
+
 	return true;
 }
 Scene* SceneManager::getCurrentScene() {

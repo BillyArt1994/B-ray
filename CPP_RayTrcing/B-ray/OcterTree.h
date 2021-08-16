@@ -14,8 +14,6 @@ using std::vector;
 using std::array;
 using std::pair;
 
-#define BitSize 32;
-
 struct OcterNode
 {
 	OcterNode(vector<pair<unsigned, unsigned >> p, AABB b) :data(p), box(b) {}
@@ -135,15 +133,17 @@ public:
 	//¹¹½¨Ê÷
 	void BuildTree() {
 		vector<std::pair<unsigned, unsigned >> vertexIndex;
+		unsigned vertexCount = 0;
 		for (unsigned i = 0; i < meshList.size(); i++)
 		{
-			for (unsigned j = 0; j < meshList[i]->getVertexCount(); i++)
+			vertexCount = meshList[i]->getVertexCount();
+			for (unsigned j = 0; j < vertexCount; j++)
 			{
 				vertexIndex.push_back({ i,j });
 			}
 		}
-		octreeBuild(vertexIndex, sceneBound,0);
-		
+		CharArray code ('0');
+		octreeBuild(vertexIndex, sceneBound,code);
 	}
 
 	bool Intersect(const Ray& r, float& t, unsigned& meshIndex, unsigned& tirgIndex) {

@@ -11,14 +11,14 @@
 class OBJLoader
 {
 public:
-	static Mesh ReadObjectFile(std::string filePath);
+	static Mesh* ReadObjectFile(std::string filePath);
 private:
 };
 
-Mesh OBJLoader::ReadObjectFile(std::string filePath) {
+Mesh* OBJLoader::ReadObjectFile(std::string filePath) {
 	//GameObject gameObject_00;
 	//gameObject_00.name = getFileName(filePath);
-	Mesh obj;
+	Mesh* obj = new Mesh();
 	vector<Vector3> normal, texcoord;
 	vector<Triangle> triangle_array;
 	vector<Vertex> vertex_array;
@@ -107,10 +107,10 @@ Mesh OBJLoader::ReadObjectFile(std::string filePath) {
 			break;
 		}
 	}
-	obj.setFaceCount(faces_Count);
-	obj.setVertexCount(vertexs_Count);
-	vertex_array.swap(obj.vertexArray);
-	triangle_array.swap(obj.triangleArray);
+	obj->setFaceCount(faces_Count);
+	obj->setVertexCount(vertexs_Count);
+	vertex_array.swap(obj->vertexArray);
+	triangle_array.swap(obj->triangleArray);
 	ifs.close();
 	return obj;
 }
