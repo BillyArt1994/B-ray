@@ -63,7 +63,6 @@ void Scene::buildOctree() {
 }
 
 void Scene::buildBound() {
-
 	for (unsigned i = 0; i < scene_GameObject.size(); i++)
 	{
 		scene_GameObject[i]->buildBound();

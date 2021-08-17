@@ -16,7 +16,7 @@ using std::pair;
 
 struct OcterNode
 {
-	OcterNode(vector<pair<unsigned, unsigned >> p, AABB b) :data(p), box(b) {}
+	OcterNode(vector<pair<unsigned, unsigned >>& p, AABB& b) :data(p), box(b) {}
 	vector<pair<unsigned, unsigned >>data;
 	AABB box;
 };
@@ -26,8 +26,8 @@ class OcterTree {
 private:
 	NBhash_map<OcterNode*> localCode;
 	vector<Mesh*> meshList;
-	unsigned maxOfTirg;
-	int gap;
+	unsigned maxOfTirg = -1;
+	int gap = -1;
 	AABB sceneBound;
 
 	//获得场景中最大匹配编码
@@ -83,7 +83,7 @@ private:
 			return;
 		}
 
-		array<AABB, 8> subBounding = sceneBound.getEightSubAABB();
+		array<AABB, 8> subBounding = bound.getEightSubAABB();
 		vector<std::pair<unsigned, unsigned >> subIndex[8];
 
 		//所有三角面进行八叉树分割
@@ -125,10 +125,10 @@ private:
 
 public:
 
-	OcterTree(){}
-	OcterTree (vector<Mesh*>& m_meshList,unsigned m_maxfTrig,AABB& Bounding) :
+	OcterTree() {}
+	OcterTree(vector<Mesh*>& m_meshList, unsigned m_maxfTrig, AABB& Bounding) :
 		meshList(m_meshList), maxOfTirg(m_maxfTrig), sceneBound(Bounding),
-		gap(static_cast<int>(2147483648/Bounding.maxPoint.x)){}
+		gap(static_cast<int>(2147483648 / Bounding.maxPoint.x)) {}
 
 	//构建树
 	void BuildTree() {
@@ -142,8 +142,8 @@ public:
 				vertexIndex.push_back({ i,j });
 			}
 		}
-		CharArray code ('0');
-		octreeBuild(vertexIndex, sceneBound,code);
+		CharArray code('0');
+		octreeBuild(vertexIndex, sceneBound, code);
 	}
 
 	bool Intersect(const Ray& r, float& t, unsigned& meshIndex, unsigned& tirgIndex) {
@@ -168,7 +168,7 @@ public:
 			}
 
 			//获得空间编码
-			qcode = EncodePosition( ray.GetOriginPos()*gap ) ;
+			qcode = EncodePosition(ray.GetOriginPos()*gap);
 
 			//最大匹配位置代码
 

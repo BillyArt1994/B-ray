@@ -9,7 +9,7 @@ public:
 
 	CharArray() {}
 
-	inline CharArray(char c) { this->addElement(c); }
+	CharArray(char c) { this->addElement(c); }
 
 	inline CharArray(const char* c) {
 		while (*c)
@@ -50,12 +50,15 @@ public:
 
 	CharArray operator + (char value) {
 		this->m_data[size] = value;
+		size += 1;
 		return *this;
 	}
 
 	CharArray operator + (int value) {
-		this->m_data[size] = value + '0';
-		return *this;
+		CharArray c;
+		c = *this;
+		c.addElement(value+'0');
+		return c;
 	}
 
 	bool operator == (const CharArray& a) const {

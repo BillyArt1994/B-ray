@@ -11,25 +11,23 @@ using std::pair;
 template <class T_Value>
 struct hash_node
 {
-	hash_node() {}
+	hash_node(){}
 	hash_node(CharArray k, T_Value v) :_key(k), _value(v) {}
-	CharArray _key;
-	T_Value _value;
 	size_t _hashA = -1;
 	size_t _hashB = -1;
-	bool bExists = false;
+	bool bExists = 0;
+	CharArray _key;
+	T_Value _value;
 };
 
 //Hash±í
 template <class T_Value>
 class NBhash_map {
 private:
-	unsigned _capacity = 1 << 4;
+	unsigned _capacity = 16;
 	unsigned _count = 0;
 	float _loadFactor = 0.75f;
-
 	hash_node<T_Value>* hashtable = nullptr;
-
 	//hashº¯Êý
 	size_t hash(const char* input, unsigned length, unsigned ID) {
 		int hash = 0;
@@ -65,34 +63,52 @@ private:
 
 	void reSize() {
 
-		hash_node<T_Value>* old_hash_table = hashtable;
+		hash_node<T_Value>* old_hash_table;
+		for (size_t i = 0; i < 16; i++)
+		{
+			old_hash_table = &hashtable[i];
+		}
+
+		old_hash_table = hashtable;
 		int old_capacity = _capacity;
 		unsigned new_capacity = Nearest2Power(_capacity + 1);
 		hashtable = new hash_node<T_Value>[new_capacity];
 		_capacity = new_capacity;
 		_count = 0;
+		bool isEmpty = 0;
+		hash_node<T_Value>* node = nullptr;
 		for (size_t i = 0; i < old_capacity; i++)
 		{
-			hash_node<T_Value>* node = &old_hash_table[i];
-			if (node->bExists)
-			{
-				this->insert(node->_key, node->_value);
-			}
+			node = &old_hash_table[i];
+			isEmpty = node->bExists;
+			//if (isEmpty)
+			//{
+			//	this->insert(node->_key, node->_value);
+			//}
 		}
+
 		delete[] old_hash_table;
 	}
 
 
 public:
-
-	NBhash_map() :hashtable(new hash_node<T_Value>[_capacity]) {
+	
+	NBhash_map() {
+		hashtable = new hash_node<T_Value>[_capacity];
 	}
 
 	~NBhash_map() {
 		delete[] hashtable;
 	}
 
-	void insert(CharArray key, T_Value vlue) {
+	void insert(CharArray& key, T_Value& vlue) {
+
+		hash_node<T_Value> old_hash_table;
+		for (size_t i = 0; i < _capacity; i++)
+		{
+			old_hash_table = hashtable[i];
+		}
+
 
 		if (_count >= _loadFactor * _capacity)
 		{

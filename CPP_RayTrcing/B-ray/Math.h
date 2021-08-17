@@ -60,8 +60,6 @@ inline bool is_pow_of_2(int x) {
 }
 
 inline int Nearest2Power(int i) {
-	if (is_pow_of_2(i))
-		return i;
 	i |= (i >> 1);
 	i |= (i >> 2);
 	i |= (i >> 4);
