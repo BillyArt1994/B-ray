@@ -15,7 +15,7 @@ struct hash_node
 	hash_node(CharArray k, T_Value v) :_key(k), _value(v) {}
 	size_t _hashA = -1;
 	size_t _hashB = -1;
-	bool bExists = 0;
+	bool bExists = false;
 	CharArray _key;
 	T_Value _value;
 };
@@ -27,7 +27,7 @@ private:
 	unsigned _capacity = 16;
 	unsigned _count = 0;
 	float _loadFactor = 0.75f;
-	hash_node<T_Value>* hashtable = nullptr;
+	
 	//hashº¯Êý
 	size_t hash(const char* input, unsigned length, unsigned ID) {
 		int hash = 0;
@@ -93,20 +93,20 @@ private:
 
 public:
 	
-	NBhash_map() {
-		hashtable = new hash_node<T_Value>[_capacity];
+	NBhash_map():hashtable(new hash_node<T_Value>[_capacity]) {
 	}
 
 	~NBhash_map() {
 		delete[] hashtable;
 	}
+	hash_node<T_Value>* hashtable = nullptr;
 
-	void insert(CharArray& key, T_Value& vlue) {
+	void insert(const CharArray& key,const T_Value& vlue) {
 
 		hash_node<T_Value> old_hash_table;
 		for (size_t i = 0; i < _capacity; i++)
 		{
-			old_hash_table = hashtable[i];
+			old_hash_table =hashtable[i];
 		}
 
 

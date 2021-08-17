@@ -19,6 +19,7 @@ struct OcterNode
 	OcterNode(vector<pair<unsigned, unsigned >>& p, AABB& b) :data(p), box(b) {}
 	vector<pair<unsigned, unsigned >>data;
 	AABB box;
+	~OcterNode(){}
 };
 
 class OcterTree {
@@ -35,8 +36,9 @@ private:
 		unsigned i = 1;
 		while (i <= qcode.size)
 		{
+			
 			CharArray c = qcode.subchar(i);
-
+			
 			if (localCode.find(c, value))
 			{
 				return true;
