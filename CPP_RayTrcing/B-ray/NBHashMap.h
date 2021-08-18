@@ -110,7 +110,6 @@ public:
 			if (nodePtr->bExists == false)
 			{
 				nodePtr->_key = key;
-				std::cout <<"key:" <<key.readArrary()<<"index:"<< index << std::endl;
 				nodePtr->_hashA = hashA;
 				nodePtr->_hashB = hashB;
 				nodePtr->_value = value;

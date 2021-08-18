@@ -55,19 +55,49 @@ bool AABB::checkIfInside(const Vector3& point) {
 }
 
 bool AABB::checkIfInside(const Triangle& trig) {
-	if (checkIfInside(trig._vertexArray[0]->position))
+
+	Vector3 v0 = trig._vertexArray[0]->position;
+	Vector3 v1 = trig._vertexArray[1]->position;
+	Vector3 v2 = trig._vertexArray[2]->position;
+
+	if (checkIfInside(v0)|| checkIfInside(v1)|| checkIfInside(v2))
 	{
 		return true;
 	}
-	if (checkIfInside(trig._vertexArray[1]->position))
+
+	Vector3 e = (maxPoint.x - minPoint.x)/2;
+	Vector3 c = maxPoint-e;
+
+	v0 -= c;
+	v1 -= c;
+	v2 -= c;
+
+	Vector3 boxNormal[3]{ Vector3(1.0f, 0.0f, 0.0f),Vector3(0.0f, 1.0f, 0.0f),Vector3(0.0f, 0.0f, 1.0f) };
+	Vector3 tirgleEdge[3]{ v1 - v0,v2 - v1,v0 - v2 };
+	Vector3 axisArray[13] = {
+		boxNormal[0],boxNormal[1],boxNormal[2],
+		cross(tirgleEdge[0],tirgleEdge[1]),
+		cross(boxNormal[0],tirgleEdge[0]), cross(boxNormal[0], tirgleEdge[1]), cross(boxNormal[0], tirgleEdge[2]),
+		cross(boxNormal[1],tirgleEdge[0]), cross(boxNormal[1], tirgleEdge[1]), cross(boxNormal[1], tirgleEdge[2]),
+		cross(boxNormal[2],tirgleEdge[0]), cross(boxNormal[2], tirgleEdge[1]), cross(boxNormal[2], tirgleEdge[2]),
+	};
+
+	for (int i = 0; i < 13; i++)
 	{
-		return true;
+		float p0 = dot(v0, axisArray[i]);
+		float p1 = dot(v1, axisArray[i]);
+		float p2 = dot(v2, axisArray[i]);
+
+		float r = e.x*abs(dot(boxNormal[0], axisArray[i])) +
+			e.y*abs(dot(boxNormal[1], axisArray[i])) +
+			e.z*abs(dot(boxNormal[2], axisArray[i]));
+
+		if (Min(p0, p1, p2) > r || -Max(p0, p1, p2) > r)
+		{
+			return false;
+		}
 	}
-	if (checkIfInside(trig._vertexArray[2]->position))
-	{
-		return true;
-	}
-	return false;
+	return true;
 }
 
 array<AABB, 8> AABB::getEightSubAABB() {
@@ -75,22 +105,22 @@ array<AABB, 8> AABB::getEightSubAABB() {
 	float length = (maxPoint.x - minPoint.x) / 2;
 	Vector3 maxPfourB = maxPoint;
 	Vector3 minPfourB = maxPoint - length;
-	subBound[0].maxPoint = maxPfourB - Vector3(0, 0, length);
-	subBound[0].minPoint = minPfourB - Vector3(0, 0, length);
-	subBound[1].maxPoint = maxPfourB - Vector3(length, 0, length);
-	subBound[1].minPoint = minPfourB - Vector3(length, 0, length);
-	subBound[2].maxPoint = maxPfourB - Vector3(0, length, length);
-	subBound[2].minPoint = minPfourB - Vector3(0, length, length);
-	subBound[3].maxPoint = maxPfourB - Vector3(length, length, length);
-	subBound[3].minPoint = minPfourB - Vector3(length, length, length);
-	subBound[4].maxPoint = maxPfourB;
-	subBound[4].minPoint = minPfourB;
-	subBound[5].maxPoint = maxPfourB - Vector3(length, 0, 0);
-	subBound[5].minPoint = minPfourB - Vector3(length, 0, 0);
-	subBound[6].maxPoint = maxPfourB - Vector3(0, length, 0);
-	subBound[6].minPoint = minPfourB - Vector3(0, length, 0);
-	subBound[7].maxPoint = maxPfourB - Vector3(length, length, 0);
-	subBound[7].minPoint = minPfourB - Vector3(length, length, 0);
+	subBound[0].maxPoint = maxPfourB;
+	subBound[0].minPoint = minPfourB;
+	subBound[1].maxPoint = maxPfourB - Vector3(length, 0, 0);
+	subBound[1].minPoint = minPfourB - Vector3(length, 0, 0);
+	subBound[2].maxPoint = maxPfourB - Vector3(0, length, 0) ;
+	subBound[2].minPoint = minPfourB - Vector3(0, length, 0);
+	subBound[3].maxPoint = maxPfourB - Vector3(length, length, 0);
+	subBound[3].minPoint = minPfourB - Vector3(length, length, 0);
+	subBound[4].maxPoint = maxPfourB - Vector3(0, 0, length);
+	subBound[4].minPoint = minPfourB - Vector3(0, 0, length);
+	subBound[5].maxPoint = maxPfourB - Vector3(length, 0, length);
+	subBound[5].minPoint = minPfourB - Vector3(length, 0, length);
+	subBound[6].maxPoint = maxPfourB - Vector3(0, length, length);
+	subBound[6].minPoint = minPfourB - Vector3(0, length, length);
+	subBound[7].maxPoint = maxPfourB - Vector3(length, length, length);
+	subBound[7].minPoint = minPfourB - Vector3(length, length, length);
 	return subBound;
 }
 

@@ -75,6 +75,11 @@ private:
 		{
 			OcterNode* node = new OcterNode(index, bound);
 			localCode.insert(depthcode, node);
+			std::cout << "Key:" << depthcode.readArrary() << std::endl;
+			for (size_t i = 0; i < index.size(); i++)
+			{
+				std::cout << "Value:" << index[i].second << std::endl;
+			}
 			return;
 		}
 
@@ -130,7 +135,7 @@ public:
 	OcterTree() {}
 	OcterTree(vector<Mesh*>& m_meshList, unsigned m_maxfTrig, AABB& Bounding) :
 		meshList(m_meshList), maxOfTirg(m_maxfTrig), sceneBound(Bounding),
-		gap(static_cast<int>(2147483648 / Bounding.maxPoint.x)) {}
+		gap(static_cast<int>(2147483648/Bounding.maxPoint.x)) {}
 
 	//构建树
 	void BuildTree() {
@@ -146,7 +151,7 @@ public:
 			}
 		}
 		CharArray code;
-		octreeBuild(vertexIndex, sceneBound, code);
+		octreeBuild(vertexIndex, sceneBound,code);
 	}
 
 	bool Intersect(const Ray& r, float& t, unsigned& meshIndex, unsigned& tirgIndex) {
@@ -155,14 +160,13 @@ public:
 		OcterNode* node = nullptr;
 		CharArray qcode;
 		vector<std::pair<unsigned, unsigned>>index;
-		unsigned m_Index = -1;
-		unsigned t_Index = -1;
+		unsigned m_Index = -1, t_Index =-1;
 		float minDis = 0.0f;
 		Triangle* trig = nullptr;
-
+		float t_Step = 0;
 		while (true)
 		{
-			float t_Step = 0;
+			t_Step = 0;
 
 			//检测射线是否还在场景内部
 			if (!sceneBound.checkIfInside(ray.GetOriginPos()))

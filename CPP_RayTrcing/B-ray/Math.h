@@ -21,19 +21,27 @@ inline float Min(const float& x, const float& y, const float& z) {
 	return x < y ? (x < z ? x : z) : (y < z ? y : z);
 }
 
+inline float Min(const float& x, const float& y) {
+	return x < y ? x : y;
+}
+
 inline float Max(const float& x, const float& y, const float& z) {
 	return x > y ? (x > z ? x : z) : (y > z ? y : z);
 }
 
-inline int Abs(int x) { int a = x >> 31; return ((x ^ a) - a); }
-
-inline float Min(const float& x, const float& y) {
-	return x < y ? x:y;
-}
-
 inline float Max(const float& x, const float& y) {
-	return x > y ? x:y;
+	return x > y ? x : y;
 }
+
+inline Vector3 Max(const Vector3& a, const Vector3& b) {
+	return Vector3(Max(a.x,b.x), Max(a.y, b.y), Max(a.z, b.z));
+}
+
+inline Vector3 Min(const Vector3& a, const Vector3& b) {
+	return Vector3(Min(a.x, b.x), Min(a.y, b.y), Min(a.z, b.z));
+}
+
+inline int Abs(int x) { int a = x >> 31; return ((x ^ a) - a); }
 
 inline float CompareSize(Vector3 a) {
 	float minSize = 0;

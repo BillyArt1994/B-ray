@@ -54,24 +54,31 @@ bool Scene::checkEmptyScene() {
 }
 
 void Scene::buildOctree() {
-	float maxValue = Max(Max(Abs(scene_BoxBound.minPoint.x), Abs(scene_BoxBound.maxPoint.x)),
-				   Max(Abs(scene_BoxBound.minPoint.y), Abs(scene_BoxBound.maxPoint.y)),
-				   Max(Abs(scene_BoxBound.minPoint.z), Abs(scene_BoxBound.maxPoint.z)));
+	float maxValue = Max(
+		Max(Abs(scene_BoxBound.minPoint.x), Abs(scene_BoxBound.maxPoint.x)),
+		Max(Abs(scene_BoxBound.minPoint.y), Abs(scene_BoxBound.maxPoint.y)),
+		Max(Abs(scene_BoxBound.minPoint.z), Abs(scene_BoxBound.maxPoint.z)));
 	int length = Nearest2Power(static_cast<int>(maxValue));
 	scene_OT = OcterTree(scene_MeshList,20, AABB(Vector3(length, length, length), Vector3(-length, -length, -length)));
 	scene_OT.BuildTree();
 }
 
 void Scene::buildBound() {
+	Vector3 minP(0), maxP(0);
 	for (unsigned i = 0; i < scene_GameObject.size(); i++)
 	{
 		scene_GameObject[i]->buildBound();
+		maxP = Max(maxP, scene_GameObject[i]->getBound()->maxPoint);
+		minP = Min(minP, scene_GameObject[i]->getBound()->minPoint);
 	};
-	scene_BoxBound = *scene_GameObject[0]->getBound();
+	maxP = Max(maxP, mainCamera->cameraPosition);
+	minP = Min(minP, mainCamera->cameraPosition);
+	scene_BoxBound.maxPoint = maxP;
+	scene_BoxBound.minPoint = minP;
 }
 
 Scene::~Scene() {
-	
+	delete mainCamera;
 }
 
 

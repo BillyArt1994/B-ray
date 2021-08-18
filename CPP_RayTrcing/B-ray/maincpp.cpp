@@ -11,14 +11,6 @@
 #include <chrono> 
 
 int main() {
-	//hash_node<int> *p = new hash_node<int>[16];
-	//hash_node<int> f;
-	//for (size_t i = 0; i < 16; i++)
-	//{
-	//	f = p[i];
-	//}
-
-
 	//计时
 	auto start = std::chrono::system_clock::now();
 
@@ -26,7 +18,7 @@ int main() {
 	Light light(Color(1.0f, 1.0f, 1.0f), Vector3(2.0f, 3.0f, -5.0f), Vector3(0.0f));
 
 	//Model
-	GameObject* torusMesh  = new GameObject(OBJLoader::ReadObjectFile("Torus.obj"));
+	GameObject* torusMesh  = new GameObject(OBJLoader::ReadObjectFile("Hedra.obj"));
 
 	//Image
 	//输出图形比例-长比宽,尺寸
