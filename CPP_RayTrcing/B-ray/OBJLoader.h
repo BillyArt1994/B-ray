@@ -68,6 +68,7 @@ Mesh* OBJLoader::ReadObjectFile(std::string filePath) {
 			{
 				sscanf(buff_line, "v %f %f %f", &x, &y, &z);
 				Vertex vert(Vector3(x, y, z), Vector3(0), Vector3(0));
+				std::cout << "(" << x << "," << y << "," << z << ")" << std::endl;
 				vertex_array.push_back(vert);
 				vertexs_Count += 1;
 			}

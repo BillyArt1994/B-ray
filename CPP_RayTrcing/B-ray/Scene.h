@@ -78,7 +78,7 @@ void Scene::buildBound() {
 }
 
 Scene::~Scene() {
-	delete mainCamera;
+
 }
 
 

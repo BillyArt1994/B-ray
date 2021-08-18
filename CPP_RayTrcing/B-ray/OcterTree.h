@@ -148,6 +148,8 @@ public:
 			for (unsigned j = 0; j < vertexCount; j++)
 			{
 				vertexIndex.push_back({ i,j });
+				/*Vector3 pos = meshList[i]->vertexArray[j].position;
+				std::cout << "构建树时"<<"(" << pos.x << "," << pos.y << "," << pos.z << ")" << std::endl;*/
 			}
 		}
 		CharArray code;
@@ -160,10 +162,10 @@ public:
 		OcterNode* node = nullptr;
 		CharArray qcode;
 		vector<std::pair<unsigned, unsigned>>index;
-		unsigned m_Index = -1, t_Index =-1;
+		unsigned m_Index = 0, t_Index =0;
 		float minDis = 0.0f;
 		Triangle* trig = nullptr;
-		float t_Step = 0;
+		float t_Step = 0.0f;
 		while (true)
 		{
 			t_Step = 0;
@@ -206,6 +208,8 @@ public:
 
 				if (minDis != FLT_MAX)
 				{
+					Vector3 pos = meshList[m_Index]->triangleArray[t_Index]._vertexArray[0]->position;
+					std::cout << "构建树时" << "(" << pos.x << "," << pos.y << "," << pos.z << ")" << std::endl;
 					return true;
 				}
 			}

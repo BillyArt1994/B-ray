@@ -24,8 +24,7 @@ void GameObject::buildBound() {
 }
 
 GameObject::~GameObject() {
-	delete _mesh;
-	delete _bound;
+
 }
 
 #endif // !GAMEOBJECT_H

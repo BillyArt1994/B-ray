@@ -33,8 +33,9 @@ struct Triangle {
 		Vector3 v0 = _vertexArray[0]->position;
 		Vector3 v1 = _vertexArray[1]->position;
 		Vector3 v2 = _vertexArray[2]->position;
+		
 		Vector3 orig = ray.GetOriginPos();
-		Vector3 dir = -ray.GetDirection();
+		Vector3 dir = ray.GetDirection();
 
 		Vector3 E1 = v1 - v0;
 		Vector3 E2 = v2 - v0;
