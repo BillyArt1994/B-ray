@@ -18,7 +18,7 @@ int main() {
 	Light light(Color(1.0f, 1.0f, 1.0f), Vector3(2.0f, 3.0f, -5.0f), Vector3(0.0f));
 
 	//Model
-	GameObject* torusMesh  = new GameObject(OBJLoader::ReadObjectFile("Hedra.obj"));
+	GameObject* torusMesh  = new GameObject(OBJLoader::ReadObjectFile("Torus.obj"));
 
 	//Image
 	//输出图形比例-长比宽,尺寸

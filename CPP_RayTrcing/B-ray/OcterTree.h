@@ -75,11 +75,11 @@ private:
 		{
 			OcterNode* node = new OcterNode(index, bound);
 			localCode.insert(depthcode, node);
-			std::cout << "Key:" << depthcode.readArrary() << std::endl;
-			for (size_t i = 0; i < index.size(); i++)
-			{
-				std::cout << "Value:" << index[i].second << std::endl;
-			}
+			//std::cout << "Key:" << depthcode.readArrary() << std::endl;
+			//for (size_t i = 0; i < index.size(); i++)
+			//{
+			//	std::cout << "Value:" << index[i].second << std::endl;
+			//}
 			return;
 		}
 
@@ -181,7 +181,7 @@ public:
 			node = FindMaxMatch(qcode);
 			//匹配后检测此叶节点下 是否包含面片
 			//进行面片求交
-			index.swap(node->data);
+			index=node->data;
 			if (index.size())
 			{
 				minDis = FLT_MAX;
