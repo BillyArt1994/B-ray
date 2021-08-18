@@ -19,29 +19,30 @@ struct OcterNode
 	OcterNode(vector<pair<unsigned, unsigned >>& p, AABB& b) :data(p), box(b) {}
 	vector<pair<unsigned, unsigned >>data;
 	AABB box;
-	~OcterNode(){}
 };
 
 class OcterTree {
 
 private:
-	NBhash_map<OcterNode*> localCode;
+
 	vector<Mesh*> meshList;
 	unsigned maxOfTirg = -1;
 	int gap = -1;
 	AABB sceneBound;
+	NBhash_map<OcterNode*> localCode;
 
 	//获得场景中最大匹配编码
-	bool FindMaxMatch(CharArray qcode, OcterNode* value) {
+	OcterNode* FindMaxMatch(CharArray qcode) {
 		unsigned i = 1;
-		while (i <= qcode.size)
+		CharArray c;
+		OcterNode* value;
+		while (i <= 32)
 		{
-			
-			CharArray c = qcode.subchar(i);
-			
+			c = qcode.subchar(i);
+
 			if (localCode.find(c, value))
 			{
-				return true;
+				return value;
 			}
 			else
 			{
@@ -126,7 +127,6 @@ private:
 	}
 
 public:
-
 	OcterTree() {}
 	OcterTree(vector<Mesh*>& m_meshList, unsigned m_maxfTrig, AABB& Bounding) :
 		meshList(m_meshList), maxOfTirg(m_maxfTrig), sceneBound(Bounding),
@@ -134,6 +134,7 @@ public:
 
 	//构建树
 	void BuildTree() {
+		localCode.tableInitialize();
 		vector<std::pair<unsigned, unsigned >> vertexIndex;
 		unsigned vertexCount = 0;
 		for (unsigned i = 0; i < meshList.size(); i++)
@@ -144,7 +145,7 @@ public:
 				vertexIndex.push_back({ i,j });
 			}
 		}
-		CharArray code('0');
+		CharArray code;
 		octreeBuild(vertexIndex, sceneBound, code);
 	}
 
@@ -173,38 +174,35 @@ public:
 			qcode = EncodePosition(ray.GetOriginPos()*gap);
 
 			//最大匹配位置代码
-
-			if (FindMaxMatch(qcode, node))
+			node = FindMaxMatch(qcode);
+			//匹配后检测此叶节点下 是否包含面片
+			//进行面片求交
+			index.swap(node->data);
+			if (index.size())
 			{
-				index.swap(node->data);
-				//匹配后检测此叶节点下 是否包含面片
-				//进行面片求交
-				if (index.size())
-				{
-					minDis = FLT_MAX;
-					meshIndex = 0;
-					tirgIndex = 0;
+				minDis = FLT_MAX;
+				meshIndex = 0;
+				tirgIndex = 0;
 
-					for (unsigned i = 0; i < index.size(); i++)
+				for (unsigned i = 0; i < index.size(); i++)
+				{
+					m_Index = index.at(i).first;
+					t_Index = index.at(i).second;
+					trig = &(meshList[m_Index]->triangleArray[t_Index]);
+					if (trig->IntersectTriangle(r, t))
 					{
-						m_Index = index.at(i).first;
-						t_Index = index.at(i).second;
-						trig = &(meshList[m_Index]->triangleArray[t_Index]);
-						if (trig->IntersectTriangle(r, t))
+						if (t < minDis)
 						{
-							if (t < minDis)
-							{
-								minDis = t;
-								meshIndex = m_Index;
-								tirgIndex = t_Index;
-							}
+							minDis = t;
+							meshIndex = m_Index;
+							tirgIndex = t_Index;
 						}
 					}
+				}
 
-					if (minDis != FLT_MAX)
-					{
-						return true;
-					}
+				if (minDis != FLT_MAX)
+				{
+					return true;
 				}
 			}
 

@@ -38,9 +38,10 @@ public:
 	}
 
 	CharArray subchar(unsigned e) {
-		strncpy(this->m_data, m_data, e);
-		this->size = e;
-		return *this;
+		CharArray a;
+		strncpy(a.m_data,m_data, e);
+		a.size = e;
+		return a;
 	}
 
 	void operator = (const CharArray& a) {

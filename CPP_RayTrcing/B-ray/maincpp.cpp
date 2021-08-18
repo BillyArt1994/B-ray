@@ -10,29 +10,14 @@
 #include <iostream>
 #include <chrono> 
 
-struct hash_nd
-{
-	hash_nd() {}
-	size_t _hashA = -1;
-	size_t _hashB = -1;
-	bool bExists = false;
-};
-
 int main() {
-
-	//hash_nd* node;
-	//node = new hash_nd[15];
-	//for (size_t i = 0; i < 15; i++)
-	//{
-	//	node[i];
-	//}
-
-	//hash_node<int>* p;
-	//p = new  hash_node<int>[16]();
+	//hash_node<int> *p = new hash_node<int>[16];
+	//hash_node<int> f;
 	//for (size_t i = 0; i < 16; i++)
 	//{
-	//	p[i];
+	//	f = p[i];
 	//}
+
 
 	//¼ÆÊ±
 	auto start = std::chrono::system_clock::now();
