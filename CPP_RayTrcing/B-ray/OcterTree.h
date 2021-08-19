@@ -32,15 +32,15 @@ private:
 	NBhash_map<OcterNode*> localCode;
 
 	//获得场景中最大匹配编码
-	OcterNode* FindMaxMatch(CharArray qcode) {
+	OcterNode* FindMaxMatch(CharArray& qcode) {
 		unsigned i = 1;
-		CharArray c;
+		CharArray c = qcode;
 		OcterNode* value;
 		while (i <= 32)
 		{
-			c = qcode.subchar(i);
+			qcode = c.subchar(i);
 
-			if (localCode.find(c, value))
+			if (localCode.find(qcode, value))
 			{
 				return value;
 			}
@@ -49,7 +49,6 @@ private:
 				i++;
 			}
 		}
-		return false;
 	}
 
 	//获得坐标在空间中的编码
@@ -88,6 +87,12 @@ private:
 		{
 			OcterNode* node = new OcterNode(index, bound);
 			localCode.insert(depthcode, node);
+
+			//std::cout << "Key:" << depthcode.readArrary() << std::endl;
+			//for (size_t i = 0; i < index.size(); i++)
+			//{
+			//	std::cout << "Value:" << index[i].second << std::endl;
+			//}
 			return;
 		}
 
@@ -140,20 +145,18 @@ public:
 	//构建树
 	void BuildTree() {
 		localCode.tableInitialize();
-		vector<std::pair<unsigned, unsigned >> vertexIndex;
+		vector<std::pair<unsigned, unsigned >> trigIndex;
 		unsigned vertexCount = 0;
 		for (unsigned i = 0; i < meshList.size(); i++)
 		{
-			vertexCount = meshList[i]->getVertexCount();
+			vertexCount = meshList[i]->getFaceCount();
 			for (unsigned j = 0; j < vertexCount; j++)
 			{
-				vertexIndex.push_back({ i,j });
-				/*Vector3 pos = meshList[i]->vertexArray[j].position;
-				std::cout << "构建树时"<<"(" << pos.x << "," << pos.y << "," << pos.z << ")" << std::endl;*/
+				trigIndex.push_back({ i,j });
 			}
 		}
 		CharArray code;
-		octreeBuild(vertexIndex, sceneBound,code);
+		octreeBuild(trigIndex, sceneBound,code);
 	}
 
 	bool Intersect(const Ray& r, float& t, unsigned& meshIndex, unsigned& tirgIndex) {
@@ -164,26 +167,23 @@ public:
 		vector<std::pair<unsigned, unsigned>>index;
 		unsigned m_Index = 0, t_Index =0;
 		float minDis = 0.0f;
-		Triangle* trig = nullptr;
 		float t_Step = 0.0f;
 		while (true)
-		{
+		{	//重置t_Step
 			t_Step = 0;
-
 			//检测射线是否还在场景内部
 			if (!sceneBound.checkIfInside(ray.GetOriginPos()))
 			{
 				return false;
 			}
-
 			//获得空间编码
 			qcode = EncodePosition(ray.GetOriginPos()*gap);
-
-			//最大匹配位置代码
+			//获得最大匹配位置代码
 			node = FindMaxMatch(qcode);
 			//匹配后检测此叶节点下 是否包含面片
 			//进行面片求交
-			index=node->data;
+			index.resize(node->data.size());
+			copy(node->data.begin(), node->data.end(), index.begin());
 			if (index.size())
 			{
 				minDis = FLT_MAX;
@@ -194,8 +194,7 @@ public:
 				{
 					m_Index = index.at(i).first;
 					t_Index = index.at(i).second;
-					trig = &(meshList[m_Index]->triangleArray[t_Index]);
-					if (trig->IntersectTriangle(r, t))
+					if (meshList[m_Index]->triangleArray[t_Index].IntersectTriangle(r, t))
 					{
 						if (t < minDis)
 						{
@@ -208,9 +207,7 @@ public:
 
 				if (minDis != FLT_MAX)
 				{
-					Vector3 pos = meshList[m_Index]->triangleArray[t_Index]._vertexArray[0]->position;
-					std::cout << "构建树时" << "(" << pos.x << "," << pos.y << "," << pos.z << ")" << std::endl;
-					return true;
+				return true;
 				}
 			}
 

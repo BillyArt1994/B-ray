@@ -8,24 +8,22 @@
 class RenderManager
 {
 public:
-	RenderManager() {};
+	RenderManager(){}
 	~RenderManager();
-	bool startUp(InputManager& iM, SceneManager& sM);
+	void startUp(InputManager* iM,SceneManager* sM);
 	void run();
 
 private:
 	Render* m_renader;
 };
 
-bool RenderManager::startUp(InputManager& iM, SceneManager& sM)
+void RenderManager::startUp(InputManager* iM, SceneManager* sM)
 {
-	m_renader = new Render(sM.getCurrentScene()->mainCamera,sM.getCurrentScene()->scene_MeshList,sM.getCurrentScene()->scene_LightList,iM, new unsigned char[iM.image_width *iM.image_height * 3], sM.getCurrentScene()->scene_OT);
-	return true;
+	m_renader = new Render(iM,sM);
 }
 
 void RenderManager::run() {
 	m_renader->Rendering();
-	m_renader->SaveTexture();
 }
 
 RenderManager::~RenderManager() {

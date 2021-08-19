@@ -7,57 +7,59 @@
 #include "Mesh.h"
 #include "Ray.h"
 #include "InputManager.h"
+#include "SceneManager.h"
 
 class Render
 {
 public:
-	Render() {};
-	Render(Camera* c, vector<Mesh*>& sML, vector<Light*>& sLL, InputManager& iM, unsigned char *p,OcterTree& tree) :
-		high_left_corner(c->high_left_corner), horizontal(c->horizontal), vertical(c->vertical),
-		camerPos(c->cameraPosition), width(iM.image_width), height(iM.image_height),
-		sceneMeshList(sML), sceneLightList(sLL), rgb(p), root(tree){}
-
+	Render(InputManager* iM,SceneManager* sM) :inputManager(iM), sceneManager(sM) {}
 	void Rendering();
-	void SaveTexture();
 
 private:
 	unsigned char *rgb = nullptr;
-	Vector3 high_left_corner;
-	Vector3 horizontal;
-	Vector3 vertical;
-	Vector3 camerPos;
-	unsigned width;
-	unsigned height;
-	vector<Mesh*> sceneMeshList;
-	vector<Light*> sceneLightList;
-	Vector3 ray_color(const Ray& r);
-	OcterTree root;
+	InputManager* inputManager;
+	SceneManager* sceneManager;
+	void SaveTexture(unsigned wd, unsigned ht);
+	Vector3 ray_color(const Ray& r, OcterTree& root);
 };
 
 void Render::Rendering() {
+	unsigned height = inputManager->image_height;
+	unsigned width = inputManager->image_width;
+	rgb = new unsigned char[height*width*3];
 	unsigned char *p = rgb;
+	Camera*camera = sceneManager->getCurrentScene()->mainCamera;
+	Vector3 high_left_corner = camera->high_left_corner;
+	Vector3 horizontal = camera->horizontal;
+	Vector3 vertical = camera->vertical;
+	Vector3 camerPos = camera->cameraPosition;
+	OcterTree root = sceneManager->getCurrentScene()->scene_OT;
+
 	for (unsigned i = 0; i < height; i++) {
 		for (unsigned j = 0; j < width; j++) {
 			float u = float(j) / (width - 1);
 			float v = float(i) / (height - 1);
 			Ray r(camerPos, ((high_left_corner + horizontal * u - vertical * v) - camerPos).normalize());
-			Color pixel_color = write_color(ray_color(r));
+			Color pixel_color = write_color(ray_color(r,root));
 			*p++ = (unsigned char)pixel_color.x;    //R
 			*p++ = (unsigned char)pixel_color.y;    //G
 			*p++ = (unsigned char)pixel_color.z;    //B
 		}
 		int rate = static_cast<int>((i/(height-1.0f))*100);
 		std::cout << rate << "%" << std::endl;
+		//±£´æÍ¼Æ¬
+		SaveTexture( width, height);
 	}
 }
 
-void Render::SaveTexture() {
+void Render::SaveTexture(unsigned wd, unsigned ht) {
 	FILE *fp = fopen("render.png", "wb");
-	svpng(fp, width, height, rgb, 0);
+	svpng(fp, wd, ht, rgb, 0);
 	fclose(fp);
+	delete rgb;
 }
 
-Vector3 Render::ray_color(const Ray& r) {
+Vector3 Render::ray_color(const Ray& r,OcterTree& root) {
 	unsigned meshIndex = 0;
 	unsigned trigIndex = 0;
 	float t = 0.0f;

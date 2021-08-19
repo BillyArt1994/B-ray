@@ -13,24 +13,31 @@ using std::vector;
 
 class Scene {
 public:
-	Scene(std::string sceneID):name(sceneID){}
 	Scene(){}
 	~Scene();
 	std::string name= "SimpleScene";
 	vector<Mesh*> scene_MeshList;
 	vector<GameObject*> scene_GameObject;
 	vector<Light*> scene_LightList;
-	Camera *mainCamera =nullptr;
 	OcterTree scene_OT;
 	AABB scene_BoxBound;
+	Camera *mainCamera = nullptr;
 
 	void addMeshElement(Mesh* n_mesh);
 	void addGameObjElement(GameObject* n_gameObj);
 	void addLightElement(Light* n_light);
-	bool checkEmptyScene();
 	void buildOctree();
 	void buildBound();
+	void startUp();
 };
+
+void Scene::startUp() {
+	mainCamera = new Camera(Vector3(0, 0, -6), -1, (16.0f / 9.0f));
+	GameObject* torusMesh = new GameObject(OBJLoader::ReadObjectFile("Torus.obj"));
+	addGameObjElement(torusMesh);
+	buildBound();
+	buildOctree();
+}
 
 void Scene::addMeshElement(Mesh* n_mesh ) {
 	scene_MeshList.push_back(n_mesh);
@@ -43,14 +50,6 @@ void Scene::addLightElement(Light* n_light) {
 void Scene::addGameObjElement(GameObject* n_gameObject) {
 	scene_GameObject.push_back(n_gameObject);
 	addMeshElement(n_gameObject->getMesh());
-}
-
-bool Scene::checkEmptyScene() {
-	if (scene_MeshList.size()==0 && scene_LightList.size()==0)
-	{
-		return true;
-	}
-	return false;
 }
 
 void Scene::buildOctree() {

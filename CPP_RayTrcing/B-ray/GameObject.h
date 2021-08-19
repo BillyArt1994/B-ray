@@ -8,6 +8,7 @@ class GameObject
 public:
 	GameObject(){}
 	~GameObject();
+
 	GameObject(Mesh* mesh) : _mesh(mesh){
 	}
 	Mesh* getMesh() const { return _mesh; }

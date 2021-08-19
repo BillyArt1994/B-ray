@@ -7,26 +7,29 @@
 class SceneManager
 {
 public:
-
+	SceneManager() {}
 	SceneManager(Scene* m_scene):currentScene(m_scene){};
 	~SceneManager() {};
-	bool startUp();
-	void shuDown();
+	void startUp();
+	void shutDown();
 	void updata();
-	Scene* getCurrentScene();
+	Scene* getCurrentScene ()const;
 
 private:
 	Scene* currentScene;
 };
 
-bool SceneManager::startUp() {
-	currentScene->buildBound();
-	currentScene->buildOctree();
-
-	return true;
+void SceneManager::startUp() {
+	currentScene = new Scene();
+	currentScene->startUp();
 }
-Scene* SceneManager::getCurrentScene() {
+
+Scene* SceneManager::getCurrentScene()const{
 	return currentScene;
+}
+
+void SceneManager::shutDown() {
+
 }
 
 #endif // !SCENEMANAGER_H

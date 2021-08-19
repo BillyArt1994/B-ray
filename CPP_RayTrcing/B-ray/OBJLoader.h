@@ -15,9 +15,10 @@ public:
 private:
 };
 
-Mesh* OBJLoader::ReadObjectFile(std::string filePath) {
-	//GameObject gameObject_00;
-	//gameObject_00.name = getFileName(filePath);
+GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
+	GameObject gameObject_00;
+	gameObject_00.name = getFileName(filePath);
+
 	Mesh* obj = new Mesh();
 	vector<Vector3> normal, texcoord;
 	vector<Triangle> triangle_array;
@@ -52,23 +53,19 @@ Mesh* OBJLoader::ReadObjectFile(std::string filePath) {
 		float x, y, z;
 		switch (buff_line[0])
 		{
-			//case '#':
-			//	std::string::size_type idx_f_object;
-			//	idx_f_object = buff.find("object");
-			//	if (idx_f_object == std::string::npos)
-			//	{
-			//		char buf[128] = { '\0' };
-			//		sscanf(buff_line, "# object %s", buf);
-			//		obj.name = buf;
-			//	}
-			//	break;
+			case '#':
+				if (buff_line[1] == 'o')
+				{
+
+				}
+				break;
+
 		case 'v':
 
 			if (buff_line[1] == ' ')
 			{
 				sscanf(buff_line, "v %f %f %f", &x, &y, &z);
 				Vertex vert(Vector3(x, y, z), Vector3(0), Vector3(0));
-				std::cout << "(" << x << "," << y << "," << z << ")" << std::endl;
 				vertex_array.push_back(vert);
 				vertexs_Count += 1;
 			}
