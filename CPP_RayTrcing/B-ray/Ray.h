@@ -7,7 +7,10 @@ class Ray
 {
 public:
 	Ray(){}
-
+	Ray(const Ray& r) {
+		_dirction = r._dirction;
+		_originPos = r._originPos;
+	}
 	Ray(const Vector3 pos,const Vector3 dir):_originPos(pos), _dirction(dir){}
 
 	Vector3 GetOriginPos() const { return _originPos; }

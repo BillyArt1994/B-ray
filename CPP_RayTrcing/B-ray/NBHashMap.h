@@ -24,13 +24,13 @@ struct hash_node
 template <class T_Value>
 class NBhash_map {
 private:
-	unsigned _capacity = 16;
-	unsigned _count = 0;
-	float _loadFactor = 0.75f;
+	unsigned _capacity=16;
+	unsigned _count=0;
+	float _loadFactor=0.75f;
 	hash_node<T_Value>* hashtable = nullptr;
 	//hashº¯Êý
 	size_t hash(const char* input, unsigned length, unsigned ID) {
-		int hash = 0;
+		int hash(0);
 		switch (ID)
 		{
 		case 0:
@@ -42,14 +42,13 @@ private:
 		case 1:
 			for (size_t i = 0; i < length; i++)
 			{
-				hash = ((hash << 5) + hash) + *input++;
+				hash += (hash << 5)+*input++;
 			}
 			break;
 		case 2:
-			for (size_t i = 0; i < length; i += 2)
+			for (size_t i = 0; i < length; i ++)
 			{
-				hash ^= ((hash << 7) ^ (*input++) ^ (hash >> 3));
-				hash ^= (~((hash << 11) ^ (*input++) ^ (hash >> 5)));
+				hash ^= ((hash << 5)+ (hash >> 2)+*input++);
 			}
 			break;
 		}
@@ -133,7 +132,7 @@ public:
 
 		unsigned length = key.size;
 		const char* str = key.readArrary();
-		const int  HASH_OFFSET = 0, HASH_A = 1, HASH_B = 2;
+		const int  HASH_OFFSET(0), HASH_A(1), HASH_B(2);
 		size_t hashPos = hash(str, length, HASH_OFFSET);
 		size_t hashA = hash(str, length, HASH_A);
 		size_t hashB = hash(str, length, HASH_B);

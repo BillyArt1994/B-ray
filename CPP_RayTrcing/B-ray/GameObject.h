@@ -9,19 +9,24 @@ public:
 	GameObject(){}
 	~GameObject();
 
-	GameObject(Mesh* mesh) : _mesh(mesh){
-	}
-	Mesh* getMesh() const { return _mesh; }
-	AABB* getBound() const { return _bound; }
 	void buildBound();
-private:
-	Mesh* _mesh = nullptr;
-	AABB* _bound = nullptr;
+	vector<Mesh*> mesh;
+	AABB* bound = nullptr;
+	unsigned meshCount = 0;
+	
+	AABB* getBound() const { return bound; }
 };
 
 void GameObject::buildBound() {
-	_bound = new AABB();
-	_bound->buildAABB(_mesh);
+	AABB meshbound;
+	Vector3 maxPoint(FLT_MIN), minPoint(FLT_MAX);
+	for (size_t i = 0; i < meshCount; i++)
+	{
+		meshbound.buildAABB(mesh[i]);
+		maxPoint = Max(maxPoint, meshbound.maxPoint);
+		minPoint = Min(minPoint, meshbound.minPoint);
+	}
+	bound = new AABB(maxPoint, minPoint);
 }
 
 GameObject::~GameObject() {

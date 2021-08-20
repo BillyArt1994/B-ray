@@ -10,6 +10,7 @@ struct Triangle {
 	Vertex *_vertexArray[3]{ nullptr,nullptr,nullptr };
 	Vector3 _normal = NULL;
 
+	Triangle() {}
 	Triangle(Vertex* a, Vertex* b, Vertex* c) :_vertexArray{ a,b,c } {}
 
 	//float _dis = 0;
@@ -29,18 +30,18 @@ struct Triangle {
 	//	_vertexIndex[index] = &vertex;
 	//}
 
-	bool IntersectTriangle(const Ray& ray,float& t) {
-		Vector3 v0 = _vertexArray[0]->position;
-		Vector3 v1 = _vertexArray[1]->position;
-		Vector3 v2 = _vertexArray[2]->position;
-		
-		Vector3 orig = ray.GetOriginPos();
-		Vector3 dir = ray.GetDirection();
+	bool IntersectTriangle(const Ray& ray, float& t) {
+		Vector3 v0(_vertexArray[0]->position);
+		Vector3 v1(_vertexArray[1]->position);
+		Vector3 v2(_vertexArray[2]->position);
 
-		Vector3 E1 = v1 - v0;
-		Vector3 E2 = v2 - v0;
-		Vector3 P = cross(dir, E2);
-		float det = dot(E1, P);
+		Vector3 orig(ray.GetOriginPos());
+		Vector3 dir(ray.GetDirection());
+
+		Vector3 E1(v1 - v0);
+		Vector3 E2(v2 - v0);
+		Vector3 P(cross(dir, E2));
+		float det(dot(E1, P));
 
 		Vector3 T;
 		if (det > 0)
@@ -53,16 +54,17 @@ struct Triangle {
 			det = -det;
 		}
 
-		if (det < 0.0001f)
+		if (det < 0.0001f){
 			return false;
+		}
 
-		float u = dot(T, P);
+		float u (dot(T, P));
 		if (u<0.0f || u>det)
 		{
 			return false;
 		}
 
-		Vector3 Q = cross(T, E1);
+		Vector3 Q (cross(T, E1));
 		float v = dot(dir, Q);
 		if (v<0.0f || v + u>det)
 		{

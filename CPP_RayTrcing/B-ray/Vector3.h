@@ -8,7 +8,12 @@ struct Vector3 {
 
 	float x = 0.0f, y = 0.0f, z = 0.0f;
 
-	Vector3() {}
+	Vector3(){}
+	Vector3(const Vector3& value) {
+		this->x = value.x;
+		this->y = value.y;
+		this->z = value.z;
+	}
 
 	Vector3(const float value) :x(value), y(value), z(value) {}
 
@@ -75,12 +80,22 @@ struct Vector3 {
 		}
 	}
 
-	inline float length() {
-		return sqrt(this->x*this->x + this->y*this->y + this->z*this->z);
+	float Q_rsqrt(float number) {
+		long i;
+		float x2, y;
+		const float threehalfs = 1.5f;
+
+		x2 = number * 0.5f;
+		y = number;
+		i = *(long*)&y;
+		i = 0x5f3759df - (i >> 1);
+		y = *(float*)&i;
+		y = y * (threehalfs - (x2*y*y));
+		return y;
 	}
 
 	inline Vector3 normalize() {
-		return *this / this->length();
+		return Q_rsqrt((x*x + y * y + z * z));
 	}
 
 	inline Vector3 operator -() {

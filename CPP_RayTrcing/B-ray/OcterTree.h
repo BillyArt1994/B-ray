@@ -16,6 +16,7 @@ using std::pair;
 
 struct OcterNode
 {
+	OcterNode() {}
 	OcterNode(vector<pair<unsigned, unsigned >>& p, AABB& b) :data(p), box(b) {}
 	vector<pair<unsigned, unsigned >>data;
 	AABB box;
@@ -33,22 +34,17 @@ private:
 
 	//获得场景中最大匹配编码
 	OcterNode* FindMaxMatch(CharArray& qcode) {
-		unsigned i = 1;
+		unsigned i = 0;
 		CharArray c = qcode;
 		OcterNode* value;
-		while (i <= 32)
-		{
-			qcode = c.subchar(i);
 
-			if (localCode.find(qcode, value))
-			{
-				return value;
-			}
-			else
-			{
-				i++;
-			}
-		}
+		do
+		{
+			i += 1;
+			qcode = c.subchar(i);
+		} while (!localCode.find(qcode, value));
+
+		return value;
 	}
 
 	//获得坐标在空间中的编码
@@ -74,11 +70,6 @@ private:
 		{
 			OcterNode* node = new OcterNode(index, bound);
 			localCode.insert(depthcode, node);
-			//std::cout << "Key:" << depthcode.readArrary() << std::endl;
-			//for (size_t i = 0; i < index.size(); i++)
-			//{
-			//	std::cout << "Value:" << index[i].second << std::endl;
-			//}
 			return;
 		}
 
@@ -87,12 +78,6 @@ private:
 		{
 			OcterNode* node = new OcterNode(index, bound);
 			localCode.insert(depthcode, node);
-
-			//std::cout << "Key:" << depthcode.readArrary() << std::endl;
-			//for (size_t i = 0; i < index.size(); i++)
-			//{
-			//	std::cout << "Value:" << index[i].second << std::endl;
-			//}
 			return;
 		}
 
@@ -140,7 +125,7 @@ public:
 	OcterTree() {}
 	OcterTree(vector<Mesh*>& m_meshList, unsigned m_maxfTrig, AABB& Bounding) :
 		meshList(m_meshList), maxOfTirg(m_maxfTrig), sceneBound(Bounding),
-		gap(static_cast<int>(2147483648/Bounding.maxPoint.x)) {}
+		gap(static_cast<int>(2147483648 / Bounding.maxPoint.x)) {}
 
 	//构建树
 	void BuildTree() {
@@ -156,18 +141,19 @@ public:
 			}
 		}
 		CharArray code;
-		octreeBuild(trigIndex, sceneBound,code);
+		octreeBuild(trigIndex, sceneBound, code);
 	}
 
 	bool Intersect(const Ray& r, float& t, unsigned& meshIndex, unsigned& tirgIndex) {
 
 		Ray ray = r;
-		OcterNode* node = nullptr;
+		OcterNode* node;
 		CharArray qcode;
 		vector<std::pair<unsigned, unsigned>>index;
-		unsigned m_Index = 0, t_Index =0;
-		float minDis = 0.0f;
-		float t_Step = 0.0f;
+		unsigned m_Index(0), t_Index(0);
+		float minDis(0.0f);
+		float t_Step(0.0f);
+
 		while (true)
 		{	//重置t_Step
 			t_Step = 0;
@@ -184,6 +170,7 @@ public:
 			//进行面片求交
 			index.resize(node->data.size());
 			copy(node->data.begin(), node->data.end(), index.begin());
+
 			if (index.size())
 			{
 				minDis = FLT_MAX;
@@ -207,8 +194,9 @@ public:
 
 				if (minDis != FLT_MAX)
 				{
-				return true;
+					return true;
 				}
+
 			}
 
 			//当前射线并未求到交点，则与立方体网格求交并找到出口点添加1单位的扰动量穿越到下一个立方体网格中
@@ -216,6 +204,7 @@ public:
 			t_Step += 0.1f;
 			ray = Ray(ray.RayRun(t_Step), ray.GetDirection());
 		}
+
 	}
 };
 

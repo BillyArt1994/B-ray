@@ -25,9 +25,9 @@ struct AABB {
 			minValue.y = Min(mesh->vertexArray[i].position.y, minValue.y);
 			minValue.z = Min(mesh->vertexArray[i].position.z, minValue.z);
 
-			maxValue.x = Max(mesh->vertexArray[i].position.x, minValue.x);
-			maxValue.y = Max(mesh->vertexArray[i].position.y, minValue.y);
-			maxValue.z = Max(mesh->vertexArray[i].position.z, minValue.z);
+			maxValue.x = Max(mesh->vertexArray[i].position.x, maxValue.x);
+			maxValue.y = Max(mesh->vertexArray[i].position.y, maxValue.y);
+			maxValue.z = Max(mesh->vertexArray[i].position.z, maxValue.z);
 		}
 
 		minPoint = minValue;

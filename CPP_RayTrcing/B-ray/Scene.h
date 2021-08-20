@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include "Light.h"
 #include "OcterTree.h"
+#include "OBJLoader.h"
 #include "Camera.h"
 #include "Math.h"
 #include "AABB.h"
@@ -33,14 +34,15 @@ public:
 
 void Scene::startUp() {
 	mainCamera = new Camera(Vector3(0, 0, -6), -1, (16.0f / 9.0f));
-	GameObject* torusMesh = new GameObject(OBJLoader::ReadObjectFile("Torus.obj"));
-	addGameObjElement(torusMesh);
+	GameObject* gameObject = OBJLoader::ReadObjectFile("Torus.obj");
+	addGameObjElement(gameObject);
 	buildBound();
 	buildOctree();
 }
 
 void Scene::addMeshElement(Mesh* n_mesh ) {
 	scene_MeshList.push_back(n_mesh);
+
 }
 
 void Scene::addLightElement(Light* n_light) {
@@ -49,26 +51,24 @@ void Scene::addLightElement(Light* n_light) {
 
 void Scene::addGameObjElement(GameObject* n_gameObject) {
 	scene_GameObject.push_back(n_gameObject);
-	addMeshElement(n_gameObject->getMesh());
+	scene_MeshList.insert(scene_MeshList.end(), n_gameObject->mesh.begin(), n_gameObject->mesh.end());
 }
 
 void Scene::buildOctree() {
-	float maxValue = Max(
-		Max(Abs(scene_BoxBound.minPoint.x), Abs(scene_BoxBound.maxPoint.x)),
-		Max(Abs(scene_BoxBound.minPoint.y), Abs(scene_BoxBound.maxPoint.y)),
-		Max(Abs(scene_BoxBound.minPoint.z), Abs(scene_BoxBound.maxPoint.z)));
+	float maxValue = Max(Max(Abs(scene_BoxBound.minPoint.x), Abs(scene_BoxBound.minPoint.y), Abs(scene_BoxBound.minPoint.z)),
+		Max(Abs(scene_BoxBound.maxPoint.x), Abs(scene_BoxBound.maxPoint.y), Abs(scene_BoxBound.maxPoint.z)));
 	int length = Nearest2Power(static_cast<int>(maxValue));
 	scene_OT = OcterTree(scene_MeshList,20, AABB(Vector3(length, length, length), Vector3(-length, -length, -length)));
 	scene_OT.BuildTree();
 }
 
 void Scene::buildBound() {
-	Vector3 minP(0), maxP(0);
+	Vector3 minP(FLT_MAX), maxP(FLT_MIN);
 	for (unsigned i = 0; i < scene_GameObject.size(); i++)
 	{
 		scene_GameObject[i]->buildBound();
-		maxP = Max(maxP, scene_GameObject[i]->getBound()->maxPoint);
-		minP = Min(minP, scene_GameObject[i]->getBound()->minPoint);
+		maxP = Max(maxP, scene_GameObject[i]->bound->maxPoint);
+		minP = Min(minP, scene_GameObject[i]->bound->minPoint);
 	};
 	maxP = Max(maxP, mainCamera->cameraPosition);
 	minP = Min(minP, mainCamera->cameraPosition);

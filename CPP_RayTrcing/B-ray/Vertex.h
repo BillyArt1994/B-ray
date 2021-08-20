@@ -4,6 +4,7 @@
 
 struct Vertex
 {
+	Vertex(){}
 	Vertex(Vector3 pos, Vector3 nor, Vector3 uv) :position(pos), normal(nor), texcoord(uv) {}
 	Vector3 position;
 	Vector3 normal;

@@ -12,7 +12,9 @@
 class Render
 {
 public:
-	Render(InputManager* iM,SceneManager* sM) :inputManager(iM), sceneManager(sM) {}
+	Render(InputManager* iM,SceneManager* sM) :inputManager(iM), sceneManager(sM) {
+		rgb =new unsigned char[inputManager->image_height*inputManager->image_width*3];
+	}
 	void Rendering();
 
 private:
@@ -26,7 +28,6 @@ private:
 void Render::Rendering() {
 	unsigned height = inputManager->image_height;
 	unsigned width = inputManager->image_width;
-	rgb = new unsigned char[height*width*3];
 	unsigned char *p = rgb;
 	Camera*camera = sceneManager->getCurrentScene()->mainCamera;
 	Vector3 high_left_corner = camera->high_left_corner;
@@ -39,7 +40,8 @@ void Render::Rendering() {
 		for (unsigned j = 0; j < width; j++) {
 			float u = float(j) / (width - 1);
 			float v = float(i) / (height - 1);
-			Ray r(camerPos, ((high_left_corner + horizontal * u - vertical * v) - camerPos).normalize());
+			Vector3 pixelPos = (high_left_corner + horizontal * u - vertical * v);
+			Ray r(pixelPos, (pixelPos-camerPos).normalize());
 			Color pixel_color = write_color(ray_color(r,root));
 			*p++ = (unsigned char)pixel_color.x;    //R
 			*p++ = (unsigned char)pixel_color.y;    //G
@@ -47,16 +49,16 @@ void Render::Rendering() {
 		}
 		int rate = static_cast<int>((i/(height-1.0f))*100);
 		std::cout << rate << "%" << std::endl;
-		//±£´æÍ¼Æ¬
-		SaveTexture( width, height);
 	}
+	//±£´æÍ¼Æ¬
+	SaveTexture(width,height);
 }
 
 void Render::SaveTexture(unsigned wd, unsigned ht) {
 	FILE *fp = fopen("render.png", "wb");
 	svpng(fp, wd, ht, rgb, 0);
 	fclose(fp);
-	delete rgb;
+	delete[] rgb;
 }
 
 Vector3 Render::ray_color(const Ray& r,OcterTree& root) {
