@@ -17,7 +17,7 @@ struct AABB {
 	void buildAABB(const Mesh* mesh) {
 		Vector3 minValue(FLT_MAX, FLT_MAX, FLT_MAX);
 		Vector3 maxValue(FLT_MIN, FLT_MIN, FLT_MIN);
-		int length = mesh->getVertexCount();
+		int length = mesh->faces_Count;
 
 		for (size_t i = 0; i < length; i++)
 		{
@@ -56,17 +56,17 @@ bool AABB::checkIfInside(const Vector3& point) {
 
 bool AABB::checkIfInside(const Triangle& trig) {
 
-	Vector3 v0 = trig._vertexArray[0]->position;
-	Vector3 v1 = trig._vertexArray[1]->position;
-	Vector3 v2 = trig._vertexArray[2]->position;
+	Vector3 v0 (trig._vertexArray[0]->position);
+	Vector3 v1 (trig._vertexArray[1]->position);
+	Vector3 v2 (trig._vertexArray[2]->position);
 
 	if (checkIfInside(v0)|| checkIfInside(v1)|| checkIfInside(v2))
 	{
 		return true;
 	}
 
-	Vector3 e = (maxPoint.x - minPoint.x)/2;
-	Vector3 c = maxPoint-e;
+	Vector3 e ((maxPoint.x - minPoint.x)/2);
+	Vector3 c ( maxPoint-e);
 
 	v0 -= c;
 	v1 -= c;

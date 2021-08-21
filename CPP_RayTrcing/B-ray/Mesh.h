@@ -10,15 +10,10 @@ using std::vector;
 struct Mesh {
 public:
 	std::string name;
-	vector<Triangle> triangleArray;
-	vector<Vertex> vertexArray;
+	Triangle* triangleArray;
+	Vertex* vertexArray;
 	Mesh(){}
 	~Mesh(){}
-	unsigned int getVertexCount() const { return vertexs_Count; }
-	unsigned int getFaceCount() const { return faces_Count; }
-	void setVertexCount(const unsigned& num) { vertexs_Count = num ;}
-	void setFaceCount(const unsigned& num) { faces_Count = num ;}
-private:
 	unsigned vertexs_Count = 0, faces_Count = 0;
 };
 

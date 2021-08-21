@@ -42,7 +42,6 @@ void Scene::startUp() {
 
 void Scene::addMeshElement(Mesh* n_mesh ) {
 	scene_MeshList.push_back(n_mesh);
-
 }
 
 void Scene::addLightElement(Light* n_light) {
@@ -51,7 +50,11 @@ void Scene::addLightElement(Light* n_light) {
 
 void Scene::addGameObjElement(GameObject* n_gameObject) {
 	scene_GameObject.push_back(n_gameObject);
-	scene_MeshList.insert(scene_MeshList.end(), n_gameObject->mesh.begin(), n_gameObject->mesh.end());
+	Mesh* mesh_ptr = n_gameObject->mesh;
+	for (size_t i = 0; i < n_gameObject->meshCount; i++, *mesh_ptr++)
+	{
+		scene_MeshList.push_back(mesh_ptr);
+	}
 }
 
 void Scene::buildOctree() {

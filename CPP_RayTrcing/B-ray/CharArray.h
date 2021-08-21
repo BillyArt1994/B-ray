@@ -9,7 +9,12 @@ public:
 
 	CharArray() {}
 
-	CharArray(char c) { this->addElement(c); }
+	CharArray(char& c) { this->addElement(c); }
+
+	CharArray(const CharArray& c){
+		this->size = c.size;
+		memcpy(this->m_data, c.m_data, 33);
+	}
 
 	inline CharArray(const char* c) {
 		while (*c)
@@ -19,17 +24,12 @@ public:
 		}
 	}
 
-	inline void addElement(char input) {
+	inline void addElement(const char& input) {
 		m_data[size] = input;
 		size += 1;
 	}
 
-	inline void addElement(char input, unsigned index) {
-		m_data[index] = input;
-		size += 1;
-	}
-
-	inline char at(const int index) const {
+	inline char at(const int& index) const {
 		return m_data[index];
 	}
 
@@ -39,7 +39,7 @@ public:
 
 	CharArray subchar(unsigned e) {
 		CharArray a;
-		strncpy(a.m_data,m_data, e);
+		memcpy(a.m_data,m_data, e);
 		a.size = e;
 		return a;
 	}
@@ -56,10 +56,14 @@ public:
 	}
 
 	CharArray operator + (int value) {
-		CharArray c;
-		c = *this;
+		CharArray c(*this);
 		c.addElement(value+'0');
 		return c;
+	}
+
+	void operator +=(const char& value) {
+		m_data[size] = value;
+		++size;
 	}
 
 	bool operator == (const CharArray& a) const {
@@ -83,7 +87,7 @@ public:
 
 private:
 
-	char m_data[128] = { '\0' };
+	char m_data[33] = { '\0' };
 };
 
 #endif // !CHARARRY_H

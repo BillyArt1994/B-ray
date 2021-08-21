@@ -8,21 +8,21 @@ struct Vector3 {
 
 	float x = 0.0f, y = 0.0f, z = 0.0f;
 
-	Vector3(){}
+	Vector3() {}
 	Vector3(const Vector3& value) {
 		this->x = value.x;
 		this->y = value.y;
 		this->z = value.z;
 	}
 
-	Vector3(const float value) :x(value), y(value), z(value) {}
+	Vector3(const float& value) :x(value), y(value), z(value) {}
 
-	Vector3(const float a, const float b, const float c) :
+	Vector3(const float& a, const float& b, const float& c) :
 		x(a), y(b), z(c) {}
 
 	//‘ÀÀ„∑˚÷ÿ‘ÿ
 	inline Vector3 operator -(const Vector3 &b) {
-		return Vector3(x - b.x, y - b.y, z - b.z);
+		return Vector3(x-b.x, y - b.y, z - b.z);
 	}
 
 	inline Vector3 operator +(const Vector3 &b) {
@@ -41,13 +41,6 @@ struct Vector3 {
 	}
 
 	inline Vector3& operator *=(const float &b) {
-		x = x * b;
-		y = y * b;
-		z = z * b;
-		return *this;
-	}
-
-	inline Vector3& operator *=(const int &b) {
 		x = x * b;
 		y = y * b;
 		z = z * b;
@@ -95,7 +88,7 @@ struct Vector3 {
 	}
 
 	inline Vector3 normalize() {
-		return Q_rsqrt((x*x + y * y + z * z));
+		return *this *= Q_rsqrt(x*x + y*y +z*z);
 	}
 
 	inline Vector3 operator -() {

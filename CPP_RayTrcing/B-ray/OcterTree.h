@@ -34,15 +34,12 @@ private:
 
 	//获得场景中最大匹配编码
 	OcterNode* FindMaxMatch(CharArray& qcode) {
-		unsigned i = 0;
-		CharArray c = qcode;
-		OcterNode* value;
-
+		unsigned i(0);
+		OcterNode* value = nullptr;
 		do
 		{
-			i += 1;
-			qcode = c.subchar(i);
-		} while (!localCode.find(qcode, value));
+			++i;
+		} while (!localCode.find(qcode.subchar(i), value));
 
 		return value;
 	}
@@ -55,10 +52,10 @@ private:
 
 		CharArray result;
 		unsigned  r;
-		for (unsigned i = 0; i < 32; i++)
+		for (int i = 31; i >= 0; --i)
 		{
-			r = ((x >> i) & 1) + 2 * ((y >> i) & 1) + 4 * ((z >> i) & 1);
-			result.addElement(r + '0', 31 - i);
+			r = ((x >> i)&1) + 2 * ((y >> i) & 1) + 4 * ((z >> i) & 1) + '0';
+			result += r;
 		}
 		return result;
 	}
@@ -131,11 +128,11 @@ public:
 	void BuildTree() {
 		localCode.tableInitialize();
 		vector<std::pair<unsigned, unsigned >> trigIndex;
-		unsigned vertexCount = 0;
+		unsigned faceCount = 0;
 		for (unsigned i = 0; i < meshList.size(); i++)
 		{
-			vertexCount = meshList[i]->getFaceCount();
-			for (unsigned j = 0; j < vertexCount; j++)
+			faceCount = meshList[i]->faces_Count;
+			for (unsigned j = 0; j < faceCount; j++)
 			{
 				trigIndex.push_back({ i,j });
 			}
@@ -146,13 +143,13 @@ public:
 
 	bool Intersect(const Ray& r, float& t, unsigned& meshIndex, unsigned& tirgIndex) {
 
-		Ray ray = r;
-		OcterNode* node;
+		Ray ray(r);
+		OcterNode* node = nullptr;
 		CharArray qcode;
-		vector<std::pair<unsigned, unsigned>>index;
 		unsigned m_Index(0), t_Index(0);
-		float minDis(0.0f);
-		float t_Step(0.0f);
+		float minDis(0.0f), t_Step(0.0f);
+		unsigned length(0);
+		Triangle* trig = nullptr;
 
 		while (true)
 		{	//重置t_Step
@@ -168,20 +165,19 @@ public:
 			node = FindMaxMatch(qcode);
 			//匹配后检测此叶节点下 是否包含面片
 			//进行面片求交
-			index.resize(node->data.size());
-			copy(node->data.begin(), node->data.end(), index.begin());
-
-			if (index.size())
+			length = node->data.size();
+			if (length)
 			{
 				minDis = FLT_MAX;
 				meshIndex = 0;
 				tirgIndex = 0;
 
-				for (unsigned i = 0; i < index.size(); i++)
+				for (unsigned i = 0; i < length; i++)
 				{
-					m_Index = index.at(i).first;
-					t_Index = index.at(i).second;
-					if (meshList[m_Index]->triangleArray[t_Index].IntersectTriangle(r, t))
+					m_Index = node->data[i].first;
+					t_Index = node->data[i].second;
+					trig = &meshList[m_Index]->triangleArray[t_Index];
+					if (trig->IntersectTriangle(r, t))
 					{
 						if (t < minDis)
 						{
@@ -191,18 +187,11 @@ public:
 						}
 					}
 				}
-
-				if (minDis != FLT_MAX)
-				{
-					return true;
-				}
-
+				if (minDis != FLT_MAX) return true;
 			}
-
 			//当前射线并未求到交点，则与立方体网格求交并找到出口点添加1单位的扰动量穿越到下一个立方体网格中
 			node->box.intersects(ray, t_Step);
-			t_Step += 0.1f;
-			ray = Ray(ray.RayRun(t_Step), ray.GetDirection());
+			ray = Ray(ray.RayRun(t_Step + 0.1f), ray.GetDirection());
 		}
 
 	}

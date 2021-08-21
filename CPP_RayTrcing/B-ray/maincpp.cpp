@@ -13,7 +13,6 @@
 int main() {
 	//¼ÆÊ±
 	auto start = std::chrono::system_clock::now();
-	
 	//Engine
 	Engine SSGE;
 	if (!SSGE.StartUp())

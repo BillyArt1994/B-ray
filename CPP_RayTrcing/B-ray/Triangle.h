@@ -13,23 +13,6 @@ struct Triangle {
 	Triangle() {}
 	Triangle(Vertex* a, Vertex* b, Vertex* c) :_vertexArray{ a,b,c } {}
 
-	//float _dis = 0;
-	//Triangle(Vertex& a, Vertex& b, Vertex& c) {
-	//	_vertexIndex[0] = &a;
-	//	_vertexIndex[1] = &b;
-	//	_vertexIndex[2] = &c;
-	//}
-
-	//Triangle() {}
-
-	//Vector3 GetNormal() const { return _normal; }
-	//float GetDis() const { return _dis; }
-	//Vertex* GetVertex(int index) const { return _vertexIndex[index]; }
-
-	//void SetIndex(int index, Vertex& vertex) {
-	//	_vertexIndex[index] = &vertex;
-	//}
-
 	bool IntersectTriangle(const Ray& ray, float& t) {
 		Vector3 v0(_vertexArray[0]->position);
 		Vector3 v1(_vertexArray[1]->position);
@@ -54,22 +37,15 @@ struct Triangle {
 			det = -det;
 		}
 
-		if (det < 0.0001f){
-			return false;
-		}
+		if (det < 0.0001f) return false;
 
 		float u (dot(T, P));
-		if (u<0.0f || u>det)
-		{
-			return false;
-		}
+
+		if (u<0.0f || u>det) return false;
 
 		Vector3 Q (cross(T, E1));
 		float v = dot(dir, Q);
-		if (v<0.0f || v + u>det)
-		{
-			return false;
-		}
+		if (v<0.0f || v + u>det) return false;
 
 		t = dot(E2, Q)*(1.0f / det);
 		_normal = cross(E1, E2).normalize();

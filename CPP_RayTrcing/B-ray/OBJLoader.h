@@ -7,6 +7,7 @@
 #include <String>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 #include <windows.h>
 
 class OBJLoader
@@ -17,12 +18,12 @@ private:
 };
 
 GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
-	GameObject *gameObject= new GameObject();
-	Mesh* obj =nullptr;
+	GameObject *gameObject = new GameObject();
 	vector<Vector3> normal, texcoord;
 	vector<Triangle> triangle_array;
 	vector<Vertex> vertex_array;
-	unsigned vertexs_Count = 0, faces_Count=0,vertexindex_Offest =1;
+	vector<Mesh> mesh_array;
+	unsigned vertexs_Count = 0, faces_Count = 0, mesh_Index = 0, vertexindex_Offest = 1;
 
 	std::ifstream ifs;
 	ifs.open(filePath, std::ios::in);
@@ -46,23 +47,25 @@ GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
 		switch (buff_line[0])
 		{
 		case '#':
-				if (buff_line[2] == 'o')
+			if (buff_line[2] == 'o')
+			{
+				if (faces_Count)
 				{
-					if (obj != nullptr)
-					{
-						obj->setFaceCount(faces_Count);
-						faces_Count = 0;
-						obj->setVertexCount(vertexs_Count);
-						vertexindex_Offest += vertexs_Count;
-						vertexs_Count = 0;
-						obj->vertexArray.swap(vertex_array);
-						obj->triangleArray.swap(triangle_array);
-						gameObject->mesh.push_back(obj);
-						gameObject->meshCount += 1;
-					}
-					obj = new Mesh();
+					mesh_array[mesh_Index].triangleArray = new Triangle[faces_Count];
+					copy(triangle_array.begin(), triangle_array.end(), mesh_array[mesh_Index].triangleArray);
+					triangle_array.swap(vector<Triangle>());
+					mesh_array[mesh_Index].vertexArray = new Vertex[vertexs_Count];
+					copy(vertex_array.begin(), vertex_array.end(), mesh_array[mesh_Index].vertexArray);
+					vertex_array.swap(vector<Vertex>());
+					mesh_array[mesh_Index].faces_Count = faces_Count;
+					mesh_array[mesh_Index].vertexs_Count = vertexs_Count;
+					vertexs_Count = faces_Count = 0;
+					++mesh_Index;
 				}
-				break;
+				mesh_array.push_back(Mesh());
+
+			}
+			break;
 
 		case 'v':
 
@@ -109,12 +112,15 @@ GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
 			break;
 		}
 	}
-	obj->setFaceCount(faces_Count);
-	obj->setVertexCount(vertexs_Count);
-	obj->triangleArray.swap(triangle_array);
-	obj->vertexArray.swap(vertex_array);
-	gameObject->mesh.push_back(obj);
-	gameObject->meshCount += 1;
+	mesh_array[mesh_Index].triangleArray = new Triangle[faces_Count];
+	copy(triangle_array.begin(), triangle_array.end(), mesh_array[mesh_Index].triangleArray);
+	mesh_array[mesh_Index].vertexArray = new Vertex[vertexs_Count];
+	copy(vertex_array.begin(), vertex_array.end(), mesh_array[mesh_Index].vertexArray);
+	mesh_array[mesh_Index].faces_Count = faces_Count;
+	mesh_array[mesh_Index].vertexs_Count = vertexs_Count;
+	gameObject->mesh = new Mesh[mesh_Index + 1];
+	copy(mesh_array.begin(), mesh_array.end(), gameObject->mesh);
+	gameObject->meshCount = mesh_Index + 1;
 	ifs.close();
 	return gameObject;
 }

@@ -57,7 +57,7 @@ private:
 
 	//获得hash表索引
 	unsigned GetIndex(const size_t& hash) {
-		return hash & (_capacity - 1);
+		return hash&(_capacity - 1);
 	}
 
 	void reSize() {
@@ -90,22 +90,19 @@ public:
 	}
 
 	void insert(CharArray& key, T_Value& value) {
-		if (_count >= _loadFactor * _capacity)
-		{
-			reSize();
-		}
-		const int  HASH_OFFSET = 0, HASH_A = 1, HASH_B = 2;
-		const char* code = key.readArrary();
-		unsigned length = key.size;
-		size_t hashCode = hash(code, length, HASH_OFFSET);
-		unsigned index, startPos;
-		index = startPos = GetIndex(hashCode);
-		size_t hashA = hash(code, length, HASH_A);
-		size_t hashB = hash(code, length, HASH_B);
-
+		if (_count >= _loadFactor * _capacity) reSize();
+		unsigned length(key.size);
+		const char* str(key.readArrary());
+		const int  HASH_OFFSET(0), HASH_A(1), HASH_B(2);
+		size_t hashPos(hash(str, length, HASH_OFFSET));
+		size_t hashA(hash(str, length, HASH_A));
+		size_t hashB(hash(str, length, HASH_B));
+		unsigned index(GetIndex(hashPos)), startPos;
+		startPos = index;
+		hash_node<T_Value>* nodePtr = nullptr;
 		do
 		{
-			hash_node<T_Value>* nodePtr = &hashtable[index];
+			nodePtr = &hashtable[index];
 			if (nodePtr->bExists == false)
 			{
 				nodePtr->_key = key;
@@ -113,7 +110,7 @@ public:
 				nodePtr->_hashB = hashB;
 				nodePtr->_value = value;
 				nodePtr->bExists = true;
-				_count += 1;
+				++_count;
 				break;
 			}
 
@@ -130,38 +127,28 @@ public:
 
 	bool find(const CharArray& key, T_Value& v) {
 
-		unsigned length = key.size;
-		const char* str = key.readArrary();
+		const unsigned length(key.size);
+		const char* str(key.readArrary());
 		const int  HASH_OFFSET(0), HASH_A(1), HASH_B(2);
-		size_t hashPos = hash(str, length, HASH_OFFSET);
-		size_t hashA = hash(str, length, HASH_A);
-		size_t hashB = hash(str, length, HASH_B);
-		unsigned index, startPos;
-		index = startPos = GetIndex(hashPos);
-
+		size_t hashPos(hash(str, length, HASH_OFFSET));
+		size_t hashA(hash(str, length, HASH_A));
+		size_t hashB(hash(str, length, HASH_B));
+		unsigned index(GetIndex(hashPos)), startPos;
+		startPos=index;
+		hash_node<T_Value>* node = nullptr;
 		do
 		{
-			hash_node<T_Value>* node = &(hashtable[index]);
+			node = &(hashtable[index]);
 
-			if (node->bExists == false)
-			{
-				return false;
-			}
+			if (!node->bExists) return false;
 
 			if (node->_hashA == hashA && node->_hashB == hashB)
 			{
-
 				v = node->_value;
 				return true;
-
 			}
 
-			index += 1;
-
-			if (index >= _capacity)
-			{
-				index = 0;
-			}
+			index = GetIndex(index + 1);
 
 		} while (index != startPos);
 

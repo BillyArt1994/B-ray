@@ -9,7 +9,6 @@ struct Camera
 	//摄像机坐标//画布左上角坐标//画布水平向量-U//画布垂直向量-V
 	float cilp, aspect_ratio;
 	Vector3 cameraPosition,horizontal,vertical,high_left_corner;
-	
 };
 
 Camera::Camera( Vector3 cameraPosV, float cilpV,float aspect_r):cilp(cilpV), aspect_ratio(aspect_r),

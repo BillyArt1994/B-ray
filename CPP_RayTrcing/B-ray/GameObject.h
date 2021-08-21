@@ -10,11 +10,9 @@ public:
 	~GameObject();
 
 	void buildBound();
-	vector<Mesh*> mesh;
+	Mesh* mesh =nullptr;
 	AABB* bound = nullptr;
 	unsigned meshCount = 0;
-	
-	AABB* getBound() const { return bound; }
 };
 
 void GameObject::buildBound() {
@@ -22,7 +20,7 @@ void GameObject::buildBound() {
 	Vector3 maxPoint(FLT_MIN), minPoint(FLT_MAX);
 	for (size_t i = 0; i < meshCount; i++)
 	{
-		meshbound.buildAABB(mesh[i]);
+		meshbound.buildAABB(&mesh[i]);
 		maxPoint = Max(maxPoint, meshbound.maxPoint);
 		minPoint = Min(minPoint, meshbound.minPoint);
 	}
