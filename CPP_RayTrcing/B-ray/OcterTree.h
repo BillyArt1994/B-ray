@@ -17,8 +17,9 @@ using std::pair;
 struct OcterNode
 {
 	OcterNode() {}
-	OcterNode(vector<pair<unsigned, unsigned >>& p, AABB& b) :data(p), box(b) {}
-	vector<pair<unsigned, unsigned >>data;
+	OcterNode(pair<unsigned, unsigned >* p,unsigned count, AABB& b) :data(p), dataCount(count),box(b) {}
+	pair<unsigned, unsigned >* data;
+	unsigned dataCount = 0;
 	AABB box;
 };
 
@@ -62,7 +63,8 @@ private:
 		//三角面数量低于Maximum时设为叶节点并且存入哈希表中
 		if (index.size() <= maxOfTirg)
 		{
-			OcterNode* node = new OcterNode(index, bound);
+			unsigned length = index.size();
+			OcterNode* node = new OcterNode(new std::pair<unsigned, unsigned>[length],length, bound);
 			localCode.insert(depthcode, node);
 			return;
 		}
@@ -70,7 +72,8 @@ private:
 		//八叉树深度大于maxDepth时设为叶节点并且存入哈希表中
 		if (depthcode.size >= 32)
 		{
-			OcterNode* node = new OcterNode(index, bound);
+			unsigned length = index.size();
+			OcterNode* node = new OcterNode(new std::pair<unsigned, unsigned>[length], length, bound);
 			localCode.insert(depthcode, node);
 			return;
 		}
@@ -162,7 +165,7 @@ public:
 			node = FindMaxMatch(qcode);
 			//匹配后检测此叶节点下 是否包含面片
 			//进行面片求交
-			length = node->data.size();
+			length = node->dataCount;
 			if (length)
 			{
 				minDis = FLT_MAX;
