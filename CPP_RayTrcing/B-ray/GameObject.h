@@ -17,7 +17,7 @@ public:
 
 void GameObject::buildBound() {
 	AABB meshbound;
-	Vector3 maxPoint(FLT_MIN), minPoint(FLT_MAX);
+	Vector3 maxPoint(-FLT_MAX), minPoint(FLT_MAX);
 	for (size_t i = 0; i < meshCount; i++)
 	{
 		meshbound.buildAABB(&mesh[i]);

@@ -9,19 +9,14 @@ public:
 
 	CharArray() {}
 
-	CharArray(char& c) { this->addElement(c); }
+	CharArray(const char* c)
+	{
+		strncpy(m_data, c, 33);
+	}
 
 	CharArray(const CharArray& c){
 		this->size = c.size;
 		memcpy(this->m_data, c.m_data, 33);
-	}
-
-	inline CharArray(const char* c) {
-		while (*c)
-		{
-			this->addElement(*c);
-			*c++;
-		}
 	}
 
 	inline void addElement(const char& input) {
@@ -87,7 +82,7 @@ public:
 
 private:
 
-	char m_data[33] = { '\0' };
+	char m_data[33]{ '\0'};
 };
 
 #endif // !CHARARRY_H

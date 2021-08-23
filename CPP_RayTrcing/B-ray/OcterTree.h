@@ -40,7 +40,6 @@ private:
 		{
 			++i;
 		} while (!localCode.find(qcode.subchar(i), value));
-
 		return value;
 	}
 
@@ -50,14 +49,12 @@ private:
 			y = static_cast<int>(floor(pos.y)),
 			z = static_cast<int>(floor(pos.z));
 
-		CharArray result;
-		unsigned  r;
-		for (int i = 31; i >= 0; --i)
+		char res[33]{ '\0' };
+		for (int i = 31,j=0; i >= 0; --i,++j)
 		{
-			r = ((x >> i)&1) + 2 * ((y >> i) & 1) + 4 * ((z >> i) & 1) + '0';
-			result += r;
+			res[j] = ((x >> i)&1) + 2 * ((y >> i) & 1) + 4 * ((z >> i) & 1) + '0';
 		}
-		return result;
+		return res;
 	}
 
 	void octreeBuild(vector<std::pair<unsigned, unsigned >>& index, AABB& bound, CharArray depthcode) {
@@ -131,7 +128,7 @@ public:
 		unsigned faceCount = 0;
 		for (unsigned i = 0; i < meshList.size(); i++)
 		{
-			faceCount = meshList[i]->faces_Count;
+			faceCount = meshList[i]->getFaceCount();
 			for (unsigned j = 0; j < faceCount; j++)
 			{
 				trigIndex.push_back({ i,j });
@@ -176,8 +173,7 @@ public:
 				{
 					m_Index = node->data[i].first;
 					t_Index = node->data[i].second;
-					trig = &meshList[m_Index]->triangleArray[t_Index];
-					if (trig->IntersectTriangle(r, t))
+					if (meshList[m_Index]->triangleArray[t_Index].IntersectTriangle(r, t))
 					{
 						if (t < minDis)
 						{

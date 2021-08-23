@@ -2,12 +2,11 @@
 #define OBJLoader_H
 
 #include "Mesh.h"
-#include "Triangle.h"
 #include "GameObject.h"
+#include "Triangle.h"
 #include <String>
 #include <fstream>
 #include <iostream>
-#include <algorithm>
 #include <windows.h>
 
 class OBJLoader
@@ -18,12 +17,18 @@ private:
 };
 
 GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
-	GameObject *gameObject = new GameObject();
+	GameObject* gameObject =new GameObject();
+	Mesh* obj = new Mesh();
 	vector<Vector3> normal, texcoord;
-	vector<Vector3> triangleIndex_array;
+	vector<Triangle> triangle_array;
 	vector<Vertex> vertex_array;
-	vector<Mesh> mesh_array;
-	unsigned vertexs_Count = 0, faces_Count = 0, mesh_Index = 0, vertexindex_Offest = 1;
+	char charDes[10]{ '\0' };
+	unsigned count(0), meshCount(0);
+	//for (size_t i = 0; i < 10; i++)
+	//{
+	//	obj.vertexArray.push_back(Vertex(Vector3(i), Vector3(0), Vector3(0)));
+	//	obj.faces_Count += 1;
+	//}
 
 	std::ifstream ifs;
 	ifs.open(filePath, std::ios::in);
@@ -33,6 +38,8 @@ GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
 	{
 		MessageBox(NULL, (LPCTSTR)TEXT("文件打开失败"), (LPCTSTR)TEXT("提示"), MB_OK);
 	}
+
+
 
 	if (ifs.get() == EOF)
 	{
@@ -44,20 +51,28 @@ GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
 		char buff_line[128];
 		strcpy_s(buff_line, buff.c_str());
 		float x, y, z;
+
 		switch (buff_line[0])
 		{
 		case '#':
-			if (buff_line[2] == 'o')
+			sscanf(buff_line, "# %i %s", &count, &charDes);
+			if (!strcmp(charDes,"vertices"))
 			{
-				if (faces_Count)
-				{
+				obj->vertexArray = new Vertex[count];
+				copy(vertex_array.begin(), vertex_array.end(), obj->vertexArray);
+				vertex_array.swap(vector<Vertex>());
+				obj->setVertexCount(count);
+			}
 
-				}
-				mesh_array.push_back(Mesh());
+			if (!strcmp(charDes, "faces")) {
+				obj->triangleArray = new Triangle[count];
+				copy(triangle_array.begin(), triangle_array.end(), obj->triangleArray);
+				triangle_array.swap(vector<Triangle>());
+				obj->setFaceCount(count);
+				++meshCount;
 			}
 
 			break;
-
 		case 'v':
 
 			if (buff_line[1] == ' ')
@@ -65,7 +80,6 @@ GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
 				sscanf(buff_line, "v %f %f %f", &x, &y, &z);
 				Vertex vert(Vector3(x, y, z), Vector3(0), Vector3(0));
 				vertex_array.push_back(vert);
-				mesh_array[mesh_Index].vertexs_Count+=1;
 			}
 
 			if (buff_line[1] == 'n')
@@ -79,7 +93,6 @@ GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
 				sscanf(buff.c_str(), "vt %f %f %f", &x, &y, &z);
 				texcoord.push_back(Vector3(x, y, z));
 			}
-
 			break;
 
 		case 'f':
@@ -91,18 +104,19 @@ GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
 
 			for (size_t i = 0; i < 3; i++)
 			{
-				vertex_array.at(vertexIndex[i] - vertexindex_Offest).normal = normal.at(normalIndex[i] - 1);
-				vertex_array.at(vertexIndex[i] - vertexindex_Offest).texcoord = texcoord.at(uvIndex[i] - 1);
+				obj->vertexArray[vertexIndex[i] - 1].normal = normal.at(normalIndex[i] - 1);
+				obj->vertexArray[vertexIndex[i] - 1].texcoord = texcoord.at(uvIndex[i] - 1);
 			}
-
-			Vector3 triIndex(vertexIndex[0] - vertexindex_Offest,
-						 vertexIndex[1] - vertexindex_Offest,
-						 vertexIndex[2] - vertexindex_Offest);
-			triangleIndex_array.push_back(triIndex);
-			faces_Count += 1;
+			
+				Triangle tri(&(obj->vertexArray[vertexIndex[0] - 1]),
+							 &(obj->vertexArray[vertexIndex[1] - 1]),
+							 &(obj->vertexArray[vertexIndex[2] - 1]));
+				triangle_array.push_back(tri);
 			break;
 		}
 	}
+	gameObject->mesh = obj;
+	gameObject->meshCount = meshCount;
 	ifs.close();
 	return gameObject;
 }

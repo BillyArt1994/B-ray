@@ -66,7 +66,7 @@ void Scene::buildOctree() {
 }
 
 void Scene::buildBound() {
-	Vector3 minP(FLT_MAX), maxP(FLT_MIN);
+	Vector3 minP(FLT_MAX), maxP(-FLT_MAX);
 	for (unsigned i = 0; i < scene_GameObject.size(); i++)
 	{
 		scene_GameObject[i]->buildBound();

@@ -22,7 +22,7 @@ struct Vector3 {
 
 	//‘ÀÀ„∑˚÷ÿ‘ÿ
 	inline Vector3 operator -(const Vector3 &b) {
-		return Vector3(x-b.x, y - b.y, z - b.z);
+		return Vector3(x-b.x, y-b.y, z-b.z);
 	}
 
 	inline Vector3 operator +(const Vector3 &b) {
@@ -109,6 +109,10 @@ struct Vector3 {
 
 inline Vector3 operator *(const Vector3& a, const float &b) {
 	return Vector3(a.x*b, a.y*b, a.z*b);
+}
+
+inline Vector3 operator *(const Vector3& a, const Vector3&b) {
+	return Vector3(a.x*b.x, a.y*b.y, a.z*b.z);
 }
 
 inline Vector3 operator *(const float& a, const Vector3 &b) {
