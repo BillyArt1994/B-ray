@@ -14,19 +14,17 @@ struct Triangle {
 	Triangle(Vertex* a, Vertex* b, Vertex* c) :vertexArray{ a,b,c } {}
 
 	bool IntersectTriangle(const Ray& ray, float& t) {
-		Vector3 v0 = vertexArray[0]->position;
-		Vector3 v1 = vertexArray[1]->position;
-		Vector3 v2 = vertexArray[2]->position;
+		Vector3 v0(vertexArray[0]->position),
+				v1(vertexArray[1]->position),
+				v2(vertexArray[2]->position),
+				orig(ray.GetOriginPos()),
+				dir(ray.GetDirection()),
+				E1(v1 - v0),
+				E2(v2 - v0),
+				P(cross(dir, E2)),T;
 
-		Vector3 orig = ray.GetOriginPos();
-		Vector3 dir = ray.GetDirection();
+		float det(dot(E1, P));
 
-		Vector3 E1 = v1 - v0;
-		Vector3 E2 = v2 - v0;
-		Vector3 P = cross(dir, E2);
-		float det = dot(E1, P);
-
-		Vector3 T;
 		if (det > 0)
 		{
 			T = orig - v0;
@@ -40,13 +38,13 @@ struct Triangle {
 		if (det < 0.0001f)
 			return false;
 
-		float u = dot(T, P);
+		float u (dot(T, P));
 		if (u<0.0f || u>det)
 		{
 			return false;
 		}
 
-		Vector3 Q = cross(T, E1);
+		Vector3 Q (cross(T, E1));
 		float v = dot(dir, Q);
 		if (v<0.0f || v + u>det)
 		{

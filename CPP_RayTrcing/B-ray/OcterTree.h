@@ -16,8 +16,7 @@ using std::pair;
 
 struct OcterNode
 {
-	OcterNode() {}
-	OcterNode(pair<unsigned, unsigned >* p,unsigned count, AABB& b) :data(p), dataCount(count),box(b) {}
+	OcterNode(pair<unsigned, unsigned >* p, unsigned count, AABB& b) :data(p), dataCount(count), box(b) {}
 	pair<unsigned, unsigned >* data;
 	unsigned dataCount = 0;
 	AABB box;
@@ -26,9 +25,9 @@ struct OcterNode
 class OcterTree {
 
 private:
-
-	vector<Mesh*> meshList;
-	unsigned maxOfTirg = -1;
+	Mesh* meshList;
+	unsigned meshCount =0;
+	unsigned maxOfTirg =0;
 	int gap = -1;
 	AABB sceneBound;
 	NBhash_map<OcterNode*> localCode;
@@ -46,9 +45,9 @@ private:
 
 	//获得坐标在空间中的编码
 	CharArray EncodePosition(const Vector3& pos) {
-		int x = static_cast<int>(floor(pos.x)),
-			y = static_cast<int>(floor(pos.y)),
-			z = static_cast<int>(floor(pos.z));
+		int x = static_cast<int>(pos.x),
+			y = static_cast<int>(pos.y),
+			z = static_cast<int>(pos.z);
 
 		char res[33]{ '\0' };
 		for (int i = 31,j=0; i >= 0; --i,++j)
@@ -64,7 +63,7 @@ private:
 		if (index.size() <= maxOfTirg)
 		{
 			unsigned length = index.size();
-			OcterNode* node = new OcterNode(new std::pair<unsigned, unsigned>[length],length, bound);
+			OcterNode* node = new OcterNode(new std::pair<unsigned, unsigned>[length], length, bound);
 			localCode.insert(depthcode, node);
 			return;
 		}
@@ -78,6 +77,7 @@ private:
 			return;
 		}
 
+
 		array<AABB, 8> subBounding = bound.getEightSubAABB();
 		vector<std::pair<unsigned, unsigned >> subIndex[8];
 
@@ -86,7 +86,7 @@ private:
 		{
 			for (unsigned j = 0; j < 8; j++)
 			{
-				if (subBounding[j].checkIfInside(meshList[index[i].first]->triangleArray[index[i].second]))
+				if (subBounding[j].checkIfInside(meshList[index[i].first].triangleArray[index[i].second]))
 				{
 					subIndex[j].push_back(index[i]);
 				}
@@ -120,8 +120,8 @@ private:
 
 public:
 	OcterTree() {}
-	OcterTree(vector<Mesh*>& m_meshList, unsigned m_maxfTrig, AABB& Bounding) :
-		meshList(m_meshList), maxOfTirg(m_maxfTrig), sceneBound(Bounding),
+	OcterTree(Mesh* m_meshList,unsigned mCount,unsigned m_maxfTrig, AABB& Bounding) :
+		meshList(m_meshList), meshCount(mCount),maxOfTirg(m_maxfTrig), sceneBound(Bounding),
 		gap(static_cast<int>(2147483648 / Bounding.maxPoint.x)) {}
 
 	//构建树
@@ -129,9 +129,9 @@ public:
 		localCode.tableInitialize();
 		vector<std::pair<unsigned, unsigned >> trigIndex;
 		unsigned faceCount = 0;
-		for (unsigned i = 0; i < meshList.size(); i++)
+		for (unsigned i = 0; i < meshCount; i++)
 		{
-			faceCount = meshList[i]->getFaceCount();
+			faceCount = meshList[i].getFaceCount();
 			for (unsigned j = 0; j < faceCount; j++)
 			{
 				trigIndex.push_back({ i,j });
@@ -176,7 +176,7 @@ public:
 				{
 					m_Index = node->data[i].first;
 					t_Index = node->data[i].second;
-					if (meshList[m_Index]->triangleArray[t_Index].IntersectTriangle(r, t))
+					if (meshList[m_Index].triangleArray[t_Index].IntersectTriangle(r, t))
 					{
 						if (t < minDis)
 						{

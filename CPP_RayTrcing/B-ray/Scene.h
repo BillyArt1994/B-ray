@@ -17,7 +17,8 @@ public:
 	Scene(){}
 	~Scene();
 	std::string name= "SimpleScene";
-	vector<Mesh*> scene_MeshList;
+	Mesh* scene_MeshList;
+	unsigned meshCount = 0;
 	vector<GameObject*> scene_GameObject;
 	vector<Light*> scene_LightList;
 	OcterTree scene_OT;
@@ -40,10 +41,6 @@ void Scene::startUp() {
 	buildOctree();
 }
 
-void Scene::addMeshElement(Mesh* n_mesh ) {
-	scene_MeshList.push_back(n_mesh);
-}
-
 void Scene::addLightElement(Light* n_light) {
 	scene_LightList.push_back(n_light);
 }
@@ -53,7 +50,8 @@ void Scene::addGameObjElement(GameObject* n_gameObject) {
 	Mesh* mesh_ptr = n_gameObject->mesh;
 	for (size_t i = 0; i < n_gameObject->meshCount; i++, *mesh_ptr++)
 	{
-		scene_MeshList.push_back(mesh_ptr);
+		scene_MeshList=mesh_ptr;
+		++meshCount;
 	}
 }
 
@@ -61,7 +59,7 @@ void Scene::buildOctree() {
 	float maxValue = Max(Max(Abs(scene_BoxBound.minPoint.x), Abs(scene_BoxBound.minPoint.y), Abs(scene_BoxBound.minPoint.z)),
 		Max(Abs(scene_BoxBound.maxPoint.x), Abs(scene_BoxBound.maxPoint.y), Abs(scene_BoxBound.maxPoint.z)));
 	int length = Nearest2Power(static_cast<int>(maxValue));
-	scene_OT = OcterTree(scene_MeshList,20, AABB(Vector3(length, length, length), Vector3(-length, -length, -length)));
+	scene_OT = OcterTree(scene_MeshList,meshCount,20, AABB(Vector3(length, length, length), Vector3(-length, -length, -length)));
 	scene_OT.BuildTree();
 }
 

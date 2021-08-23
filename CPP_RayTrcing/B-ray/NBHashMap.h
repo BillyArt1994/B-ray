@@ -24,9 +24,9 @@ struct hash_node
 template <class T_Value>
 class NBhash_map {
 private:
-	unsigned _capacity=16;
-	unsigned _count=0;
-	float _loadFactor=0.75f;
+	unsigned _capacity = 16;
+	unsigned _count = 0;
+	float _loadFactor = 0.75f;
 	hash_node<T_Value>* hashtable = nullptr;
 	//hash函数
 	size_t hash(const char* input, unsigned length, unsigned ID) {
@@ -42,13 +42,13 @@ private:
 		case 1:
 			for (size_t i = 0; i < length; i++)
 			{
-				hash += (hash << 5)+*input++;
+				hash += (hash << 5) + *input++;
 			}
 			break;
 		case 2:
-			for (size_t i = 0; i < length; i ++)
+			for (size_t i = 0; i < length; i++)
 			{
-				hash ^= ((hash << 5)+ (hash >> 2)+*input++);
+				hash ^= ((hash << 5) + (hash >> 2) + *input++);
 			}
 			break;
 		}
@@ -57,12 +57,12 @@ private:
 
 	//获得hash表索引
 	unsigned GetIndex(const size_t& hash) {
-		return hash&(_capacity - 1);
+		return hash & (_capacity - 1);
 	}
 
 	void reSize() {
 
-		hash_node<T_Value>* old_hash_table= hashtable;
+		hash_node<T_Value>* old_hash_table = hashtable;
 		int old_capacity = _capacity;
 		unsigned new_capacity = Nearest2Power(_capacity + 1);
 		hashtable = new hash_node<T_Value>[new_capacity];
@@ -82,7 +82,7 @@ private:
 
 
 public:
-	NBhash_map(){
+	NBhash_map() {
 	}
 
 	~NBhash_map() {
@@ -130,11 +130,11 @@ public:
 		const unsigned length(key.size);
 		const char* str(key.readArrary());
 		const int  HASH_OFFSET(0), HASH_A(1), HASH_B(2);
-		size_t hashPos(hash(str, length, HASH_OFFSET));
-		size_t hashA(hash(str, length, HASH_A));
-		size_t hashB(hash(str, length, HASH_B));
+		size_t hashPos(hash(str, length, HASH_OFFSET)),
+				hashA(hash(str, length, HASH_A)),
+				hashB(hash(str, length, HASH_B));
 		unsigned index(GetIndex(hashPos)), startPos;
-		startPos=index;
+		startPos = index;
 		hash_node<T_Value>* node = nullptr;
 		do
 		{

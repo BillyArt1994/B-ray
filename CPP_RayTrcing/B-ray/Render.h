@@ -19,21 +19,21 @@ public:
 
 private:
 	unsigned char *rgb = nullptr;
-	InputManager* inputManager;
-	SceneManager* sceneManager;
+	InputManager* inputManager = nullptr;
+	SceneManager* sceneManager = nullptr;
 	void SaveTexture(unsigned wd, unsigned ht);
 	Vector3 ray_color(const Ray& r, OcterTree& root);
 };
 
 void Render::Rendering() {
-	unsigned height = inputManager->image_height;
-	unsigned width = inputManager->image_width;
+	unsigned height(inputManager->image_height),
+			width(inputManager->image_width);
 	unsigned char *p = rgb;
 	Camera*camera = sceneManager->getCurrentScene()->mainCamera;
-	Vector3 high_left_corner = camera->high_left_corner;
-	Vector3 horizontal = camera->horizontal;
-	Vector3 vertical = camera->vertical;
-	Vector3 camerPos = camera->cameraPosition;
+	Vector3 high_left_corner( camera->high_left_corner),
+			horizontal(camera->horizontal),
+			vertical (camera->vertical),
+			camerPos (camera->cameraPosition);
 	OcterTree root = sceneManager->getCurrentScene()->scene_OT;
 
 	for (unsigned i = 0; i < height; i++) {
