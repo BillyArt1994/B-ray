@@ -33,8 +33,8 @@ public:
 };
 
 void Scene::startUp() {
-	mainCamera = new Camera(Vector3(0, 0, -6), -1, (16.0f / 9.0f));
-	GameObject* gameObject = OBJLoader::ReadObjectFile("PlanWithSphere.obj");
+	mainCamera = new Camera(Vector3(0.0f, 0.0f, -3.0f), -1.0f, (10.0f / 9.0f));
+	GameObject* gameObject = OBJLoader::ReadObjectFile("CornellBox-Adjust.obj");
 	addGameObjElement(gameObject);
 	buildBound();
 	buildOctree();

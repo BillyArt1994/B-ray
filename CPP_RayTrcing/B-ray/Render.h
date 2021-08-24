@@ -71,8 +71,7 @@ Color Render::ray_color(const Ray& r, int depth) {
 
 	if (octerRoot->Intersect(r, t, meshIndex, trigIndex))
 	{
-		Vector3 randomVector3 = random_in_unit_sphere();
-		Vector3 target = r.GetOriginPos()+sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal+ random_in_unit_sphere();
+		Vector3 target = r.GetOriginPos()+sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal+ random_in_unit_sphere().normalize();
 	//	Vector3 normal = sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal;
 		return 0.5f*ray_color(Ray(r.GetOriginPos(), target-r.GetOriginPos()), depth-1);
 	//	return (normal*0.5f + 0.5f);

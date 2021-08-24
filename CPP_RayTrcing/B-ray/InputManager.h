@@ -14,7 +14,7 @@ struct InputManager
 };
 void InputManager::startUp(SceneManager* sceneManager) {
 	image_width = 400;
-	image_height = static_cast<int>(400 / sceneManager->getCurrentScene()->mainCamera->aspect_ratio);
+	image_height = static_cast<int>(image_width / sceneManager->getCurrentScene()->mainCamera->aspect_ratio);
 }
 
 #endif // !IMAGE_H
