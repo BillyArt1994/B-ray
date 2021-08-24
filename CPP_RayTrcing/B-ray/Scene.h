@@ -17,8 +17,7 @@ public:
 	Scene(){}
 	~Scene();
 	std::string name= "SimpleScene";
-	Mesh* scene_MeshList;
-	unsigned meshCount = 0;
+	vector<Mesh*> scene_MeshList;
 	vector<GameObject*> scene_GameObject;
 	vector<Light*> scene_LightList;
 	OcterTree scene_OT;
@@ -35,10 +34,14 @@ public:
 
 void Scene::startUp() {
 	mainCamera = new Camera(Vector3(0, 0, -6), -1, (16.0f / 9.0f));
-	GameObject* gameObject = OBJLoader::ReadObjectFile("Torus.obj");
+	GameObject* gameObject = OBJLoader::ReadObjectFile("PlanWithSphere.obj");
 	addGameObjElement(gameObject);
 	buildBound();
 	buildOctree();
+}
+
+void Scene::addMeshElement(Mesh* n_mesh ) {
+	scene_MeshList.push_back(n_mesh);
 }
 
 void Scene::addLightElement(Light* n_light) {
@@ -47,11 +50,9 @@ void Scene::addLightElement(Light* n_light) {
 
 void Scene::addGameObjElement(GameObject* n_gameObject) {
 	scene_GameObject.push_back(n_gameObject);
-	Mesh* mesh_ptr = n_gameObject->mesh;
-	for (size_t i = 0; i < n_gameObject->meshCount; i++, *mesh_ptr++)
+	for (size_t i = 0; i < n_gameObject->meshCount; i++)
 	{
-		scene_MeshList=mesh_ptr;
-		++meshCount;
+		scene_MeshList.push_back(n_gameObject->mesh[i]);
 	}
 }
 
@@ -59,7 +60,8 @@ void Scene::buildOctree() {
 	float maxValue = Max(Max(Abs(scene_BoxBound.minPoint.x), Abs(scene_BoxBound.minPoint.y), Abs(scene_BoxBound.minPoint.z)),
 		Max(Abs(scene_BoxBound.maxPoint.x), Abs(scene_BoxBound.maxPoint.y), Abs(scene_BoxBound.maxPoint.z)));
 	int length = Nearest2Power(static_cast<int>(maxValue));
-	scene_OT = OcterTree(scene_MeshList,meshCount,20, AABB(Vector3(length, length, length), Vector3(-length, -length, -length)));
+	AABB SceneBoxBound(Vector3(length, length, length), Vector3(-length, -length, -length));
+	scene_OT = OcterTree(scene_MeshList,100, SceneBoxBound);
 	scene_OT.BuildTree();
 }
 

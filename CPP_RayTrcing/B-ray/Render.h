@@ -21,8 +21,9 @@ private:
 	unsigned char *rgb = nullptr;
 	InputManager* inputManager = nullptr;
 	SceneManager* sceneManager = nullptr;
+	OcterTree* octerRoot = nullptr;
 	void SaveTexture(unsigned wd, unsigned ht);
-	Vector3 ray_color(const Ray& r, OcterTree& root);
+	Vector3 ray_color(const Ray& r, int depth);
 };
 
 void Render::Rendering() {
@@ -34,15 +35,15 @@ void Render::Rendering() {
 			horizontal(camera->horizontal),
 			vertical (camera->vertical),
 			camerPos (camera->cameraPosition);
-	OcterTree root = sceneManager->getCurrentScene()->scene_OT;
+	octerRoot = &sceneManager->getCurrentScene()->scene_OT;
 
 	for (unsigned i = 0; i < height; i++) {
 		for (unsigned j = 0; j < width; j++) {
 			float u = float(j) / (width - 1);
 			float v = float(i) / (height - 1);
-			Vector3 pixelPos = (high_left_corner + horizontal * u - vertical * v);
+			Vector3 pixelPos((high_left_corner + horizontal * u - vertical * v));
 			Ray r(pixelPos, (pixelPos-camerPos).normalize());
-			Color pixel_color = write_color(ray_color(r,root));
+			Color pixel_color = write_color(ray_color(r,50));
 			*p++ = (unsigned char)pixel_color.x;    //R
 			*p++ = (unsigned char)pixel_color.y;    //G
 			*p++ = (unsigned char)pixel_color.z;    //B
@@ -58,17 +59,19 @@ void Render::SaveTexture(unsigned wd, unsigned ht) {
 	FILE *fp = fopen("render.png", "wb");
 	svpng(fp, wd, ht, rgb, 0);
 	fclose(fp);
-	delete[] rgb;
 }
 
-Vector3 Render::ray_color(const Ray& r,OcterTree& root) {
+Color Render::ray_color(const Ray& r, int depth) {
 	unsigned meshIndex = 0;
 	unsigned trigIndex = 0;
 	float t = 0.0f;
 
-	if (root.Intersect(r, t, meshIndex, trigIndex))
+	if (octerRoot->Intersect(r, t, meshIndex, trigIndex))
 	{
-		return Color(1.0f, 0.0f, 0.0f);
+		Vector3 target = r.GetOriginPos()+sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal+ random_in_unit_sphere();
+	//	Vector3 normal = sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal;
+		return 0.5f*ray_color(Ray(r.GetOriginPos(), target-r.GetOriginPos()), depth-1);
+	//	return (normal*0.5f + 0.5f);
 	}
 
 /*
@@ -104,9 +107,11 @@ Vector3 Render::ray_color(const Ray& r,OcterTree& root) {
 #pragma endregion
 */
 
-	float bg_t = (r.GetDirection().y + 1.0f)*0.5f;
+	float bg_t = (r.GetDirection().normalize().y + 1.0f)*0.5f;
 	return Color(1.0f, 1.0f, 1.0f)*(1.0f - bg_t) + Color(0.5f, 0.7f, 1.0f)*bg_t;
 }
+
+
 
 #endif // !RENDER_H
 

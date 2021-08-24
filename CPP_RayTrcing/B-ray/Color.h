@@ -4,7 +4,7 @@
 #include "Vector3.h"
 #include "Math.h"
 
-Color write_color(Color &pixel_color) {
+Color write_color(Color pixel_color) {
 	// Write the translated [0,255] value of each color component.
 	//auto r = pixel_color.x();
 	//auto g = pixel_color.y();

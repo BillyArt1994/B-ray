@@ -17,18 +17,13 @@ private:
 };
 
 GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
-	GameObject* gameObject =new GameObject();
+	GameObject* gameObject = new GameObject();
 	Mesh* obj = new Mesh();
 	vector<Vector3> normal, texcoord;
 	vector<Triangle> triangle_array;
 	vector<Vertex> vertex_array;
 	char charDes[10]{ '\0' };
-	unsigned count(0), meshCount(0);
-	//for (size_t i = 0; i < 10; i++)
-	//{
-	//	obj.vertexArray.push_back(Vertex(Vector3(i), Vector3(0), Vector3(0)));
-	//	obj.faces_Count += 1;
-	//}
+	unsigned count(0), meshCount(0), vetrexCount(0), vertexIndex_offest(1);
 
 	std::ifstream ifs;
 	ifs.open(filePath, std::ios::in);
@@ -38,8 +33,6 @@ GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
 	{
 		MessageBox(NULL, (LPCTSTR)TEXT("文件打开失败"), (LPCTSTR)TEXT("提示"), MB_OK);
 	}
-
-
 
 	if (ifs.get() == EOF)
 	{
@@ -55,21 +48,31 @@ GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
 		switch (buff_line[0])
 		{
 		case '#':
+			if (buff_line[2] == 'o'&& meshCount != 0)
+			{
+				obj = new Mesh();
+				vertexIndex_offest += vetrexCount;
+			}
+
 			sscanf(buff_line, "# %i %s", &count, &charDes);
-			if (!strcmp(charDes,"vertices"))
+			if (!strcmp(charDes, "vertices"))
 			{
 				obj->vertexArray = new Vertex[count];
+				vetrexCount = count;
 				copy(vertex_array.begin(), vertex_array.end(), obj->vertexArray);
-				vertex_array.swap(vector<Vertex>());
+				vector<Vertex>().swap(vertex_array);
 				obj->setVertexCount(count);
+				memset(charDes, '\0', sizeof(charDes));
 			}
 
 			if (!strcmp(charDes, "faces")) {
 				obj->triangleArray = new Triangle[count];
 				copy(triangle_array.begin(), triangle_array.end(), obj->triangleArray);
-				triangle_array.swap(vector<Triangle>());
+				vector<Triangle>().swap(triangle_array);
 				obj->setFaceCount(count);
+				gameObject->mesh[meshCount] = obj;
 				++meshCount;
+				memset(charDes, '\0', sizeof(charDes));
 			}
 
 			break;
@@ -104,18 +107,17 @@ GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
 
 			for (size_t i = 0; i < 3; i++)
 			{
-				obj->vertexArray[vertexIndex[i] - 1].normal = normal.at(normalIndex[i] - 1);
-				obj->vertexArray[vertexIndex[i] - 1].texcoord = texcoord.at(uvIndex[i] - 1);
+				obj->vertexArray[vertexIndex[i] - vertexIndex_offest].normal = normal.at(normalIndex[i] - 1);
+				obj->vertexArray[vertexIndex[i] - vertexIndex_offest].texcoord = texcoord.at(uvIndex[i] - 1);
 			}
-			
-				Triangle tri(&(obj->vertexArray[vertexIndex[0] - 1]),
-							 &(obj->vertexArray[vertexIndex[1] - 1]),
-							 &(obj->vertexArray[vertexIndex[2] - 1]));
-				triangle_array.push_back(tri);
+
+			Triangle tri(&(obj->vertexArray[vertexIndex[0] - vertexIndex_offest]),
+				&(obj->vertexArray[vertexIndex[1] - vertexIndex_offest]),
+				&(obj->vertexArray[vertexIndex[2] - vertexIndex_offest]));
+			triangle_array.push_back(tri);
 			break;
 		}
 	}
-	gameObject->mesh = obj;
 	gameObject->meshCount = meshCount;
 	ifs.close();
 	return gameObject;

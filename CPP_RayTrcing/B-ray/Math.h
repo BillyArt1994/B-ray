@@ -2,11 +2,12 @@
 #define MATH_H
 
 #include "Vector3.h"
+#include <cstdlib>
 
 inline float Det3x3Multiply(Vector3& a, Vector3& b, Vector3& c) {
 	float positive = a.x*b.y*c.z + a.z*b.x*c.y + a.y*b.z*c.x;
 	float negative = c.x*b.y*a.z + c.z*b.x*a.y + c.y*a.x*b.z;
-	return positive-negative;
+	return positive - negative;
 }
 
 inline float dot(const Vector3 &a, const Vector3 &b) {
@@ -34,7 +35,7 @@ inline float Max(const float& x, const float& y) {
 }
 
 inline Vector3 Max(const Vector3& a, const Vector3& b) {
-	return Vector3(Max(a.x,b.x), Max(a.y, b.y), Max(a.z, b.z));
+	return Vector3(Max(a.x, b.x), Max(a.y, b.y), Max(a.z, b.z));
 }
 
 inline Vector3 Min(const Vector3& a, const Vector3& b) {
@@ -96,5 +97,33 @@ inline float Q_rsqrt(float& number) {
 	//	y = y * (threehalfs - (x2*y*y));
 	return y;
 }
+
+inline float random_float() {
+	// Returns a random real in [0,1).
+	return rand() / (RAND_MAX + 1.0f);
+}
+
+inline float random_float(float min, float max) {
+	// Returns a random real in [min,max).
+	return min + (max - min)*random_float();
+}
+
+inline Vector3 random_vector3() {
+	return Vector3(random_float(), random_float(), random_float());
+}
+
+inline Vector3 random_vector3(float min, float max) {
+	return Vector3(random_float(), random_float(), random_float());
+}
+
+Vector3 random_in_unit_sphere() {
+	while (true) {
+		auto p = random_vector3(-1.0f, 1.0f);
+		if (p.length_squared() >= 1) continue;
+		return p;
+	}
+}
+
+
 
 #endif // !MATH

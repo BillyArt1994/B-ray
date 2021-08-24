@@ -22,7 +22,7 @@ struct Vector3 {
 
 	//ÔËËã·ûÖØÔØ
 	inline Vector3 operator -(const Vector3 &b) {
-		return Vector3(x-b.x, y-b.y, z-b.z);
+		return Vector3(x - b.x, y - b.y, z - b.z);
 	}
 
 	inline Vector3 operator +(const Vector3 &b) {
@@ -73,25 +73,6 @@ struct Vector3 {
 		}
 	}
 
-	float Q_rsqrt(float number) {
-		long i;
-		float x2, y;
-		const float threehalfs = 1.5f;
-
-		x2 = number * 0.5f;
-		y = number;
-		i = *(long*)&y;
-		i = 0x5f3759df - (i >> 1);
-		y = *(float*)&i;
-		y = y * (threehalfs - (x2*y*y));
-	//	y = y * (threehalfs - (x2*y*y));
-		return y;
-	}
-
-	inline Vector3 normalize() {
-		return *this *= Q_rsqrt(x*x + y*y +z*z);
-	}
-
 	inline Vector3 operator -() {
 		x = -x;
 		y = -y;
@@ -104,6 +85,30 @@ struct Vector3 {
 		y -= b.y;
 		z -= b.z;
 		return *this;
+	}
+
+
+	float Q_rsqrt(float number) {
+		long i;
+		float x2, y;
+		const float threehalfs = 1.5f;
+
+		x2 = number * 0.5f;
+		y = number;
+		i = *(long*)&y;
+		i = 0x5f3759df - (i >> 1);
+		y = *(float*)&i;
+		y = y * (threehalfs - (x2*y*y));
+		//	y = y * (threehalfs - (x2*y*y));
+		return y;
+	}
+
+	double length_squared() const {
+		return x * x + y * y + z * z;
+	}
+
+	inline Vector3 normalize() {
+		return *this *= Q_rsqrt(length_squared());
 	}
 };
 
@@ -124,4 +129,6 @@ inline Vector3 operator /(const float &a, const Vector3 &b) {
 }
 
 using Color = Vector3;
+
 #endif // Vector3_H
+
