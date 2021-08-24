@@ -66,8 +66,12 @@ Color Render::ray_color(const Ray& r, int depth) {
 	unsigned trigIndex = 0;
 	float t = 0.0f;
 
+	if (depth <= 0)
+		return Color(0.0f, 0.0f, 0.0f);
+
 	if (octerRoot->Intersect(r, t, meshIndex, trigIndex))
 	{
+		Vector3 randomVector3 = random_in_unit_sphere();
 		Vector3 target = r.GetOriginPos()+sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal+ random_in_unit_sphere();
 	//	Vector3 normal = sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal;
 		return 0.5f*ray_color(Ray(r.GetOriginPos(), target-r.GetOriginPos()), depth-1);
