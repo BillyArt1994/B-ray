@@ -119,7 +119,7 @@ inline Vector3 random_vector3(float min, float max) {
 Vector3 random_in_unit_sphere() {
 	while (true) {
 		auto p = random_vector3(-1.0f, 1.0f);
-		if (p.length_squared() >= 1) continue;
+		if (p.length_squared() >= 1.0f) continue;
 		return p;
 	}
 }

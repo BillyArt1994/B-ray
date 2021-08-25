@@ -34,7 +34,7 @@ public:
 
 void Scene::startUp() {
 	mainCamera = new Camera(Vector3(0.0f, 0.0f, -3.0f), -1.0f, (10.0f / 9.0f));
-	GameObject* gameObject = OBJLoader::ReadObjectFile("CornellBox-Adjust.obj");
+	GameObject* gameObject = OBJLoader::ReadObjectFile("Torus.obj");
 	addGameObjElement(gameObject);
 	buildBound();
 	buildOctree();
@@ -61,7 +61,7 @@ void Scene::buildOctree() {
 		Max(Abs(scene_BoxBound.maxPoint.x), Abs(scene_BoxBound.maxPoint.y), Abs(scene_BoxBound.maxPoint.z)));
 	int length = Nearest2Power(static_cast<int>(maxValue));
 	AABB SceneBoxBound(Vector3(length, length, length), Vector3(-length, -length, -length));
-	scene_OT = OcterTree(scene_MeshList,100, SceneBoxBound);
+	scene_OT = OcterTree(scene_MeshList,scene_MeshList.size(),20, SceneBoxBound);
 	scene_OT.BuildTree();
 }
 

@@ -16,9 +16,9 @@ using std::pair;
 
 struct OcterNode
 {
-	OcterNode() {}
-	OcterNode(vector<pair<unsigned, unsigned >>& p, AABB& b) :data(p), box(b) {}
-	vector<pair<unsigned, unsigned >>data;
+	OcterNode(pair<unsigned, unsigned >* p, unsigned count, AABB& b) :data(p), dataCount(count), box(b) {}
+	pair<unsigned, unsigned >* data;
+	unsigned dataCount = 0;
 	AABB box;
 };
 
@@ -26,9 +26,10 @@ class OcterTree {
 
 private:
 
-	vector<Mesh*> meshList;
-	unsigned maxOfTirg = -1;
-	int gap = -1;
+	Mesh* meshList[36];
+	unsigned meshCount = 0;
+	unsigned maxOfTirg = 0;
+	int gap = 0;
 	AABB sceneBound;
 	NBhash_map<OcterNode*> localCode;
 
@@ -59,18 +60,23 @@ private:
 
 	void octreeBuild(vector<std::pair<unsigned, unsigned >>& index, AABB& bound, CharArray depthcode) {
 
+		unsigned length = index.size();
 		//三角面数量低于Maximum时设为叶节点并且存入哈希表中
-		if (index.size() <= maxOfTirg)
+		if (length <= maxOfTirg)
 		{
-			OcterNode* node = new OcterNode(index, bound);
-			localCode.insert(depthcode, node);
+			std::pair<unsigned, unsigned>* p =new std::pair<unsigned, unsigned>[length];
+			copy(index.begin(), index.end(), p);
+			OcterNode* node = new OcterNode(p,length, bound);
+			localCode.insert(depthcode,node);
 			return;
 		}
 
 		//八叉树深度大于maxDepth时设为叶节点并且存入哈希表中
 		if (depthcode.size >= 32)
 		{
-			OcterNode* node = new OcterNode(index, bound);
+			std::pair<unsigned, unsigned>* p = new std::pair<unsigned, unsigned>[length];
+			copy(index.begin(), index.end(), p);
+			OcterNode* node = new OcterNode(p, length, bound);			
 			localCode.insert(depthcode, node);
 			return;
 		}
@@ -117,16 +123,18 @@ private:
 
 public:
 	OcterTree() {}
-	OcterTree(vector<Mesh*>& m_meshList, unsigned m_maxfTrig, AABB& Bounding) :
-		meshList(m_meshList), maxOfTirg(m_maxfTrig), sceneBound(Bounding),
-		gap(static_cast<int>(2147483648 / Bounding.maxPoint.x)) {}
+	OcterTree(vector<Mesh*> m_meshList, unsigned m_meshCount,unsigned m_maxfTrig, AABB& Bounding) :
+		meshCount(m_meshCount),maxOfTirg(m_maxfTrig), sceneBound(Bounding),
+		gap(static_cast<int>(2147483648 / Bounding.maxPoint.x)) {
+		copy(m_meshList.begin(), m_meshList.end(), meshList);
+	}
 
 	//构建树
 	void BuildTree() {
 		localCode.tableInitialize();
 		vector<std::pair<unsigned, unsigned >> trigIndex;
 		unsigned faceCount = 0;
-		for (unsigned i = 0; i < meshList.size(); i++)
+		for (unsigned i = 0; i < meshCount; i++)
 		{
 			faceCount = meshList[i]->getFaceCount();
 			for (unsigned j = 0; j < faceCount; j++)
@@ -142,11 +150,10 @@ public:
 
 		Ray ray(r);
 		OcterNode* node = nullptr;
-		CharArray qcode;
-		unsigned m_Index(0), t_Index(0);
-		float minDis(0.0f), t_Step(0.0f);
-		unsigned length(0);
 		Triangle* trig = nullptr;
+		CharArray qcode;
+		unsigned m_Index(0), t_Index(0),length(0);
+		float minDis(0.0f), t_Step(0.0f);
 
 		while (true)
 		{	//重置t_Step
@@ -162,7 +169,7 @@ public:
 			node = FindMaxMatch(qcode);
 			//匹配后检测此叶节点下 是否包含面片
 			//进行面片求交
-			length = node->data.size();
+			length = node->dataCount;
 			if (length)
 			{
 				minDis = FLT_MAX;

@@ -9,7 +9,7 @@ using std::array;
 
 struct AABB {
 	AABB() {}
-	~AABB(){}
+	~AABB() {}
 	AABB(Vector3 maxP, Vector3 minP);
 	Vector3 minPoint = 0;
 	Vector3 maxPoint = 0;
@@ -21,9 +21,9 @@ struct AABB {
 
 		for (size_t i = 0; i < length; i++)
 		{
-			minValue.x = Min(mesh->vertexArray[i].position.x ,minValue.x);
-			minValue.y = Min(mesh->vertexArray[i].position.y ,minValue.y);
-			minValue.z = Min(mesh->vertexArray[i].position.z ,minValue.z);
+			minValue.x = Min(mesh->vertexArray[i].position.x, minValue.x);
+			minValue.y = Min(mesh->vertexArray[i].position.y, minValue.y);
+			minValue.z = Min(mesh->vertexArray[i].position.z, minValue.z);
 
 			maxValue.x = Max(mesh->vertexArray[i].position.x, maxValue.x);
 			maxValue.y = Max(mesh->vertexArray[i].position.y, maxValue.y);
@@ -56,17 +56,17 @@ bool AABB::checkIfInside(const Vector3& point) {
 
 bool AABB::checkIfInside(const Triangle& trig) {
 
-	Vector3 v0 (trig.vertexArray[0]->position);
-	Vector3 v1 (trig.vertexArray[1]->position);
-	Vector3 v2 (trig.vertexArray[2]->position);
+	Vector3 v0(trig.vertexArray[0]->position);
+	Vector3 v1(trig.vertexArray[1]->position);
+	Vector3 v2(trig.vertexArray[2]->position);
 
-	if (checkIfInside(v0)|| checkIfInside(v1)|| checkIfInside(v2))
+	if (checkIfInside(v0) || checkIfInside(v1) || checkIfInside(v2))
 	{
 		return true;
 	}
 
-	Vector3 e ((maxPoint.x - minPoint.x)/2);
-	Vector3 c ( maxPoint-e);
+	Vector3 e((maxPoint.x - minPoint.x) / 2);
+	Vector3 c(maxPoint - e);
 
 	v0 -= c;
 	v1 -= c;
@@ -109,7 +109,7 @@ array<AABB, 8> AABB::getEightSubAABB() {
 	subBound[0].minPoint = minPfourB;
 	subBound[1].maxPoint = maxPfourB - Vector3(length, 0, 0);
 	subBound[1].minPoint = minPfourB - Vector3(length, 0, 0);
-	subBound[2].maxPoint = maxPfourB - Vector3(0, length, 0) ;
+	subBound[2].maxPoint = maxPfourB - Vector3(0, length, 0);
 	subBound[2].minPoint = minPfourB - Vector3(0, length, 0);
 	subBound[3].maxPoint = maxPfourB - Vector3(length, length, 0);
 	subBound[3].minPoint = minPfourB - Vector3(length, length, 0);
@@ -140,8 +140,8 @@ bool AABB::intersects(const Ray& r, float& t_max) {
 	//}
 	//return true;
 
-	Vector3 rd = r.GetDirection();
-	Vector3 rp = r.GetOriginPos();
+	Vector3 rd(r.GetDirection());
+	Vector3 rp(r.GetOriginPos());
 	Vector3 invdir = 1 / rd;
 	float tmin, tmax, tminY, tmaxY, tminZ, tmaxZ;
 

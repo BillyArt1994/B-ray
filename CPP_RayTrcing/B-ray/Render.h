@@ -23,7 +23,7 @@ private:
 	SceneManager* sceneManager = nullptr;
 	OcterTree* octerRoot = nullptr;
 	void SaveTexture(unsigned wd, unsigned ht);
-	Vector3 ray_color(const Ray& r, int depth);
+	Vector3 ray_color(const Ray& r);
 };
 
 void Render::Rendering() {
@@ -43,7 +43,7 @@ void Render::Rendering() {
 			float v = float(i) / (height - 1);
 			Vector3 pixelPos((high_left_corner + horizontal * u - vertical * v));
 			Ray r(pixelPos, (pixelPos-camerPos).normalize());
-			Color pixel_color = write_color(ray_color(r,50));
+			Color pixel_color = write_color(ray_color(r));
 			*p++ = (unsigned char)pixel_color.x;    //R
 			*p++ = (unsigned char)pixel_color.y;    //G
 			*p++ = (unsigned char)pixel_color.z;    //B
@@ -61,19 +61,21 @@ void Render::SaveTexture(unsigned wd, unsigned ht) {
 	fclose(fp);
 }
 
-Color Render::ray_color(const Ray& r, int depth) {
+Color Render::ray_color(const Ray& r) {
 	unsigned meshIndex = 0;
 	unsigned trigIndex = 0;
 	float t = 0.0f;
 
-	if (depth <= 0)
-		return Color(0.0f, 0.0f, 0.0f);
+	//if (depth <= 0)
+	//	return Color(0.0f, 0.0f, 0.0f);
 
 	if (octerRoot->Intersect(r, t, meshIndex, trigIndex))
 	{
-		Vector3 target = r.GetOriginPos()+sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal+ random_in_unit_sphere().normalize();
+		Vector3 target = r.GetOriginPos()+sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal+ (random_in_unit_sphere()*0.01f);
 	//	Vector3 normal = sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal;
-		return 0.5f*ray_color(Ray(r.GetOriginPos(), target-r.GetOriginPos()), depth-1);
+		Vector3 col = 0.5f*ray_color(Ray(r.GetOriginPos(), (target - r.GetOriginPos()).normalize()));
+	//	std::cout << "col:" << "(" << col.x << "," << col.y << "," << col.z << ")" << std::endl;
+		return col;
 	//	return (normal*0.5f + 0.5f);
 	}
 
