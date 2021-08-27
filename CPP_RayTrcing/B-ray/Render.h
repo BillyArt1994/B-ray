@@ -2,6 +2,7 @@
 #define RENDER_H
 
 #include <iostream>
+#include <omp.h>
 #include "svpng.h"
 #include "Color.h"
 #include "Mesh.h"
@@ -37,8 +38,8 @@ void Render::Rendering() {
 			camerPos (camera->cameraPosition);
 	octerRoot = &sceneManager->getCurrentScene()->scene_OT;
 
-	for (unsigned i = 0; i < height; i++) {
-		for (unsigned j = 0; j < width; j++) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 			float u = float(j) / (width - 1);
 			float v = float(i) / (height - 1);
 			Vector3 pixelPos((high_left_corner + horizontal * u - vertical * v));
@@ -71,12 +72,12 @@ Color Render::ray_color(const Ray& r) {
 
 	if (octerRoot->Intersect(r, t, meshIndex, trigIndex))
 	{
-		Vector3 target = r.GetOriginPos()+sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal+ (random_in_unit_sphere()*0.01f);
-	//	Vector3 normal = sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal;
-		Vector3 col = 0.5f*ray_color(Ray(r.GetOriginPos(), (target - r.GetOriginPos()).normalize()));
+	//	Vector3 target = r.GetOriginPos()+sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal+ (random_in_unit_sphere()*0.01f);
+		Vector3 normal = sceneManager->getCurrentScene()->scene_MeshList[meshIndex]->triangleArray[trigIndex].normal;
+	//	Vector3 col = 0.5f*ray_color(Ray(r.GetOriginPos(), (target - r.GetOriginPos()).normalize()));
 	//	std::cout << "col:" << "(" << col.x << "," << col.y << "," << col.z << ")" << std::endl;
-		return col;
-	//	return (normal*0.5f + 0.5f);
+	//	return col;
+		return (normal*0.5f + 0.5f);
 	}
 
 /*

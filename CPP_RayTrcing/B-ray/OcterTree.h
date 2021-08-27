@@ -64,6 +64,14 @@ private:
 		//三角面数量低于Maximum时设为叶节点并且存入哈希表中
 		if (length <= maxOfTirg)
 		{
+			//std::cout <<"网格编码： "<<depthcode.readArrary() << std::endl;
+
+			//for (size_t i = 0; i < length; i++)
+			//{
+			//	std::cout <<"(" << index[i].first << "," << index[i].second<< ")";
+			//}
+
+			//std::cout << std::endl;
 			std::pair<unsigned, unsigned>* p =new std::pair<unsigned, unsigned>[length];
 			copy(index.begin(), index.end(), p);
 			OcterNode* node = new OcterNode(p,length, bound);
@@ -74,6 +82,11 @@ private:
 		//八叉树深度大于maxDepth时设为叶节点并且存入哈希表中
 		if (depthcode.size >= 32)
 		{
+			//std::cout << depthcode.readArrary() << std::endl;
+			//for (size_t i = 0; i < length; i++)
+			//{
+			//	std::cout << index[i].second << std::endl;
+			//}
 			std::pair<unsigned, unsigned>* p = new std::pair<unsigned, unsigned>[length];
 			copy(index.begin(), index.end(), p);
 			OcterNode* node = new OcterNode(p, length, bound);			
@@ -153,16 +166,12 @@ public:
 		Triangle* trig = nullptr;
 		CharArray qcode;
 		unsigned m_Index(0), t_Index(0),length(0);
-		float minDis(0.0f), t_Step(0.0f);
+		float minDis(FLT_MAX), t_Step(0.0f);
 
-		while (true)
+		//检测射线是否还在场景内部
+		while (sceneBound.checkIfInside(ray.GetOriginPos()))
 		{	//重置t_Step
 			t_Step = 0;
-			//检测射线是否还在场景内部
-			if (!sceneBound.checkIfInside(ray.GetOriginPos()))
-			{
-				return false;
-			}
 			//获得空间编码
 			qcode = EncodePosition(ray.GetOriginPos()*gap);
 			//获得最大匹配位置代码
@@ -173,9 +182,6 @@ public:
 			if (length)
 			{
 				minDis = FLT_MAX;
-				meshIndex = 0;
-				tirgIndex = 0;
-
 				for (unsigned i = 0; i < length; i++)
 				{
 					m_Index = node->data[i].first;
@@ -190,13 +196,15 @@ public:
 						}
 					}
 				}
-				if (minDis != FLT_MAX) return true;
+				if (minDis != FLT_MAX && node->box.checkIfInside(Ray(r).RayRun(minDis)) ) return true;
 			}
+
 			//当前射线并未求到交点，则与立方体网格求交并找到出口点添加1单位的扰动量穿越到下一个立方体网格中
 			node->box.intersects(ray, t_Step);
 			ray = Ray(ray.RayRun(t_Step + 0.1f), ray.GetDirection());
 		}
 
+		return false;
 	}
 };
 

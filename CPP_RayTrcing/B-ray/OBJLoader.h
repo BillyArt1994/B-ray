@@ -18,7 +18,7 @@ private:
 
 GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
 	GameObject* gameObject = new GameObject();
-	Mesh* obj = new Mesh();
+	Mesh* obj =nullptr;
 	vector<Vector3> normal, texcoord;
 	vector<Triangle> triangle_array;
 	vector<Vertex> vertex_array;
@@ -42,15 +42,17 @@ GameObject* OBJLoader::ReadObjectFile(std::string filePath) {
 	while (getline(ifs, buff))
 	{
 		char buff_line[128];
+		char name[128];
 		strcpy_s(buff_line, buff.c_str());
 		float x, y, z;
 
 		switch (buff_line[0])
 		{
 		case '#':
-			if (buff_line[2] == 'o'&& meshCount != 0)
+			if (buff_line[2] == 'o')
 			{
 				obj = new Mesh();
+				obj->name = strncpy(name, buff_line + 9,119);
 				vertexIndex_offest += vetrexCount;
 			}
 

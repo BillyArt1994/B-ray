@@ -16,7 +16,7 @@ public:
 	Vector3 GetOriginPos() const { return _originPos; }
 	Vector3 GetDirection() const { return _dirction; }
 
-	Vector3 RayRun(float dis) {
+	Vector3 RayRun(const float dis) {
 		return _originPos + _dirction* dis;
 	}
 
